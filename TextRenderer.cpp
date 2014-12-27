@@ -34,84 +34,85 @@ TextRenderer::TextRenderer(Text *view) : Renderer(view)
 // -- CALC TEXT --------------------------------
 void TextRenderer::calcText() 
 {
+    // @TODO make calc text working
     // var
-    const char *text = ((Text*)view)->text_str.c_str(); 
-    const char *p; 
-    int x = 0;
-    int y = -fontRowHight;
-    
-    // Vertex
-    struct Vertex
-    {
-        GLfloat x, y,
-                u, v;
-    }coords[6 * strlen(text)];
-
-    
-    // delete old buffer
-    glDeleteBuffers(1, HANDEL_VERTEX_BUFFER);
-   
-    
-    int n = 0;
-    // calc lines -> for each character
-    for(p = text; *p; p++) {
-        
-      // check for new line
-      if (*p == '\n' || ((x + charInfo[*p].advanceX) > layoutAttributes.width->intValue))
-      {
-          // new line 
-          x = 0;                // to row start
-          y-= fontRowHight;     // one line deeper
-      }  
-        
-
-      float x2 = x +  charInfo[*p].marginLeft; //ftGlyph->bitmap_left
-      float y2 = -y - charInfo[*p].marginTop;  //ftGlyph->bitmap_top
-      float w =       charInfo[*p].texWidht;   //ftGlyph->bitmap.width
-      float h =       charInfo[*p].texHight;   //ftGlyph->bitmap.rows
-
-      
-      coords[n++] = (Vertex){x2,     -y2    ,           charInfo[*p].texPosX,                                                0};
-      coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHight}; //remember: each glyph occupies a different amount of vertical space
-      coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHight};
-      coords[n++] = (Vertex){x2 + w, -y2 - h,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         charInfo[*ptexHightbh / fontRowHight};
-//      GLfloat box[4][4] = {
-//          {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
-//          {x2 + w, -y2    ,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, 0},
-//          {x2,     -y2 - h,  charInfo[*p].texPosX                               / fontRowWidht, charInfo[*p].texHight / fontRowHight},
-//          {x2 + w, -y2 - h,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, charInfo[*p].texHight / fontRowHight},
-//      };
-
-      // give gl the Vertices via array
-        glVertexAttribPointer(
-            GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS       /* pass vertices to vertex Pos attribute of vertexShader */,
-            4                                               /* 3 Aruments: x,y,z */,
-            GL_FLOAT                                        /* Format: float     */,
-            GL_FALSE                                        /* take values as-is */,   
-            0                                               /* Entry lenght ?    */,
-            box                                             /* vertices Array    */ );
-
-        // draw with the vertices form the given Array
-        // make two connected triangle to create a rectangle
-        glDrawArrays(
-            GL_TRIANGLE_STRIP,
-            0 /* Array start pos   */,
-            4 /* how much vertices */);
-
-      x += charInfo[*p].advanceX;
-      y += charInfo[*p].advanceY;
-    }
-    
-    
-    // recrate buffer
-    glGenBuffers(1, HANDEL_VERTEX_BUFFER);
-    glBindBuffer(GL_ARRAY_BUFFER, HANDEL_VERTEX_BUFFER);
-    glBufferData(GL_ARRAY_BUFFER,                                                       // type
-                 sizeof(coords),                                                        // size: num Characters * 6 Vertices per character * 4 Vaues per vertex * sizeof value
-                 coords,                                                                // data
-                 GL_DYNAMIC_DRAW);
+//    const char *text = ((Text*)view)->text_str.c_str(); 
+//    const char *p; 
+//    int x = 0;
+//    int y = -fontRowHight;
+//    
+//    // Vertex
+//    struct Vertex
+//    {
+//        GLfloat x, y,
+//                u, v;
+//    }coords[6 * strlen(text)];
+//
+//    
+//    // delete old buffer
+//    glDeleteBuffers(1, &HANDEL_VERTEX_BUFFER);
+//   
+//    
+//    int n = 0;
+//    // calc lines -> for each character
+//    for(p = text; *p; p++) {
+//        
+//      // check for new line
+//      if (*p == '\n' || ((x + charInfo[*p].advanceX) > layoutAttributes.width->intValue))
+//      {
+//          // new line 
+//          x = 0;                // to row start
+//          y-= fontRowHight;     // one line deeper
+//      }  
+//        
+//
+//      float x2 = x +  charInfo[*p].marginLeft; //ftGlyph->bitmap_left
+//      float y2 = -y - charInfo[*p].marginTop;  //ftGlyph->bitmap_top
+//      float w =       charInfo[*p].texWidht;   //ftGlyph->bitmap.width
+//      float h =       charInfo[*p].texHight;   //ftGlyph->bitmap.rows
+//
+//      
+//      coords[n++] = (Vertex){x2,     -y2    ,           charInfo[*p].texPosX,                                                0};
+//      coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
+//      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHight}; //remember: each glyph occupies a different amount of vertical space
+//      coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
+//      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHight};
+//      coords[n++] = (Vertex){x2 + w, -y2 - h,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         charInfo[*p].texHight / fontRowHight};
+////      GLfloat box[4][4] = {
+////          {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
+////          {x2 + w, -y2    ,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, 0},
+////          {x2,     -y2 - h,  charInfo[*p].texPosX                               / fontRowWidht, charInfo[*p].texHight / fontRowHight},
+////          {x2 + w, -y2 - h,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, charInfo[*p].texHight / fontRowHight},
+////      };
+//
+////      // give gl the Vertices via array
+////        glVertexAttribPointer(
+////            GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS       /* pass vertices to vertex Pos attribute of vertexShader */,
+////            4                                               /* 3 Aruments: x,y,z */,
+////            GL_FLOAT                                        /* Format: float     */,
+////            GL_FALSE                                        /* take values as-is */,   
+////            0                                               /* Entry lenght ?    */,
+////            box                                             /* vertices Array    */ );
+////
+////        // draw with the vertices form the given Array
+////        // make two connected triangle to create a rectangle
+////        glDrawArrays(
+////            GL_TRIANGLE_STRIP,
+////            0 /* Array start pos   */,
+////            4 /* how much vertices */);
+//
+//      x += charInfo[*p].advanceX;
+//      y += charInfo[*p].advanceY;
+//    }
+//    
+//    
+//    // recrate buffer
+//    glGenBuffers(1, &HANDEL_VERTEX_BUFFER);
+//    glBindBuffer(GL_ARRAY_BUFFER, HANDEL_VERTEX_BUFFER);
+//    glBufferData(GL_ARRAY_BUFFER,                                                       // type
+//                 sizeof(coords),                                                        // size: num Characters * 6 Vertices per character * 4 Vaues per vertex * sizeof value
+//                 coords,                                                                // data
+//                 GL_DYNAMIC_DRAW);
     
     cout << "[TEXT] calc Text end" << endl;
 }
