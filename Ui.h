@@ -15,8 +15,12 @@
 #ifndef UI_H
 #define	UI_H
 
-#include "FrameRenderer.h"
+#ifdef pl_pi
 #include "GLES/gl.h"
+#endif
+
+#include "FrameRenderer.h"
+
 #include "Screen.h"
 //#include "View.h"
 class View;

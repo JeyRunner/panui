@@ -114,7 +114,7 @@ void TextRenderer::calcText()
 //                 coords,                                                                // data
 //                 GL_DYNAMIC_DRAW);
     
-    cout << "[TEXT] calc Text end" << endl;
+    //cout << "[TEXT] calc Text end" << endl; 
 }
 
 
@@ -179,7 +179,7 @@ void TextRenderer::calcTextTexAtlas()
         
         // textureHight, widht
         textureWidht += ftGlyph->bitmap.width;
-        textureHight  = max(textureHight, ftGlyph->bitmap.rows);
+        textureHight  = max(textureHight, (int)ftGlyph->bitmap.rows);
     }
 //    cout << "[TEXT] calcTextTexAtlas  hight: " << textureHight << ", widht: " << textureWidht << endl;
     

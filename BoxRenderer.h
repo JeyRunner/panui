@@ -14,7 +14,10 @@
 #define	BOXRENDERER_H
 
 #include <stdlib.h>
-#include "GLES/gl.h"
+
+//#include "GLES/gl.h"
+#include "GL.h"
+
 #include "Renderer.h"
 class Box;
 using namespace std;

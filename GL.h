@@ -11,13 +11,21 @@
 
 
 #ifndef GL_H
-#define	GL_H
+#define	GL_H 
+
+#ifdef pl_pi
+#include <GLES2/gl2.h>
+#else
+#include <GL/glew.h>
+#include <GL/glu.h>
+#include <SDL/SDL.h>
+#endif
 
 #include <stdlib.h>
 #include <string>
 #include <iostream>
 #include <glm/glm.hpp>
-#include <GLES2/gl2.h>
+
 #include <ft2build.h>
 #include FT_FREETYPE_H
 using namespace std;

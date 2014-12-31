@@ -18,8 +18,9 @@
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
 
-#include "GLES2/gl2.h"
+//#include "GLES2/gl2.h"
 
+//#include "GL.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 

@@ -15,7 +15,8 @@
 #define	TEXT_H
 
 #include "View.h"
-#include "GLES/gl.h"
+//#include "GLES/gl.h"
+#include "GL.h"
 class TextRenderer;
 
 #include <string>

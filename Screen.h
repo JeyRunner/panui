@@ -14,14 +14,17 @@
  * ---------------------------------------
  */
 
-
 #ifndef SCREEN_H
 #define	SCREEN_H
-
+#ifdef pl_pi
 #include "bcm_host.h"
 #include "GLES/gl.h"
 #include "EGL/egl.h"
 #include "EGL/eglext.h"
+#else
+#include <stdint.h>
+#include "GL.h"
+#endif
 
 
 class Screen 
@@ -31,25 +34,31 @@ class Screen
         Screen();
         ~Screen();
         
+        // ini screen
+        bool initScreen();
+        
         // init sreen with egl
         bool eglInitScreen();
         
+        // init screen with sdl
+        bool sdlInitScreen();
+        
         // bind context to current thread
-        bool eglBindToCurrentThread();
+        // bool eglBindToCurrentThread();
         
         // egl swap buffers -> display new buffer
-        void eglSwapBuffer();
+        void swapBuffer();
         
-
+//#ifdef pl_pi
         static uint32_t display_width;
         static uint32_t display_height;
-        
+//#endif
         
         
     private:
         // -- Var
         //static EGL_DISPMANX_WINDOW_T nativewindow;
-
+#ifdef pl_pi
         DISPMANX_ELEMENT_HANDLE_T dispman_element;
         DISPMANX_DISPLAY_HANDLE_T dispman_display;
         DISPMANX_UPDATE_HANDLE_T dispman_update;
@@ -65,7 +74,7 @@ class Screen
         EGLDisplay display;
         EGLSurface surface;
         EGLContext context;
-        
+#endif
         
 };
 

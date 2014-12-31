@@ -15,11 +15,12 @@
 #include <stdlib.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-#include "GLES/gl.h"
+
 
 //#include "View.h" // -> in StyleAttribute
 class View; // => problems with circular including
 
+#include "GL.h"
 #include "const.h"
 #include "ColorValue.h"
 #include "IntValue.h"

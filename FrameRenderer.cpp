@@ -14,6 +14,7 @@
 
 
 #include <bits/local_lim.h>
+#include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // gl Math matix transform
 #include <stdlib.h>
 //#include <bits/sigthread.h>
@@ -69,8 +70,8 @@ void FrameRenderer::start()
 // -- STOP ---------------------
 void FrameRenderer::stop() 
 {
-    int result;
-    result = pthread_kill(thread_render_id, 1);
+    int result = 0;
+    //result = pthread_kill(thread_render_id, 1);
     
     // check if successful
     switch(result)
@@ -93,7 +94,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     FrameRenderer *fr = ((FrameRenderer*)frameRenderer);
     
     // bind openGl context to render Thread
-    fr->screen->eglInitScreen();
+    fr->screen->initScreen();
     //fr->screen->eglBindToCurrentThread();
     
     
@@ -104,18 +105,17 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     
     // create shaders
     GL::init();
-    
     // enable depth buffer
     // glEnable(GL_DEPTH_TEST);
     
     // calculate + set projection Matix
-    GL::projectionMatix = glm::ortho(  -(float)Screen::display_width/2  /* left */,
-                                        (float)Screen::display_width/2  /* right */,
-                                       -(float)Screen::display_height/2 /* bottom */,
-                                        (float)Screen::display_height/2 /* top */,
+    GL::projectionMatix = glm::ortho(-(float)Screen::display_width/2  /* left */,
+                                         (float)Screen::display_width/2  /* right */,
+                                        -(float)Screen::display_height/2 /* bottom */,
+                                         (float)Screen::display_height/2 /* top */,
             
-                                        1.0f                     /* zNear */,
-                                       -1.0f                     /* zFar */);
+                                         1.0f                     /* zNear */,
+                                        -1.0f                     /* zFar */);
     
     
     
@@ -218,11 +218,12 @@ void FrameRenderer::exe_render()
     glLoadIdentity();
     
     
-    
+#ifdef pl_pi
     // setup camera size ----
     glOrthof(-(float)(screen->display_width/2), (float)(screen->display_width/2)     /* y: from -100 to 100 */, 
              -(float)(screen->display_height/2),  (float)(screen->display_height/2)  /* x: from -100 to 100 */,
              -1, 1                                                                   /* z: from -1   to 1   */);
+#endif
     
     
     
@@ -233,7 +234,7 @@ void FrameRenderer::exe_render()
     
     // swap Buffers 
     // => display new renderd image
-    screen->eglSwapBuffer();
+    screen->swapBuffer();
 }
 
 

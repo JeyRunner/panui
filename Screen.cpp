@@ -17,8 +17,14 @@
 
 // ## INCLUDE
 #include <stdio.h>
-#include <GLES2/gl2.h>
+#include <iostream>
 
+
+#ifdef pl_pi
+#include <GLES2/gl2.h>
+#else
+#include <SDL/SDL_video.h>
+#endif
 
 #include "Screen.h"
 using namespace std;
@@ -28,10 +34,10 @@ uint32_t Screen::display_width;
 uint32_t Screen::display_height;
 
 
-
 // ############################################
 // -- Var
 // -- egl attributes
+#ifdef pl_pi
  static const EGLint attribute_list[] =
    {
       EGL_RED_SIZE,     8,
@@ -50,7 +56,7 @@ uint32_t Screen::display_height;
      EGL_CONTEXT_CLIENT_VERSION, 2 /* Open Gl ES 2.x */,
      EGL_NONE
  };
- 
+#endif
 
 
 // -- CREATE OBJEKT --------------
@@ -60,9 +66,72 @@ Screen::Screen()
 
 
 
-// -- INIT SCREEN WITH EGL ------
+// -- INIT SCREEN ---------------
+bool Screen::initScreen() 
+{
+    #ifdef pl_pi
+        eglInitScreen();
+    #else
+        sdlInitScreen();
+    #endif
+}
+
+
+// -- SDL INIT SCREEN --------------------------------------------
+bool Screen::sdlInitScreen() 
+{
+    cout << "[DISP] init screen with sld ..." << endl;
+    
+#ifndef pl_pi
+    
+    display_width  = 1800;
+    display_height = 1000;
+    int error = 0;
+    SDL_Surface *surface = NULL;
+    
+    cout << "[....] creating Window for Ubuntu" << endl;
+    
+    // init sdl -----------------------------
+    error = SDL_Init(SDL_INIT_VIDEO);
+    if (error != 0)
+    {
+        cout << "[ERR ] SDL_Init" << endl;
+        return false;
+    }
+    else 
+        cout << "[ OK ] SDL_Init" << endl;
+    
+    // set window titel
+    SDL_WM_SetCaption("OpenGl Window", "");
+    
+    // activate doublebuffering
+    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    
+    // enabel antialasing with multisampeling
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
+    
+
+    // open window
+    surface = SDL_SetVideoMode(display_width, display_height, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    
+    // init glew
+    glewInit();
+    
+    // ouput ok
+    cout << "[DONE] created Window for Ubuntu" << endl;
+    
+#endif
+}
+
+
+
+// -- INIT SCREEN WITH EGL ----------------------------------------
 bool Screen::eglInitScreen()
 {   
+    cout << "[DISP] init screen with egl ..." << endl;
+    
+#ifdef pl_pi
     // -- Var
     static EGL_DISPMANX_WINDOW_T nativewindow;
     
@@ -190,12 +259,14 @@ bool Screen::eglInitScreen()
     printf("[DISP] Open Gl renderer: '%s' \n",    glGetString(GL_RENDERER));
     printf("[DISP] Open Gl extensions: '%s' \n",  glGetString(GL_EXTENSIONS));
     printf("[DISP] Open Gl max texture size: '%s' \n",  glGetString(GL_MAX_TEXTURE_SIZE));
+#endif
 }
 
 
 
 
 // -- EGL BIND TO CURRENT THREAD ------
+/*
 bool Screen::eglBindToCurrentThread()
 {
      // bind the OpenGL API to the EGL
@@ -225,19 +296,29 @@ bool Screen::eglBindToCurrentThread()
     {
         printf("[OK] eglMakeCurrent \n");
         
-    }    
-    
-
+    }  
 }
+ */
 
 
 
 // -- EGL SWAP BUFFERS ---------
-void Screen::eglSwapBuffer()
+void Screen::swapBuffer()
 {
-    // EGL prints drawed stuff from openGL on screen
+    // prints drawed stuff from openGL on screen
+#ifdef pl_pi
+    // EGL
     eglSwapBuffers(display, surface);
+    
+#else
+    SDL_GL_SwapBuffers();
+#endif
 }
+
+
+
+
+
 
 
 // ###########################################
