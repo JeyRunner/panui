@@ -93,10 +93,34 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     // var
     FrameRenderer *fr = ((FrameRenderer*)frameRenderer);
     
-    // bind openGl context to render Thread
-    fr->screen->initScreen();
-    //fr->screen->eglBindToCurrentThread();
+    // set screen events
+    fr->screen->onResizeScreen([&](int width, int height){
+        fr->screen->resizeScreen(height, width);
+        glViewport(0, 0, width, height);
+        
+        // calculate + set projection Matix
+        GL::projectionMatix = glm::ortho(-(float)width/2  /* left */,
+                                             (float)width/2  /* right */,
+                                            -(float)height/2 /* bottom */,
+                                             (float)height/2 /* top */,
+
+                                             1.0f                     /* zNear */,
+                                            -1.0f                     /* zFar */);
+        
+        // update rootView size
+        fr->ui->rootView->style->width->value->set(width);
+        fr->ui->rootView->style->height->value->set(height);
+    });
     
+    fr->screen->onCloseScreen([&](){
+        fr->screen->closeScreen();
+        cout << "[ FR ] window is closed [OK]" << endl;
+        exit(0);
+    });
+    
+    
+    // create screen / window
+    fr->screen->initScreen();
     
     // @TODO gl bending settings !!
     // gl bending between overlapping pixels
@@ -105,19 +129,10 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     
     // create shaders
     GL::init();
+    
     // enable depth buffer
     // glEnable(GL_DEPTH_TEST);
-    
-    // calculate + set projection Matix
-    GL::projectionMatix = glm::ortho(-(float)Screen::display_width/2  /* left */,
-                                         (float)Screen::display_width/2  /* right */,
-                                        -(float)Screen::display_height/2 /* bottom */,
-                                         (float)Screen::display_height/2 /* top */,
-            
-                                         1.0f                     /* zNear */,
-                                        -1.0f                     /* zFar */);
-    
-    
+  
     
     // set transform Matix for all shaders to middel of screen
     GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
@@ -131,10 +146,11 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         // -- timestamp --------
         // get current time since 1.1.1970 in milli seconds
         
-//        float time_start = duration_cast<milliseconds>(  system_clock::now().time_since_epock()).count() * 0.001;
+        // float time_start = duration_cast<milliseconds>(  system_clock::now().time_since_epock()).count() * 0.001;
         
         
-        // -----------------------
+        // check for new screen events
+        fr->screen->checkEvents();
         
         
         // calc Layouts for views
@@ -205,8 +221,10 @@ void FrameRenderer::exe_calcTasks()
 // -- EXECUTE RENDER -------------------
 void FrameRenderer::exe_render() 
 {
+#ifdef pl_pi
     glViewport(0,0, screen->display_width, screen->display_height);
-    
+    // -> already set after window resize event
+#endif
     
     // set background color of screen -> white
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -215,16 +233,8 @@ void FrameRenderer::exe_render()
     glClear(GL_COLOR_BUFFER_BIT /* | GL_DEPTH_BUFFER_BIT */ );
     
     // remove cursor -> centor of screen
-    glLoadIdentity();
-    
-    
-#ifdef pl_pi
-    // setup camera size ----
-    glOrthof(-(float)(screen->display_width/2), (float)(screen->display_width/2)     /* y: from -100 to 100 */, 
-             -(float)(screen->display_height/2),  (float)(screen->display_height/2)  /* x: from -100 to 100 */,
-             -1, 1                                                                   /* z: from -1   to 1   */);
-#endif
-    
+    //glLoadIdentity();
+       
     
     
     // render Root View

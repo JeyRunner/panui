@@ -52,7 +52,7 @@ class StyleRule : public StyleAttributeBase::OnChangeListener
       
       
       // -- Style Attributes ----------------------
-      StyleAttribute<IntValue>    *heigh;
+      StyleAttribute<IntValue>    *height;
       StyleAttribute<IntValue>    *width;
       
       StyleAttribute<IntValue>    *left;

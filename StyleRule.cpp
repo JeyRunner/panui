@@ -25,7 +25,7 @@ StyleRule::StyleRule(string selector)
 {
     // -- create StyleAttribute objectes 
     //                                                                                                  CALC ON SELF                    CALC ON PARRENT
-    heigh               = new StyleAttribute<IntValue>(this,    StyleAttributeBase::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    height               = new StyleAttribute<IntValue>(this,    StyleAttributeBase::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     width               = new StyleAttribute<IntValue>(this,    StyleAttributeBase::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     left                = new StyleAttribute<IntValue>(this,    StyleAttributeBase::LEFT,              {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     top                 = new StyleAttribute<IntValue>(this,    StyleAttributeBase::TOP,               {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
@@ -82,7 +82,7 @@ StyleAttributeBase* StyleRule::getAttribute(StyleAttributeBase::Type type)
 {
     switch (type)
     {
-        case StyleAttributeBase::HEIGHT:             return heigh;
+        case StyleAttributeBase::HEIGHT:             return height;
         case StyleAttributeBase::WIDTH:              return width;       
         case StyleAttributeBase::LEFT:               return left;   
         case StyleAttributeBase::TOP:                return top;       

@@ -16,6 +16,11 @@
 
 #ifndef SCREEN_H
 #define	SCREEN_H
+
+#include <stdio.h>
+#include <functional>
+using namespace std;
+
 #ifdef pl_pi
 #include "bcm_host.h"
 #include "GLES/gl.h"
@@ -37,6 +42,13 @@ class Screen
         // ini screen
         bool initScreen();
         
+        // resize Screen
+        void resizeScreen(int height, int width);
+        
+        // resize Screen
+        void closeScreen();
+        
+        
         // init sreen with egl
         bool eglInitScreen();
         
@@ -49,14 +61,26 @@ class Screen
         // egl swap buffers -> display new buffer
         void swapBuffer();
         
-//#ifdef pl_pi
+        // check for events
+        void checkEvents();
+        
+        // set on resizeScreen event listener
+        void onResizeScreen(function<void(int width, int height)> onResizeScreen);
+        
+        // set on closeWindow event listener
+        void onCloseScreen(function<void()> onCloseWindow);
+        
         static uint32_t display_width;
         static uint32_t display_height;
-//#endif
         
         
     private:
         // -- Var
+        
+        // eventListener functions
+        function<void (int width, int height)> onResizeScreenListener;
+        function<void ()> onCloseScreenListener;
+        
         //static EGL_DISPMANX_WINDOW_T nativewindow;
 #ifdef pl_pi
         DISPMANX_ELEMENT_HANDLE_T dispman_element;

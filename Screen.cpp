@@ -76,50 +76,70 @@ bool Screen::initScreen()
     #endif
 }
 
+// -- RESIZE SCREEN ----------------------------------------------
+void Screen::resizeScreen(int height, int width) 
+{
+#ifndef pl_pi
+    // SDL
+    SDL_SetVideoMode(width, height, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    
+#endif
+}
+
+
+
 
 // -- SDL INIT SCREEN --------------------------------------------
 bool Screen::sdlInitScreen() 
 {
-    cout << "[DISP] init screen with sld ..." << endl;
+    cout << "[DISP] create Window with sdl [...]" << endl;
     
 #ifndef pl_pi
     
-    display_width  = 1800;
-    display_height = 1000;
+    display_width  = 1000;
+    display_height = 500;
     int error = 0;
     SDL_Surface *surface = NULL;
-    
-    cout << "[....] creating Window for Ubuntu" << endl;
     
     // init sdl -----------------------------
     error = SDL_Init(SDL_INIT_VIDEO);
     if (error != 0)
     {
-        cout << "[ERR ] SDL_Init" << endl;
+        cout << "[DISP] SDL_Init [ERR]" << endl;
         return false;
     }
     else 
-        cout << "[ OK ] SDL_Init" << endl;
+        cout << "[DISP] SDL_Init [OK]" << endl;
     
     // set window titel
-    SDL_WM_SetCaption("OpenGl Window", "");
+    SDL_WM_SetCaption("PanUi Window", "");
     
     // activate doublebuffering
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     
     // enabel antialasing with multisampeling
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
-    SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
+    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
+    // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
     
 
-    // open window
-    surface = SDL_SetVideoMode(display_width, display_height, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    // open window - init projection matrix ...
+    onResizeScreenListener(display_width, display_height);
     
     // init glew
     glewInit();
     
     // ouput ok
-    cout << "[DONE] created Window for Ubuntu" << endl;
+    cout << "[DISP] create Window with sdl [OK]" << endl;
+    
+    // print open gl info
+    printf("[DISP] Open Gl version: '%s' \n",     glGetString(GL_VERSION));
+    printf("[DISP] Open GlSl version: '%s' \n",   glGetString(GL_SHADING_LANGUAGE_VERSION));
+    printf("[DISP] Open Gl renderer: '%s' \n",    glGetString(GL_RENDERER));
+    printf("[DISP] Open Gl extensions: '%s' \n",  glGetString(GL_EXTENSIONS));
+    printf("[DISP] Open Gl max texture size: '%s' \n",  glGetString(GL_MAX_TEXTURE_SIZE));
+    
+    // enable antialiasing with multisampeling
+    // glEnable(GL_MULTISAMPLE);
     
 #endif
 }
@@ -259,6 +279,9 @@ bool Screen::eglInitScreen()
     printf("[DISP] Open Gl renderer: '%s' \n",    glGetString(GL_RENDERER));
     printf("[DISP] Open Gl extensions: '%s' \n",  glGetString(GL_EXTENSIONS));
     printf("[DISP] Open Gl max texture size: '%s' \n",  glGetString(GL_MAX_TEXTURE_SIZE));
+    
+    // init projection matrix ...
+    onResizeScreenListener(display_width, display_height);
 #endif
 }
 
@@ -318,6 +341,60 @@ void Screen::swapBuffer()
 
 
 
+// -- EVENTS ----------------------------------------------------------------------
+// -- CHECK FOR NEW EVENTS -----------------
+void Screen::checkEvents() 
+{
+#ifndef pl_pi
+    // with sdl ---------
+    SDL_Event event;
+    
+    // get all sdl events in loop
+    while (SDL_PollEvent(&event))
+    {
+        // switch types
+        switch (event.type)
+        {
+            // resize window
+            case SDL_VIDEORESIZE:
+                // reset vars
+                display_height = event.resize.h;
+                display_width = event.resize.w;
+                
+                onResizeScreenListener(display_width,
+                                          display_height);
+                break;
+                
+            // window closed
+            case SDL_QUIT:
+                onCloseScreenListener();
+                break;
+        }
+    }
+    
+    
+#endif
+}
+
+
+// -- SET ON RESIZE SCREEN EVENT LISTENER --
+void Screen::onResizeScreen(function<void(int width, int height)> onResizeScreen) 
+{ this->onResizeScreenListener = onResizeScreen; }
+
+// -- SET ON CLOSE WINDOW EVENT LISTENER --
+void Screen::onCloseScreen(function<void()> onCloseWindow) 
+{ this->onCloseScreenListener = onCloseWindow; }
+
+
+
+// -- CLOSE SCREEN -------------------------------------------
+void Screen::closeScreen() 
+{
+#ifndef pl_pi
+    // sdl
+    SDL_Quit();
+#endif
+}
 
 
 
