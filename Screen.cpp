@@ -62,6 +62,10 @@ uint32_t Screen::display_height;
 // -- CREATE OBJEKT --------------
 Screen::Screen() 
 {
+    // default
+    display_width  = 500;
+    display_height = 500;
+    display_title    = "";
 }
 
 
@@ -72,12 +76,12 @@ bool Screen::initScreen()
     #ifdef pl_pi
         eglInitScreen();
     #else
-        sdlInitScreen();
+        sdlInitScreen(display_width, display_height, display_title);
     #endif
 }
 
 // -- RESIZE SCREEN ----------------------------------------------
-void Screen::resizeScreen(int height, int width) 
+void Screen::resizeScreen(int width, int height) 
 {
 #ifndef pl_pi
     // SDL
@@ -86,18 +90,28 @@ void Screen::resizeScreen(int height, int width)
 #endif
 }
 
+// -- SET TITLE -------------------------------------------------
+void Screen::setTitle(string title) 
+{
+ #ifndef pl_pi
+     // set window titel
+    SDL_WM_SetCaption(title.c_str(), "");
+#endif
+}
+
+
 
 
 
 // -- SDL INIT SCREEN --------------------------------------------
-bool Screen::sdlInitScreen() 
+bool Screen::sdlInitScreen(int width, int height, string title) 
 {
     cout << "[DISP] create Window with sdl [...]" << endl;
     
 #ifndef pl_pi
     
-    display_width  = 1000;
-    display_height = 500;
+    display_width  = width;
+    display_height = height;
     int error = 0;
     SDL_Surface *surface = NULL;
     
@@ -112,7 +126,7 @@ bool Screen::sdlInitScreen()
         cout << "[DISP] SDL_Init [OK]" << endl;
     
     // set window titel
-    SDL_WM_SetCaption("PanUi Window", "");
+    SDL_WM_SetCaption(title.c_str(), "");
     
     // activate doublebuffering
     SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);

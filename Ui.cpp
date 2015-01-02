@@ -39,6 +39,25 @@ Ui::Ui()
     GL::initPre();
 }
 
+// -- CREATE OBJEKT --------------
+Ui::Ui(int width, int height, string title)
+{    
+    // create frameRenderer object
+    // -> init screen
+    // -> render in intervalles
+    frameRenderer = new FrameRenderer(this);
+    
+    // set window props
+    frameRenderer->screen->display_width  = width;
+    frameRenderer->screen->display_height = height;
+    frameRenderer->screen->display_title    = title;
+    
+    // init pre
+    // => before any View is created
+    GL::initPre();
+}
+
+
 
 // -- SET ROOT VIEW ------------
 void Ui::setRootView(View *view)

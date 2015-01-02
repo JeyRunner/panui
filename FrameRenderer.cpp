@@ -95,7 +95,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     
     // set screen events
     fr->screen->onResizeScreen([&](int width, int height){
-        fr->screen->resizeScreen(height, width);
+        fr->screen->resizeScreen(width, height);
         glViewport(0, 0, width, height);
         
         // calculate + set projection Matix

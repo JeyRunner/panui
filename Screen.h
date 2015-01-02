@@ -18,6 +18,7 @@
 #define	SCREEN_H
 
 #include <stdio.h>
+#include <string>
 #include <functional>
 using namespace std;
 
@@ -43,9 +44,12 @@ class Screen
         bool initScreen();
         
         // resize Screen
-        void resizeScreen(int height, int width);
+        void resizeScreen(int width, int height);
         
-        // resize Screen
+        // set title
+        void setTitle(string title);
+        
+        // close Screen
         void closeScreen();
         
         
@@ -53,7 +57,7 @@ class Screen
         bool eglInitScreen();
         
         // init screen with sdl
-        bool sdlInitScreen();
+        bool sdlInitScreen(int width, int height, string title);
         
         // bind context to current thread
         // bool eglBindToCurrentThread();
@@ -72,6 +76,7 @@ class Screen
         
         static uint32_t display_width;
         static uint32_t display_height;
+        string display_title;
         
         
     private:

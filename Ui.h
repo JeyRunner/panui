@@ -30,6 +30,7 @@ class Ui
 {
     public:
         Ui();
+        Ui(int width, int height, string title);
         ~Ui();
         
         // var
@@ -40,6 +41,7 @@ class Ui
         
         // Functions ----------------------
         static void setRootView(View *view);   // set the rootView
+        
 };
 
 
