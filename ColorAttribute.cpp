@@ -1,17 +1,18 @@
 /* 
- * File:   ColorValue.cpp
+ * File:   ColorAttribute.cpp
  * Author: Pancake
  * 
  * Created on 19. August 2014, 13:45
  */
 
-#include "ColorValue.h"
+#include "ColorAttribute.h"
 using namespace std;
 
 
 // ############################################
 // -- CREATE OBJEKT --------------
-ColorValue::ColorValue() 
+ColorAttribute::ColorAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc) 
+ : StyleAttribute(listener, type, causeCalc)
 {
     // default
     r = 1.0f;
@@ -23,7 +24,7 @@ ColorValue::ColorValue()
 
 // ## CHANGE VALUE ##########################
 // -- SET -- BY HEX
-void ColorValue::set(string value) 
+void ColorAttribute::set(string value) 
 {
     // if string is to short for r g b ---
     if (value.length() < 6)
@@ -50,18 +51,18 @@ void ColorValue::set(string value)
     }
     
     // call onchange callback
-    onChangeListener->onValueChange();
+    onValueChange();
 }
 
 // -- SET SINGEL VALUES --
-void ColorValue::setR(float red)        { r = red;              onChangeListener->onValueChange(); }
-void ColorValue::setG(float green)      { g = green;            onChangeListener->onValueChange(); }
-void ColorValue::setB(float blue)       { b = blue;             onChangeListener->onValueChange(); }
-void ColorValue::setAlpha(float alpha)  { this->alpha = alpha;  onChangeListener->onValueChange(); }
+void ColorAttribute::setR(float red)        { r = red;              onValueChange(); }
+void ColorAttribute::setG(float green)      { g = green;            onValueChange(); }
+void ColorAttribute::setB(float blue)       { b = blue;             onValueChange(); }
+void ColorAttribute::setAlpha(float alpha)  { this->alpha = alpha; onValueChange(); }
 
 
 // -- GET
-string ColorValue::get()
+string ColorAttribute::get()
 {
     // convert R G B to string hex
     ostringstream stream;
@@ -78,6 +79,6 @@ string ColorValue::get()
 
 // ###########################################
 // -- DESTROY OBJEKT -----------
-ColorValue::~ColorValue() {
+ColorAttribute::~ColorAttribute() {
 }
 

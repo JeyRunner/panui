@@ -18,10 +18,6 @@
 //#include "View.h" // => problems with circular including
 class View;
 
-#include "Value.h"
-#include "IntValue.h"
-#include "FloatValue.h"
-#include "ColorValue.h"
 #include "const.h"
 
 #include <list>
@@ -32,14 +28,23 @@ using namespace std;
 
 
 // Base of styleAttribute -> down casting
-class StyleAttributeBase 
+//class StyleAttributeBase 
+//{
+//    public:  
+
+//     
+//      
+//};
+// -- static var
+// enum StyleAttributeBase::Type;
+
+
+class StyleAttribute
 {
     public:
-
-      // -- CONSTAND
+        // -- CONSTAND
       static const bool AKTIVE = true;
       static const bool NON_AKTIVE = false;
-
       
       /* static */ enum Type 
           {
@@ -50,36 +55,19 @@ class StyleAttributeBase
             TEXT_SIZE, TEXT_COLOR, TEXT_FAMILY,
             _LAST_TYPE_AFTER  // used for loops
           } type;
-
-
-      // bounded Views -> call calcLayout at change of value
-      virtual void addBoundedView(View *view);
-      virtual void removeBoundedView(View *view);
           
       // listen for aktive change
       class OnChangeListener 
-      { public: virtual void onAktiveStateChange(StyleAttributeBase *styleAttribute) = 0; };
+      { public: virtual void onAktiveStateChange(StyleAttribute *styleAttribute) = 0; };
       
-      // set if attribute aktive
-      virtual bool aktive(bool aktive); // = 0
-      virtual bool aktive(); // = 0
-      
-};
-// -- static var
-// enum StyleAttributeBase::Type;
-
-
-template <typename ValueType> class StyleAttribute : public StyleAttributeBase, public Value::OnChangeListener
-{
-    public:
-      StyleAttribute(StyleAttributeBase::OnChangeListener *listener, Type type, initializer_list<int> causeCalc);   
+      StyleAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc);   
       
       
       // cause calc on bounded views
       int causeCalc[2]; // 1[] -> self, parrent 
       
       // value
-      ValueType *value;
+      //ValueType *value;
       
       
       // bounded Views -> call calcLayout at change of value
@@ -91,17 +79,26 @@ template <typename ValueType> class StyleAttribute : public StyleAttributeBase, 
       bool aktive();
       
       
+      
       // set on Change Listener
-      void onChange(StyleAttributeBase::OnChangeListener *listener);
+      void onChange(OnChangeListener *listener);
+      
+      
+      
+      // set value
+      virtual void set(string value);// = 0;
+      //virtual string operator =(string value);
+      
+      // get value
+      virtual string get();
+      
+      // -- OnChangeListener of value -----------------
+      void onValueChange ();  // if value changes -> bouded views->needLayout
       
       
     private:
-      // -- OnChangeListener of value -----------------
-      void onValueChange ();  // if value changes -> bouded views->needLayout
-
-      
       // -- own on change listener
-      StyleAttributeBase::OnChangeListener *onChangeListener;
+      OnChangeListener *onChangeListener;
       
       bool isAktive;
       

@@ -24,20 +24,20 @@
 StyleRule::StyleRule(string selector) 
 {
     // -- create StyleAttribute objectes 
-    //                                                                                                  CALC ON SELF                    CALC ON PARRENT
-    height               = new StyleAttribute<IntValue>(this,    StyleAttributeBase::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    width               = new StyleAttribute<IntValue>(this,    StyleAttributeBase::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    left                = new StyleAttribute<IntValue>(this,    StyleAttributeBase::LEFT,              {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    top                 = new StyleAttribute<IntValue>(this,    StyleAttributeBase::TOP,               {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    right               = new StyleAttribute<IntValue>(this,    StyleAttributeBase::RIGHT,             {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    bottom              = new StyleAttribute<IntValue>(this,    StyleAttributeBase::BOTTOM,            {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    backgroundColor     = new StyleAttribute<ColorValue>(this,  StyleAttributeBase::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
-    opacity             = new StyleAttribute<FloatValue>(this,  StyleAttributeBase::OPACITY,           {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
+    //                                                                                   CALC ON SELF                    CALC ON PARRENT
+    height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    width            = new IntAttribute(this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    left             = new IntAttribute(this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    top              = new IntAttribute(this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    right            = new IntAttribute(this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    bottom           = new IntAttribute(this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    backgroundColor = new ColorAttribute(this,  StyleAttribute::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
+    opacity          = new FloatAttribute(this,  StyleAttribute::OPACITY,           {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
     
     // text
-    textSize            = new StyleAttribute<IntValue>   (this, StyleAttributeBase::TEXT_SIZE,         {UI_CALCTASK_TEXT_SIZE,          UI_CALCTASK_NONE                        });
-    textColor           = new StyleAttribute<ColorValue> (this, StyleAttributeBase::TEXT_COLOR,        {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
-    textFamily          = new StyleAttribute<StringValue>(this, StyleAttributeBase::TEXT_FAMILY,       {UI_CALCTASK_TEXT_FAMILY,        UI_CALCTASK_NONE                        });
+    textSize         = new IntAttribute   (this, StyleAttribute::TEXT_SIZE,         {UI_CALCTASK_TEXT_SIZE,          UI_CALCTASK_NONE                        });
+    textColor        = new ColorAttribute (this, StyleAttribute::TEXT_COLOR,        {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
+    textFamily       = new StringAttribute(this, StyleAttribute::TEXT_FAMILY,       {UI_CALCTASK_TEXT_FAMILY,        UI_CALCTASK_NONE                        });
     
     
     // -- set var
@@ -78,21 +78,21 @@ void StyleRule::setImportance(SelectorType selectorType)
 
 
 // -- GET STYLE ATTRIBUTE ----------
-StyleAttributeBase* StyleRule::getAttribute(StyleAttributeBase::Type type)
+StyleAttribute* StyleRule::getAttribute(StyleAttribute::Type type)
 {
     switch (type)
     {
-        case StyleAttributeBase::HEIGHT:             return height;
-        case StyleAttributeBase::WIDTH:              return width;       
-        case StyleAttributeBase::LEFT:               return left;   
-        case StyleAttributeBase::TOP:                return top;       
-        case StyleAttributeBase::RIGHT:              return right;        
-        case StyleAttributeBase::BOTTOM:             return bottom; 
-        case StyleAttributeBase::BACKGROUND_COLOR:   return backgroundColor;   
-        case StyleAttributeBase::OPACITY:            return opacity;
-        case StyleAttributeBase::TEXT_SIZE:          return textSize;
-        case StyleAttributeBase::TEXT_COLOR:         return textColor;
-        case StyleAttributeBase::TEXT_FAMILY:        return textFamily;
+        case StyleAttribute::HEIGHT:             return height;
+        case StyleAttribute::WIDTH:              return width;       
+        case StyleAttribute::LEFT:               return left;   
+        case StyleAttribute::TOP:                return top;       
+        case StyleAttribute::RIGHT:              return right;        
+        case StyleAttribute::BOTTOM:             return bottom; 
+        case StyleAttribute::BACKGROUND_COLOR:   return backgroundColor;   
+        case StyleAttribute::OPACITY:            return opacity;
+        case StyleAttribute::TEXT_SIZE:          return textSize;
+        case StyleAttribute::TEXT_COLOR:         return textColor;
+        case StyleAttribute::TEXT_FAMILY:        return textFamily;
         
         default:                                    cout << "[RULE] getAttribute [type does not fit] ->default" << endl; return NULL;
     }    
@@ -144,7 +144,7 @@ bool StyleRule::compareRules(StyleRule* a, StyleRule* b)
 
 
 // -- IF STYLEATTRIBUTE AKTIVE_STATE CHANGES ---
-void StyleRule::onAktiveStateChange(StyleAttributeBase *styleAttributeBase) 
+void StyleRule::onAktiveStateChange(StyleAttribute *styleAttribute) 
 {
     // bounded views -> each
     for (iterator = boundedViews.begin(); /* iterator to start pos */
@@ -154,12 +154,12 @@ void StyleRule::onAktiveStateChange(StyleAttributeBase *styleAttributeBase)
         // @TODO unbind views of unused Attributes form unused Attributes @FOR_BETTER_PERFORMANCE 
          
         // get Attribute that fits to view
-        StyleAttributeBase *calculatedAttribute = (*iterator)->renderer->checkAttributeBinding(styleAttributeBase->type);
+        StyleAttribute *calculatedAttribute = (*iterator)->renderer->checkAttributeBinding(styleAttribute->type);
         
         // bind new fitting Attribute
        (*iterator)->renderer->bindAttribute(calculatedAttribute);
        
-       cout << "[STRULE] reset Attribute (type '" << styleAttributeBase->type << "') (in progress...)" << endl;
+       cout << "[STRULE] reset Attribute (type '" << styleAttribute->type << "') (in progress...)" << endl;
     }
 }
 

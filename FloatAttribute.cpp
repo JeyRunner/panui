@@ -1,23 +1,24 @@
 /* 
- * File:   FloatValue.cpp
+ * File:   FloatAttribute.cpp
 * Author: Joshua Johannson | Pancake
  *
  *
  * ---------------------------------------
- * FLOATVALUE CLASS
+ * FLOATATTRIBUTE CLASS
  * saves Integer style value
  * set, get, onchange
  * ---------------------------------------
  */
 
 
-#include "FloatValue.h"
+#include "FloatAttribute.h"
 using namespace std;
 
 
 // ############################################
 // -- CREATE OBJEKT --------------
-FloatValue::FloatValue() 
+FloatAttribute::FloatAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc) 
+ : StyleAttribute(listener, type, causeCalc)
 {
     // default
     floatValue = 0.0f;
@@ -26,30 +27,30 @@ FloatValue::FloatValue()
 
 // ## CHANGE VALUE ##########################
 // -- SET
-void FloatValue::set(string value) 
+void FloatAttribute::set(string value) 
 {    
     // convert string to int and float
     stringstream sstream(value);
     sstream >> this->floatValue;
     
     // call onchange callback
-    onChangeListener->onValueChange();
+    onValueChange();
 }
 
-void FloatValue::set(float value) 
+void FloatAttribute::set(float value) 
 {
     // set floatValue
     this->floatValue = value;
     
     // call onchange callback
-    onChangeListener->onValueChange();
+    onValueChange();
 }
 
 
 
 // -- GET
 
-string FloatValue::get()
+string FloatAttribute::get()
 {
     ostringstream stream;
     stream << floatValue;
@@ -65,6 +66,6 @@ float FloatValue::get()
 
 // ###########################################
 // -- DESTROY OBJEKT -----------
-FloatValue::~FloatValue() {
+FloatAttribute::~FloatAttribute() {
 }
 

@@ -1,31 +1,32 @@
 /* 
- * File:   IntValue.h
+ * File:   IntAttribute.h
  * Author: Joshua Johannson | Pancake
  *
  *
  * ---------------------------------------
- * VALUE CLASS
+ * INTATTRIBUTE CLASS
  * saves Integer style value
  * set, onchange
  * ---------------------------------------
  */
 
 
-#ifndef INTVALUE_H
-#define	INTVALUE_H
+#ifndef INTATTRIBUTE_H
+#define	INTATTRIBUTE_H
 
 #include <sstream>
 #include "Value.h"
+#include "StyleAttribute.h"
 #include <string>
 #include <stdlib.h>
 using namespace std;
 
 
-class IntValue : Value
+class IntAttribute : public StyleAttribute
 {
     public:
-      IntValue ();
-      ~IntValue ();
+      IntAttribute (OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      ~IntAttribute ();
       
        // set value
       void set(string value);

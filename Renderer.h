@@ -22,9 +22,9 @@ class View; // => problems with circular including
 
 #include "GL.h"
 #include "const.h"
-#include "ColorValue.h"
-#include "IntValue.h"
-#include "FloatValue.h"
+#include "ColorAttribute.h"
+#include "IntAttribute.h"
+#include "FloatAttribute.h"
 #include "StyleAttribute.h"
 #include "StyleRule.h"
 
@@ -57,12 +57,12 @@ class Renderer
         // 4 vertices -> *(x,y,z) = 12
         GLfloat vertices[12]; 
         
-        ColorValue *background_color;
-        FloatValue *opacity;
+        ColorAttribute *background_color;
+        FloatAttribute *opacity;
         
-        ColorValue  *text_color;
-        IntValue    *text_size;
-        StringValue *text_family;
+        ColorAttribute  *text_color;
+        IntAttribute    *text_size;
+        StringAttribute *text_family;
       } renderAttributes;
       //RenderAttributes *renderAttributesPtr;
       
@@ -72,8 +72,8 @@ class Renderer
       // - -> then into render Attriubtes
       struct LayoutAttributes 
       {
-        IntValue *top, *left, *right, *bottom;
-        IntValue *height, *width;
+        IntAttribute *top, *left, *right, *bottom;
+        IntAttribute *height, *width;
       } layoutAttributes;
       //LayoutAttributes *layoutAttributesPtr;
       
@@ -119,11 +119,11 @@ class Renderer
       
       
       // return calculated StyleAttribute(Base) that have to be used
-      StyleAttributeBase* checkAttributeBinding(StyleAttributeBase::Type type);
+      StyleAttribute* checkAttributeBinding(StyleAttribute::Type type);
       
       // bind StyleAttribute to view
-      void bindAttribute(StyleAttributeBase *attribute);
-      void unbindAttribute(StyleAttributeBase *attribute);
+      void bindAttribute(StyleAttribute *attribute);
+      void unbindAttribute(StyleAttribute *attribute);
       
       // searches in View rules for fitting Attributes and bind them
       void bindAttributeAutomatic();      

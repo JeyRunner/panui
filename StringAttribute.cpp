@@ -1,23 +1,24 @@
 /* 
- * File:   StringValue.cpp
+ * File:   StringAttribute.cpp
 * Author: Joshua Johannson | Pancake
  *
  *
  * ---------------------------------------
- * STRINGVALUE CLASS
+ * STRINGATTRIBUTE CLASS
  * saves String style value
  * set, onchange
  * ---------------------------------------
  */
 
 
-#include "StringValue.h"
+#include "StringAttribute.h"
 using namespace std;
 
 
 // ############################################
 // -- CREATE OBJEKT --------------
-StringValue::StringValue() 
+StringAttribute::StringAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc) 
+ : StyleAttribute(listener, type, causeCalc)
 {
     // default
     stringValue = "";
@@ -26,19 +27,19 @@ StringValue::StringValue()
 
 // ## CHANGE VALUE ##########################
 // -- SET
-void StringValue::set(string value) 
+void StringAttribute::set(string value) 
 {    
     stringValue = value;
     
     // call onchange callback
-    onChangeListener->onValueChange();
+    onValueChange();
 }
 
 
 
 // -- GET
 
-string StringValue::get()
+string StringAttribute::get()
 {
     return stringValue;
 }
@@ -46,6 +47,6 @@ string StringValue::get()
 
 // ###########################################
 // -- DESTROY OBJEKT -----------
-StringValue::~StringValue() {
+StringAttribute::~StringAttribute() {
 }
 

@@ -1,31 +1,32 @@
 /* 
- * File:   StringValue.h
+ * File:   StringAttribute.h
 * Author: Joshua Johannson | Pancake
  *
  *
  * ---------------------------------------
- * STRINGVALUE CLASS
+ * STRINGATTRIBUTE CLASS
  * saves String style value
  * set, onchange
  * ---------------------------------------
  */
 
 
-#ifndef STRINGVALUE_H
-#define	STRINGVALUE_H
+#ifndef STRINGATTRIBUTE_H
+#define	STRINGATTRIBUTE_H
 
 #include <sstream>
 #include "Value.h"
+#include "StyleAttribute.h"
 #include <string>
 #include <stdlib.h>
 using namespace std;
 
 
-class StringValue : public Value
+class StringAttribute : public StyleAttribute
 {
     public:
-      StringValue ();
-      ~StringValue ();
+      StringAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      ~StringAttribute();
       
       // set value
       void set(string value);

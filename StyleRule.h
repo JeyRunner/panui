@@ -16,10 +16,10 @@
 
 
 #include "StyleAttribute.h"
-#include "IntValue.h"
-#include "ColorValue.h"
-#include "FloatValue.h"
-#include "StringValue.h"
+#include "IntAttribute.h"
+#include "ColorAttribute.h"
+#include "FloatAttribute.h"
+#include "StringAttribute.h"
 
 #include <stdlib.h>
 #include <list>
@@ -28,7 +28,7 @@
 using namespace std;
 
 
-class StyleRule : public StyleAttributeBase::OnChangeListener
+class StyleRule : public StyleAttribute::OnChangeListener
 {
     public:
       StyleRule (string selector);
@@ -52,24 +52,24 @@ class StyleRule : public StyleAttributeBase::OnChangeListener
       
       
       // -- Style Attributes ----------------------
-      StyleAttribute<IntValue>    *height;
-      StyleAttribute<IntValue>    *width;
+      IntAttribute    *height;
+      IntAttribute    *width;
       
-      StyleAttribute<IntValue>    *left;
-      StyleAttribute<IntValue>    *top;
-      StyleAttribute<IntValue>    *right;
-      StyleAttribute<IntValue>    *bottom;
+      IntAttribute    *left;
+      IntAttribute    *top;
+      IntAttribute    *right;
+      IntAttribute    *bottom;
       
-      StyleAttribute<ColorValue>  *backgroundColor;
-      StyleAttribute<FloatValue>  *opacity;
+      ColorAttribute  *backgroundColor;
+      FloatAttribute  *opacity;
       
-      StyleAttribute<IntValue>    *textSize;
-      StyleAttribute<ColorValue>  *textColor;
-      StyleAttribute<StringValue> *textFamily;
+      IntAttribute    *textSize;
+      ColorAttribute  *textColor;
+      StringAttribute *textFamily;
       
 
       // get Attribute by StyleAttributeType
-      StyleAttributeBase* getAttribute(StyleAttributeBase::Type type);
+      StyleAttribute* getAttribute(StyleAttribute::Type type);
       
       
       // bounded Views -> call calcLayout at change of value
@@ -85,7 +85,7 @@ class StyleRule : public StyleAttributeBase::OnChangeListener
       
     private:
       // -- on change listener of attributes --
-      virtual void onAktiveStateChange (StyleAttributeBase *styleAttributeBase);
+      virtual void onAktiveStateChange (StyleAttribute *styleAttribute);
       
       
       void setImportance(SelectorType selectorType);

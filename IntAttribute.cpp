@@ -1,23 +1,24 @@
 /* 
- * File:   IntValue.cpp
+ * File:   IntAttribute.cpp
  * Author: Joshua Johannson | Pancake
  *
  *
  * ---------------------------------------
- * INTVALUE CLASS
+ * INTATTRIBUTE CLASS
  * saves Integer style value
  * set, get, onchange
  * ---------------------------------------
  */
 
 
-#include "IntValue.h"
+#include "IntAttribute.h"
 using namespace std;
 
 
 // ############################################
 // -- CREATE OBJEKT --------------
-IntValue::IntValue() 
+IntAttribute::IntAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc) 
+ : StyleAttribute(listener, type, causeCalc)
 {
     // default
     floatValue  = 0.0f;
@@ -27,7 +28,7 @@ IntValue::IntValue()
 
 // ## CHANGE VALUE ##########################
 // -- SET
-void IntValue::set(string value) 
+void IntAttribute::set(string value) 
 {    
     // convert string to int and float
     stringstream sstream(value);
@@ -35,10 +36,10 @@ void IntValue::set(string value)
     sstream >> this->floatValue;
     
     // call onchange callback
-   onChangeListener->onValueChange();
+    onValueChange();
 }
 
-void IntValue::set(int value) 
+void IntAttribute::set(int value) 
 {
     // set floatValue intValue
     this->intValue      = value;
@@ -46,12 +47,12 @@ void IntValue::set(int value)
 
     
     // call onchange callback
-    onChangeListener->onValueChange();
+    onValueChange();
 }
 
 
 // -- GET
-string IntValue::get()
+string IntAttribute::get()
 {
     ostringstream stream;
     stream << intValue;
@@ -69,6 +70,6 @@ int IntValue::get::operator()()
 
 // ###########################################
 // -- DESTROY OBJEKT -----------
-IntValue::~IntValue() {
+IntAttribute::~IntAttribute() {
 }
 

@@ -380,7 +380,7 @@ void Renderer::bindRuleAutomatic()
 
 
 // -- CHECK ATTRIBUTE BINDING
-StyleAttributeBase* Renderer::checkAttributeBinding(StyleAttributeBase::Type type) 
+StyleAttribute* Renderer::checkAttributeBinding(StyleAttribute::Type type) 
 {
     // -- for each Style Rule
     for (list<StyleRule*>::iterator iter = view->styles.begin(); /* iterator to start pos */
@@ -388,7 +388,7 @@ StyleAttributeBase* Renderer::checkAttributeBinding(StyleAttributeBase::Type typ
          iter++)
     {
         // -- get attribute of rule
-        StyleAttributeBase *attr = (*iter)->getAttribute(type);
+        StyleAttribute *attr = (*iter)->getAttribute(type);
         
         // out
         // cout << "[RN of '" << view->id << "'] check Attribute '" << attr->type << "' of Rule '" << (*iter)->selector << "'" <<  endl; 
@@ -405,55 +405,55 @@ StyleAttributeBase* Renderer::checkAttributeBinding(StyleAttributeBase::Type typ
 
 
 // -- BIND ATTRIBUTE
-void Renderer::bindAttribute(StyleAttributeBase *attribute) 
+void Renderer::bindAttribute(StyleAttribute *attribute) 
 {
     switch(attribute->type)
     {
-        case StyleAttributeBase::HEIGHT: 
-            layoutAttributes.height = (dynamic_cast<StyleAttribute<IntValue>*>(attribute))->value;
+        case StyleAttribute::HEIGHT: 
+            layoutAttributes.height = (dynamic_cast<IntAttribute*>(attribute));
             break;
             
-        case StyleAttributeBase::WIDTH: 
-            layoutAttributes.width = dynamic_cast<StyleAttribute<IntValue>*>(attribute)->value;
-            break;
-            
-            
-        case StyleAttributeBase::TOP: 
-            layoutAttributes.top = dynamic_cast<StyleAttribute<IntValue>*>(attribute)->value;
-            break;
-            
-        case StyleAttributeBase::BOTTOM: 
-            layoutAttributes.bottom = dynamic_cast<StyleAttribute<IntValue>*>(attribute)->value;
-            break;
-            
-        case StyleAttributeBase::LEFT: 
-            layoutAttributes.left = dynamic_cast<StyleAttribute<IntValue>*>(attribute)->value;
-            break;
-            
-        case StyleAttributeBase::RIGHT: 
-            layoutAttributes.right = dynamic_cast<StyleAttribute<IntValue>*>(attribute)->value;
+        case StyleAttribute::WIDTH: 
+            layoutAttributes.width = dynamic_cast<IntAttribute*>(attribute);
             break;
             
             
-        case StyleAttributeBase::BACKGROUND_COLOR: 
-            renderAttributes.background_color = dynamic_cast<StyleAttribute<ColorValue>*>(attribute)->value;
+        case StyleAttribute::TOP: 
+            layoutAttributes.top = dynamic_cast<IntAttribute*>(attribute);
             break;
             
-        case StyleAttributeBase::OPACITY: 
-            renderAttributes.opacity = dynamic_cast<StyleAttribute<FloatValue>*>(attribute)->value;
+        case StyleAttribute::BOTTOM: 
+            layoutAttributes.bottom = dynamic_cast<IntAttribute*>(attribute);
+            break;
+            
+        case StyleAttribute::LEFT: 
+            layoutAttributes.left = dynamic_cast<IntAttribute*>(attribute);
+            break;
+            
+        case StyleAttribute::RIGHT: 
+            layoutAttributes.right = dynamic_cast<IntAttribute*>(attribute);
+            break;
+            
+            
+        case StyleAttribute::BACKGROUND_COLOR: 
+            renderAttributes.background_color = dynamic_cast<ColorAttribute*>(attribute);
+            break;
+            
+        case StyleAttribute::OPACITY: 
+            renderAttributes.opacity = dynamic_cast<FloatAttribute*>(attribute);
             break; 
                 
-        case StyleAttributeBase::TEXT_SIZE:
-            renderAttributes.text_size = dynamic_cast<StyleAttribute<IntValue>*>(attribute)->value;
+        case StyleAttribute::TEXT_SIZE:
+            renderAttributes.text_size = dynamic_cast<IntAttribute*>(attribute);
             break;     
             
-        case StyleAttributeBase::TEXT_COLOR: 
-            renderAttributes.text_color = dynamic_cast<StyleAttribute<ColorValue>*>(attribute)->value;
+        case StyleAttribute::TEXT_COLOR: 
+            renderAttributes.text_color = dynamic_cast<ColorAttribute*>(attribute);
             break; 
             
-         case StyleAttributeBase::TEXT_FAMILY: 
+         case StyleAttribute::TEXT_FAMILY: 
             // cout << "[RN of '" << view->id << "'] at StyleAttribute textFamily '" << attribute->type << "'" <<  endl;
-            renderAttributes.text_family = dynamic_cast<StyleAttribute<StringValue>*>(attribute)->value;
+            renderAttributes.text_family = dynamic_cast<StringAttribute*>(attribute);
             break; 
             
         default: cout << "[RN of '" << view->id << "'] error: bindAttribute (attribute->type '" << attribute->type << "' does not fit)" << endl;
@@ -465,7 +465,7 @@ void Renderer::bindAttribute(StyleAttributeBase *attribute)
 }
 
 // -- UNBIND ATTRIBUTE 
-void Renderer::unbindAttribute(StyleAttributeBase* attribute) 
+void Renderer::unbindAttribute(StyleAttribute* attribute) 
 {
     attribute->removeBoundedView(view);
 }
@@ -475,8 +475,8 @@ void Renderer::unbindAttribute(StyleAttributeBase* attribute)
 void Renderer::bindAttributeAutomatic() 
 {
     // -- for each attribute type
-    for (int i = StyleAttributeBase::_FIRST_TYPE_BEFORE+1;
-         !(i >= StyleAttributeBase::_LAST_TYPE_AFTER/*-1*/);
+    for (int i = StyleAttribute::_FIRST_TYPE_BEFORE+1;
+         !(i >= StyleAttribute::_LAST_TYPE_AFTER/*-1*/);
          i++)
     {
         // out
@@ -491,7 +491,7 @@ void Renderer::bindAttributeAutomatic()
             // cout << "[RN of '" << view->id << "'] " << "-- check rule: " << (*iter)->selector << endl;
                        
             // -- get attribute of rule
-            StyleAttributeBase *attr = (*iter)->getAttribute(static_cast<StyleAttributeBase::Type>(i));
+            StyleAttribute *attr = (*iter)->getAttribute(static_cast<StyleAttribute::Type>(i));
             
             // cout << "--- >> aktive = " << attr->aktive() << endl;
             // -- check if attribute is set

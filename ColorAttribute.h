@@ -1,20 +1,21 @@
 /* 
- * File:   ColorValue.h
+ * File:   ColorAttribute.h
  * Author: Joshua Johannson | Pancake
  *
  *
  * ---------------------------------------
- * COLORVALUE CLASS
+ * COLORATTRIBUTE CLASS
  * saves color style value
  * set, get, onchange
  * ---------------------------------------
  */
 
 
-#ifndef COLORVALUE_H
-#define	COLORVALUE_H
+#ifndef COLORATTRIBUTE_H
+#define	COLORATTRIBUTE_H
 
 #include "Value.h"
+#include "StyleAttribute.h"
 #include <string>
 #include <iostream>
 #include <sstream>
@@ -23,11 +24,11 @@
 using namespace std;
 
 
-class ColorValue : Value
+class ColorAttribute : public StyleAttribute
 {
     public:
-      ColorValue ();
-      ~ColorValue ();
+      ColorAttribute (OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      ~ColorAttribute ();
       
       
       void set(string value);   // set by hex: R G B Alpha

@@ -1,31 +1,32 @@
 /* 
- * File:   FloatValue.h
+ * File:   FloatAttribute.h
  * Author: Joshua Johannson | Pancake
  *
  *
  * ---------------------------------------
- * FLOATVALUE CLASS
+ * FLOATATTRIBUTE CLASS
  * saves Float style value
  * set, onchange
  * ---------------------------------------
  */
 
 
-#ifndef FLOATVALUE_H
-#define	FLOATVALUE_H
+#ifndef FLOATATTRIBUTE_H
+#define	FLOATATTRIBUTE_H
 
 #include <sstream>
 #include "Value.h"
+#include "StyleAttribute.h"
 #include <string>
 #include <stdlib.h>
 using namespace std;
 
 
-class FloatValue : Value
+class FloatAttribute : public StyleAttribute
 {
     public:
-      FloatValue ();
-      ~FloatValue ();
+      FloatAttribute (OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      ~FloatAttribute ();
       
        // set value
       void set(string value);
