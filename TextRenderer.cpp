@@ -18,7 +18,7 @@
 using namespace std;
 
 // -- VAR ------
-TextRenderer::CharacterInfo charInfo[128];
+//TextRenderer::CharacterInfo charInfo[128];
 
 
 

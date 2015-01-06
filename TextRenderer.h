@@ -56,6 +56,7 @@ class TextRenderer : public Renderer
           float marginTop,marginLeft;   // to position character
           float advanceX, advanceY;
         };
+        CharacterInfo charInfo[128];
         
       
     private:
