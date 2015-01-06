@@ -46,8 +46,8 @@ class View
         // parrent view
         Box *parent;
         
-        // own Id Style
-        StyleRule *style; // own id style rule
+        // own Style
+        StyleRule *style;
         
         // list of bonded styles
         list<StyleRule*> styles;

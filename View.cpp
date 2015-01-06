@@ -18,20 +18,30 @@ using namespace std;
 
 
 // -- CREATE OBJEKT --------------
-View::View(bool DoNothing) { cout << "[VIEW] do nothing" << endl; }
+View::View(bool DoNothing) 
+{
+    // create own style rule
+    style = new StyleRule("~");
+    
+    cout << "[VIEW] do nothing" << endl; 
+}
 
 View::View() 
 {
+    // create own style rule
+    style = new StyleRule("~");
+    
     // create own renderer
-    cout << "[VIEW] create Renderer" << endl;
     renderer = new Renderer(this);
-    cout << "[VIEW] create Renderer [OK]" << endl;
 }
 View::View(string id, string class_) 
 {
     // set var
     this->id = id;
     this->class_ = class_;
+    
+    // create own style rule
+    style = new StyleRule("~");
     
     // create own renderer
     renderer = new Renderer(this);

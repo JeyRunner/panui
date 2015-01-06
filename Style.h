@@ -25,7 +25,9 @@ class Style
 {
     public:
       // Style ();
-      
+      StyleRule* operator()(string selector);
+      StyleRule* operator()(StyleRule *rule);
+        
       static void addRule(StyleRule* rule);             // add Rule to list
       static void removeRule(StyleRule* rule);          // remove Rule from list
       static StyleRule* getRule(string selector);       // search for a view in list

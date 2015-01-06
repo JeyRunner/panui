@@ -13,6 +13,7 @@
 
 
 #include "Style.h"
+#include "Box.h"
 //#include "StyleRule.h"
 
 // -- init static var
@@ -25,7 +26,26 @@
 // Style::Style() {}
 
 
+// -- FUNCTION OBJECT ----------------------------------    
+StyleRule* Style::operator()(string selector) 
+{
+    StyleRule *rule = getRule(selector);
+    
+    // new rule
+    if (rule == NULL)
+        rule = new StyleRule(selector);
+    
+    return rule;
+}
 
+StyleRule* Style::operator()(StyleRule *rule)
+{
+    // add rule
+    addRule(rule);
+}
+
+          
+          
 // -- MANGAGE STYLE RULES ------------------------------
 // -- ADD -----
 void Style::addRule(StyleRule* rule) 

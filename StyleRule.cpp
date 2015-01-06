@@ -58,7 +58,8 @@ void StyleRule::setSelectorType(string selector)
     //      << "       equals to . = " << (selectorTypeStr == '.') << endl;
     
     // -- switch
-    if      (selectorTypeStr == '#') { selectorType = ID_SELECTOR; }
+    if      (selectorTypeStr == '~') { selectorType = OWN_SELECTOR; }
+    else if (selectorTypeStr == '#') { selectorType = ID_SELECTOR; }
     else if (selectorTypeStr == '.') { selectorType = CLASS_SELECTOR; }
     else                             { selectorType = VIEW_SELECTOR; }
 }
@@ -69,9 +70,11 @@ void StyleRule::setImportance(SelectorType selectorType)
 {
     switch (selectorType)
     {
+        case OWN_SELECTOR:    importance = 200; break;
         case ID_SELECTOR:     importance = 100; break;
         case CLASS_SELECTOR:  importance = 20;  break;
         case VIEW_SELECTOR:   importance = 10;  break;
+        default:              importance = 0;   break;
     }
     cout << "[RULE] add rule '" << selector << "' with importance " << importance << endl;
 }

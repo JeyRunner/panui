@@ -353,29 +353,32 @@ void Renderer::bindRuleAutomatic()
         int doseRuleFit = checkRuleBinding(*iter);
         if (doseRuleFit >= 1)
         {
-            // fist
+            // first
             bindRule(*iter);
-            if (doseRuleFit == 2)
-            {
-                // is views own id rule
-                view->style = *iter;
-                hasIdRule   = true;
-            }
+//            if (doseRuleFit == 2)
+//            {
+//                // is views own id rule
+//                view->style = *iter;
+//                hasIdRule   = true;
+//            }
         }
     }
+    
+    // bind own style rule
+    bindRule(view->style);
      
      // if do not have id rule
-     if (hasIdRule == false)
-     { 
-         // out
-         cout << "[RN of '" << view->id << "'] create own id styleRule" <<  endl;
-         
-         // create one
-         StyleRule *rule = new StyleRule(view->id == "" ? "#" : view->id);
-         bindRule(rule);
-         view->style = rule;
-         //Style::addRule(rule);
-     }
+//     if (hasIdRule == false)
+//     { 
+//         // out
+//         cout << "[RN of '" << view->id << "'] create own id styleRule" <<  endl;
+//         
+//         // create one
+//         StyleRule *rule = new StyleRule(view->id == "" ? "#" : view->id);
+//         bindRule(rule);
+//         view->style = rule;
+//         //Style::addRule(rule);
+//     }
 }
 
 
