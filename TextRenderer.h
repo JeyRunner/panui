@@ -57,6 +57,7 @@ class TextRenderer : public Renderer
           float advanceX, advanceY;
         };
         CharacterInfo charInfo[128];
+        int charAmount;
         
       
     private:
