@@ -69,6 +69,9 @@ class Screen
         void checkEvents();
         
         // set on resizeScreen event listener
+        void onTouchMove(function<void(int x, int y)> onTouchMove);
+        
+        // set on resizeScreen event listener
         void onResizeScreen(function<void(int width, int height)> onResizeScreen);
         
         // set on closeWindow event listener
@@ -83,6 +86,7 @@ class Screen
         // -- Var
         
         // eventListener functions
+        function<void (int x, int y)> onTouchMoveListener;
         function<void (int width, int height)> onResizeScreenListener;
         function<void ()> onCloseScreenListener;
         
