@@ -137,15 +137,24 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     // set transform Matix for all shaders to middel of screen
     GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
     
-    int frame_counter = 0;
+    int    frame_counter = 0;
+    float timeStart     = 0;
+    float timeMiddle    = 0;
+    float timeStopp     = 0;
+    float fpsCalc       = 0;
+    float fpsRen        = 0;
+    
     
     // -- render loop
     while (true)
     {    
         //cout << "---------- FRAME ----------------------------" << endl;
         // -- timestamp --------
-        // get current time since 1.1.1970 in milli seconds
         
+        // get current time since 1.1.1970 in milli seconds
+        #ifndef pl_pi
+        timeStart = SDL_GetTicks();
+        #endif
         // float time_start = duration_cast<milliseconds>(  system_clock::now().time_since_epock()).count() * 0.001;
         
         
@@ -155,6 +164,10 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         
         // calc Layouts for views
         fr->exe_calcTasks();
+        
+        #ifndef pl_pi
+        timeMiddle = SDL_GetTicks();
+        #endif
         
         // render all views
         fr->exe_render();
@@ -170,10 +183,28 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         // -- calc FPS
 //        float time_end = duration_cast<milliseconds>(  system_clock::now().time_since_epock()).count() * 0.001;
 //        float time_frame = time_end - time_start;
+        #ifndef pl_pi
+        timeStopp = SDL_GetTicks();
+        #endif
+//        float fpsNew = 1/(((float)timeStopp - (float)timeStart)/1000);
+        
+//        if ((fpsNew < fps-5) || (fpsNew > fps+5))
+//            fps = fpsNew;
+        fpsCalc = timeMiddle - timeStart   + fpsCalc;
+        fpsRen  = timeStopp  - timeMiddle  + fpsRen;
         
         // change fps event
-        if (fr->onFpsChangeFunc)
-                fr->onFpsChangeFunc(frame_counter);
+        if (fr->onFpsChangeFunc && frame_counter >= 5)
+        {
+            #ifndef pl_pi
+            fr->onFpsChangeFunc(fpsCalc / 5, fpsRen / 5);
+            fpsCalc = 0;
+            fpsRen  = 0;
+            frame_counter = 0;
+            #else
+            fr->onFpsChangeFunc(frame_counter, frame_counter);
+            #endif
+        }
         
         
         // wait
@@ -250,7 +281,7 @@ void FrameRenderer::exe_render()
 
 
 // -- SET EVENTS ------------------------------------------
-void FrameRenderer::onFpsChange(function<void (float)> fpsChangeFunction)
+void FrameRenderer::onFpsChange(function<void (float, float)> fpsChangeFunction)
 {
     onFpsChangeFunc = fpsChangeFunction;
 }

@@ -53,7 +53,7 @@ class FrameRenderer
         /* @Events:
          * -> set function
          *    -> on frames per seoncond change */
-        void onFpsChange(function<void (float fps)> fpsChangeFunction);
+        void onFpsChange(function<void (float fps, float fpsRender)> fpsChangeFunction);
         
         
         
@@ -72,7 +72,7 @@ class FrameRenderer
         
         
         // events
-        function<void (float fps)> onFpsChangeFunc;
+        function<void (float fps, float fpsRender)> onFpsChangeFunc;
         
         
 };
