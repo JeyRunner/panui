@@ -51,6 +51,7 @@ class StyleAttribute
             _FIRST_TYPE_BEFORE, // used for loops
             HEIGHT, WIDTH,
             LEFT, TOP, RIGHT, BOTTOM,
+            POSITION,
             BACKGROUND_COLOR, OPACITY,
             TEXT_SIZE, TEXT_COLOR, TEXT_FAMILY,
             _LAST_TYPE_AFTER  // used for loops

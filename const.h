@@ -28,6 +28,10 @@ const int UI_CALCTASK_NONE                      = 0,
 const int UI_VIEW_SELF                          = 0,
           UI_VIEW_PARRENT                       = 1;
 
+// -- style attribute properties -----------------------
+const int UI_ATTR_POSITION_ABSOLUTE = 0,
+          UI_ATTR_POSITION_RELATIVE = 1;
+
 
 #endif	/* CONST_H */
 

@@ -44,35 +44,50 @@ void BoxRenderer::calcLayoutChildrenPos()
          iter != ((Box*)this->view)->children.end();                        /* end if iterator at last pos */
          iter++)
     { 
-        // check if open next row
-        //cout << "[RN of '" << view->id << "'] " << "  child Cursor X: " << chCur.x << "     Self widht: " << layoutAttributes.width->floatValue << endl;
-        if ((chCur.x +
-                /* next View */ ((*iter)->renderer->layoutAttributes.left->floatValue /* margin */      +(*iter)->renderer->layoutAttributes.width->floatValue /* to right */) ) 
-                >= (layoutAttributes.width->floatValue/2))
+        // get position attribute
+        IntAttribute *posAttr = (*iter)->renderer->layoutAttributes.position;
+        
+        
+        // check for positon type
+        switch (posAttr->intValue)
         {
-            // if next view would positioned out of own border
-            // => open nex row
-            //cout << "[RN of '" << view->id << "'] " << " --------- open new row" << endl;
-            chCur.Y(-chCur.hightesHight);
-            chCur.x = -(layoutAttributes.width->floatValue  /2);  // left border
-            //cout << "[RN of '" << view->id << "'] " << " --------- child Cursor Y: " << chCur.y << endl;
-            
-            // reset hightes hight
-            chCur.hightesHight = 0;
+            case UI_ATTR_POSITION_ABSOLUTE:
+                calcLayoutChildAbsolute(*iter);
+                break;
+                
+            case UI_ATTR_POSITION_RELATIVE:
+                calcLayoutChildRelative(*iter);
+                break;
         }
-        
-        
-        // @TODO switch: pos absolute, relative
-        calcLayoutChildRelative(*iter);
     }
 }
 
 // -- CALC POS RELATIVE
 void BoxRenderer::calcLayoutChildRelative(View* v) 
 {
-    //cout << "[RN of '" << view->id << "'] " << "  => pos child relative ['" << v->id << "']" << endl;
+    // cout << "[RN of '" << view->id << "'] " << "  => pos child relative ['" << v->id << "']" << endl;
     // get render
     Renderer *ren = v->renderer;
+    
+    // check if open next row
+    // cout << "[RN of '" << view->id << "'] " << "  child Cursor X: " << chCur.x << "     Self widht: " << layoutAttributes.width->floatValue << endl;
+    if ((chCur.x +
+            /* next View */ (ren->layoutAttributes.left->floatValue /* margin */      +ren->layoutAttributes.width->floatValue /* to right */) ) 
+            >= (layoutAttributes.width->floatValue/2))
+    {
+        // if next view would positioned out of own border
+        // => open nex row
+        //cout << "[RN of '" << view->id << "'] " << " --------- open new row" << endl;
+        chCur.Y(-chCur.hightesHight);
+        chCur.x = -(layoutAttributes.width->floatValue  /2);  // left border
+        //cout << "[RN of '" << view->id << "'] " << " --------- child Cursor Y: " << chCur.y << endl;
+        
+        // reset hightes hight
+        chCur.hightesHight = 0;
+    }
+    
+    
+
     
     // position
     // cursor X to center of view
@@ -109,7 +124,13 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
 // -- CALC POS ABSOLUTE
 void BoxRenderer::calcLayoutChildAbsolute(View* v) 
 {
-    // @TODO calcLayoutChildAbsolute
+    v->renderer->renderAttributes.positionX = + (v->renderer->layoutAttributes.width->floatValue / 2) 
+                                                  +  v->renderer->layoutAttributes.left->floatValue
+                                                  - (layoutAttributes.width->floatValue  /2);  // left border
+    
+    v->renderer->renderAttributes.positionY = - (v->renderer->layoutAttributes.height->floatValue / 2) 
+                                                  -  v->renderer->layoutAttributes.top->floatValue
+                                                  + (layoutAttributes.height->floatValue /2);  // top  border
 }
  
 

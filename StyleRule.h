@@ -61,6 +61,8 @@ class StyleRule : public StyleAttribute::OnChangeListener
       IntAttribute    *right;
       IntAttribute    *bottom;
       
+      IntAttribute    *position;
+      
       ColorAttribute  *backgroundColor;
       FloatAttribute  *opacity;
       

@@ -40,7 +40,7 @@ void IntAttribute::set(string value)
 }
 
 void IntAttribute::set(int value) 
-{
+{    
     // set floatValue intValue
     this->intValue      = value;
     this->floatValue    = (float)value;

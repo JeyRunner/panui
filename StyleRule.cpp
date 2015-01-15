@@ -31,6 +31,8 @@ StyleRule::StyleRule(string selector)
     top              = new IntAttribute(this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     right            = new IntAttribute(this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     bottom           = new IntAttribute(this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    position          = new IntAttribute(this,    StyleAttribute::POSITION,          {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    
     backgroundColor = new ColorAttribute(this,  StyleAttribute::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
     opacity          = new FloatAttribute(this,  StyleAttribute::OPACITY,           {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
     
@@ -91,6 +93,7 @@ StyleAttribute* StyleRule::getAttribute(StyleAttribute::Type type)
         case StyleAttribute::TOP:                return top;       
         case StyleAttribute::RIGHT:              return right;        
         case StyleAttribute::BOTTOM:             return bottom; 
+        case StyleAttribute::POSITION:           return position; 
         case StyleAttribute::BACKGROUND_COLOR:   return backgroundColor;   
         case StyleAttribute::OPACITY:            return opacity;
         case StyleAttribute::TEXT_SIZE:          return textSize;

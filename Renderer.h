@@ -72,7 +72,7 @@ class Renderer
       // - -> then into render Attriubtes
       struct LayoutAttributes 
       {
-        IntAttribute *top, *left, *right, *bottom;
+        IntAttribute *top, *left, *right, *bottom, *position;
         IntAttribute *height, *width;
       } layoutAttributes;
       //LayoutAttributes *layoutAttributesPtr;

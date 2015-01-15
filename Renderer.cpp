@@ -440,6 +440,10 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             layoutAttributes.right = dynamic_cast<IntAttribute*>(attribute);
             break;
             
+        case StyleAttribute::POSITION: 
+            layoutAttributes.position = dynamic_cast<IntAttribute*>(attribute);
+            break;
+            
             
         case StyleAttribute::BACKGROUND_COLOR: 
             renderAttributes.background_color = dynamic_cast<ColorAttribute*>(attribute);
