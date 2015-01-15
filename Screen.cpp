@@ -23,7 +23,7 @@
 #ifdef pl_pi
 #include <GLES2/gl2.h>
 #else
-#include <SDL/SDL_video.h>
+#include <SDL2/SDL.h>
 #endif
 
 #include "Screen.h"
@@ -56,6 +56,8 @@ uint32_t Screen::display_height;
      EGL_CONTEXT_CLIENT_VERSION, 2 /* Open Gl ES 2.x */,
      EGL_NONE
  };
+#else
+ SDL_Window *window;
 #endif
 
 
@@ -85,7 +87,7 @@ void Screen::resizeScreen(int width, int height)
 {
 #ifndef pl_pi
     // SDL
-    SDL_SetVideoMode(width, height, 32, SDL_OPENGL | SDL_RESIZABLE | SDL_DOUBLEBUF);
+    SDL_SetWindowSize(window, width, height);
     
 #endif
 }
@@ -95,7 +97,7 @@ void Screen::setTitle(string title)
 {
  #ifndef pl_pi
      // set window titel
-    SDL_WM_SetCaption(title.c_str(), "");
+    SDL_SetWindowTitle(window, title.c_str());
 #endif
 }
 
@@ -125,24 +127,31 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     else 
         cout << "[DISP] SDL_Init [OK]" << endl;
     
-    // set window titel
-    SDL_WM_SetCaption(title.c_str(), "");
     
     // activate doublebuffering
-    SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
+    // SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
     
-    // enabel antialasing with multisampeling
+    // enable antialasing with multisampeling
     // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
     // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
     
 
     // open window - init projection matrix ...
+    window = SDL_CreateWindow(title.c_str(), 
+                                SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, 
+                                width, height, 
+                                SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL);
+   
+    // create context
+    SDL_GL_CreateContext(window);
+    
+    // init matrix ...
     onResizeScreenListener(display_width, display_height);
     
     // init glew
     glewInit();
     
-    // ouput ok
+    // output ok
     cout << "[DISP] create Window with sdl [OK]" << endl;
     
     // print open gl info
@@ -176,7 +185,7 @@ bool Screen::eglInitScreen()
     printf("[DISP] egl Init \n");
 
 
-    // create EGL(nessasary at no xwidow)indow surface, passing context width/height
+    // create EGL(necessary at no xwidow)indow surface, passing context width/height
     int success = graphics_get_display_size(0 /*LCD Mode*/,
                                             &display_width,  &display_height);
     if (success < 0)
@@ -348,7 +357,7 @@ void Screen::swapBuffer()
     eglSwapBuffers(display, surface);
     
 #else
-    SDL_GL_SwapBuffers();
+    SDL_GL_SwapWindow(window);
 #endif
 }
 
@@ -359,7 +368,10 @@ void Screen::swapBuffer()
 // -- CHECK FOR NEW EVENTS -----------------
 void Screen::checkEvents() 
 {
-#ifndef pl_pi
+#ifdef pl_pi
+    /* @TODO check for pi screen events
+     * - mouse move ... */
+#else
     // with sdl ---------
     SDL_Event event;
     
@@ -369,14 +381,20 @@ void Screen::checkEvents()
         // switch types
         switch (event.type)
         {
-            // resize window
-            case SDL_VIDEORESIZE:
-                // reset vars
-                display_height = event.resize.h;
-                display_width = event.resize.w;
-                
-                onResizeScreenListener(display_width,
-                                          display_height);
+            
+            // event from window
+            case SDL_WINDOWEVENT:
+                switch(event.window.event)
+                {
+                    case SDL_WINDOWEVENT_RESIZED:
+                        int display_width = event.window.data1; 
+                        int display_height = event.window.data2;
+                            
+                        onResizeScreenListener(display_width,
+                                                  display_height);
+                            
+                        break;
+                }
                 break;
                 
             // window closed

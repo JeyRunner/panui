@@ -49,7 +49,7 @@ string Text::text(string text)
     this->text_str = text;
     
     // recalc textImg
-    ((TextRenderer*)renderer)->addCalcTask(UI_CALCTASK_TEXT_TEXT);
+    //((TextRenderer*)renderer)->addCalcTask(UI_CALCTASK_TEXT_TEXT);
     
     return this->text_str;
 }

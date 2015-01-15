@@ -301,16 +301,19 @@ void Renderer::resetCursor()
 // -- CHECK RULE BINDING
 int Renderer::checkRuleBinding(StyleRule *rule) 
 {
+    /* @TODO checkRuleBinding -> multiselect   
+     */ 
+    
     // -- View selector
-    if (rule->selectorType == StyleRule::VIEW_SELECTOR and  rule->selector == view->type /* @TODO... */ )
+    if (rule->selectorType == StyleRule::VIEW_SELECTOR and  rule->selector == view->type )
     { return 1; }
     
     // -- Id selector
-    if (rule->selectorType == StyleRule::ID_SELECTOR and  rule->selector == view->id /* @TODO... */ )
+    if (rule->selectorType == StyleRule::ID_SELECTOR and  rule->selector == view->id )
     { return 2; }
     
     // -- Class selector
-    if (rule->selectorType == StyleRule::CLASS_SELECTOR and  rule->selector == view->class_ /* @TODO... */ )
+    if (rule->selectorType == StyleRule::CLASS_SELECTOR and  rule->selector == view->class_ )
     { return 1; }
     
     // -- nothing fits
