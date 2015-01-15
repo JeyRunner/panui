@@ -397,6 +397,15 @@ void Screen::checkEvents()
                 }
                 break;
                 
+                
+            case SDL_MOUSEMOTION:
+                int x, y;
+                x = event.motion.x;
+                y = event.motion.y;
+                onTouchMoveListener(x, y);
+                
+                break;
+                
             // window closed
             case SDL_QUIT:
                 onCloseScreenListener();
@@ -408,6 +417,12 @@ void Screen::checkEvents()
 #endif
 }
 
+
+
+
+// -- SET ON RESIZE SCREEN EVENT LISTENER --
+void Screen::onTouchMove(function<void(int x, int y)> onTouchMove) 
+{ this->onTouchMoveListener = onTouchMove; }
 
 // -- SET ON RESIZE SCREEN EVENT LISTENER --
 void Screen::onResizeScreen(function<void(int width, int height)> onResizeScreen) 
