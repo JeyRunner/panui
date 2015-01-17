@@ -30,10 +30,14 @@ IntAttribute::IntAttribute(OnChangeListener *listener, Type type, initializer_li
 // -- SET
 void IntAttribute::set(string value) 
 {    
+    // @TODO set intAttribute by percentage string
     // convert string to int and float
     stringstream sstream(value);
     sstream >> this->intValue;
     sstream >> this->floatValue;
+    
+    // set mode to int
+    mode = UI_ATTR__MODE_VALUE;
     
     // call onchange callback
     onValueChange();
@@ -45,10 +49,25 @@ void IntAttribute::set(int value)
     this->intValue      = value;
     this->floatValue    = (float)value;
 
+    // set mode to int
+    mode = UI_ATTR__MODE_VALUE;
     
     // call onchange callback
     onValueChange();
 }
+
+void IntAttribute::setPercent(float value) 
+{
+    percentValue = value;
+    
+    // set mode to percentage
+    mode = UI_ATTR__MODE_PERCENT;
+    
+    // call onchange callback
+    onValueChange();
+}
+
+
 
 
 // -- GET
@@ -58,6 +77,14 @@ string IntAttribute::get()
     stream << intValue;
     return stream.str();
 }
+
+string IntAttribute::getPercent() 
+{
+    ostringstream stream;
+    stream << percentValue;
+    return stream.str();
+}
+
 
 /*
 int IntValue::get::operator()()

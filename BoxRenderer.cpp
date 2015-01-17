@@ -44,11 +44,16 @@ void BoxRenderer::calcLayoutChildrenPos()
          iter != ((Box*)this->view)->children.end();                        /* end if iterator at last pos */
          iter++)
     { 
-        // get position attribute
-        IntAttribute *posAttr = (*iter)->renderer->layoutAttributes.position;
+        // get position, width, height attributes
+        IntAttribute *posAttr    = (*iter)->renderer->layoutAttributes.position;      
+        IntAttribute *widthAttr  = (*iter)->renderer->layoutAttributes.width;
+        IntAttribute *heightAttr = (*iter)->renderer->layoutAttributes.height;
         
+        // calc child size
+        if ((*iter)->renderer->calcTasks[UI_CALCTASK_LAYOUT_SIZE] /* if size attr has changed */)
+            calcLayoutChildSize(*iter);
         
-        // check for positon type
+        // check for position type
         switch (posAttr->intValue)
         {
             case UI_ATTR_POSITION_ABSOLUTE:
@@ -62,7 +67,58 @@ void BoxRenderer::calcLayoutChildrenPos()
     }
 }
 
-// -- CALC POS RELATIVE
+
+
+// -- CALC CHILD SIZE
+void BoxRenderer::calcLayoutChildSize(View* v)
+{
+    // get var
+    IntAttribute *widthAttr   = v->renderer->layoutAttributes.width;
+    IntAttribute *heightAttr  = v->renderer->layoutAttributes.height;
+    
+    GLfloat       *widthFinal  = &(v->renderer->renderAttributes.width);
+    GLfloat       *heightFinal = &(v->renderer->renderAttributes.height);
+
+    
+    // set width
+    switch (widthAttr->mode)
+    {
+        // absolute
+        case UI_ATTR__MODE_VALUE:
+            *widthFinal = widthAttr->floatValue;
+            break;
+       
+        // percentage
+        case UI_ATTR__MODE_PERCENT:
+            *widthFinal = widthAttr->percentValue * (layoutAttributes.width->floatValue / 100.0f);
+            break;
+    }
+    
+    
+    // set height
+    switch (heightAttr->mode)
+    {
+        // absolute
+        case UI_ATTR__MODE_VALUE:
+            *heightFinal = heightAttr->floatValue;
+            break;
+       
+        // percentage
+        case UI_ATTR__MODE_PERCENT:
+            *heightFinal = heightAttr->percentValue * (layoutAttributes.height->floatValue / 100.0f);
+            break;
+    }
+    
+    // view calc own vertices
+    v->renderer->calcLayoutSize();
+    
+    // done
+    v->renderer->calcTasks[UI_CALCTASK_LAYOUT_SIZE] = false;
+}
+
+
+
+// -- CALC CHILD POS RELATIVE
 void BoxRenderer::calcLayoutChildRelative(View* v) 
 {
     // cout << "[RN of '" << view->id << "'] " << "  => pos child relative ['" << v->id << "']" << endl;
@@ -72,14 +128,14 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
     // check if open next row
     // cout << "[RN of '" << view->id << "'] " << "  child Cursor X: " << chCur.x << "     Self widht: " << layoutAttributes.width->floatValue << endl;
     if ((chCur.x +
-            /* next View */ (ren->layoutAttributes.left->floatValue /* margin */      +ren->layoutAttributes.width->floatValue /* to right */) ) 
-            >= (layoutAttributes.width->floatValue/2))
+            /* next View */ (ren->layoutAttributes.left->floatValue /* margin */      +ren->renderAttributes.width /* to right */) ) 
+            >= (renderAttributes.width/2))
     {
         // if next view would positioned out of own border
         // => open nex row
         //cout << "[RN of '" << view->id << "'] " << " --------- open new row" << endl;
         chCur.Y(-chCur.hightesHight);
-        chCur.x = -(layoutAttributes.width->floatValue  /2);  // left border
+        chCur.x = -(renderAttributes.width  /2);  // left border
         //cout << "[RN of '" << view->id << "'] " << " --------- child Cursor Y: " << chCur.y << endl;
         
         // reset hightes hight
@@ -93,7 +149,7 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
     // cursor X to center of view
     chCur.X(
         +ren->layoutAttributes.left->floatValue     /* margin */
-        +ren->layoutAttributes.width->floatValue /2 /* to center */);
+        +ren->renderAttributes.width /2 /* to center */);
         
     // set pos X
     ren->renderAttributes.positionX = +chCur.x;
@@ -101,16 +157,16 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
     // set pos Y
     ren->renderAttributes.positionY = +chCur.y 
                                       -ren->layoutAttributes.top->floatValue        /* margin */
-                                      -ren->layoutAttributes.height->floatValue /2  /* to center */;
+                                      -ren->renderAttributes.height /2  /* to center */;
     
     // cursor to end of view
     chCur.X(
         +ren->layoutAttributes.right->floatValue     /* margin */
-        +ren->layoutAttributes.width->floatValue /2 /* to right */);
+        +ren->renderAttributes.width /2 /* to right */);
     
     
     // calc hole hight width top, bottom
-    int holeHight = ren->layoutAttributes.height->floatValue + ren->layoutAttributes.top->floatValue + ren->layoutAttributes.bottom->floatValue;
+    int holeHight = ren->renderAttributes.height + ren->layoutAttributes.top->floatValue + ren->layoutAttributes.bottom->floatValue;
     
     // -- update hightes hight
     if (chCur.hightesHight < holeHight)
@@ -121,16 +177,16 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
 }
 
 
-// -- CALC POS ABSOLUTE
+// -- CALC CHILD POS ABSOLUTE
 void BoxRenderer::calcLayoutChildAbsolute(View* v) 
 {
-    v->renderer->renderAttributes.positionX = + (v->renderer->layoutAttributes.width->floatValue / 2) 
+    v->renderer->renderAttributes.positionX = + (v->renderer->renderAttributes.width / 2) 
                                                   +  v->renderer->layoutAttributes.left->floatValue
-                                                  - (layoutAttributes.width->floatValue  /2);  // left border
+                                                  - (renderAttributes.width  /2);  // left border
     
-    v->renderer->renderAttributes.positionY = - (v->renderer->layoutAttributes.height->floatValue / 2) 
+    v->renderer->renderAttributes.positionY = - (v->renderer->renderAttributes.height / 2) 
                                                   -  v->renderer->layoutAttributes.top->floatValue
-                                                  + (layoutAttributes.height->floatValue /2);  // top  border
+                                                  + (renderAttributes.height /2);  // top  border
 }
  
 
@@ -140,6 +196,21 @@ void BoxRenderer::calcLayoutSize()
 {
     // calc self
     Renderer::calcLayoutSize();
+    
+    // percent sized children need calc size
+    for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */
+         iter != ((Box*)this->view)->children.end();                  /* end if iterator at last pos */
+         iter++)
+    { 
+        // attributes
+        IntAttribute *widthAttr  = (*iter)->renderer->layoutAttributes.width;
+        IntAttribute *heightAttr = (*iter)->renderer->layoutAttributes.height;
+        
+        if (widthAttr->mode  == UI_ATTR__MODE_PERCENT  /* if percent value  */
+         || heightAttr->mode == UI_ATTR__MODE_PERCENT) /* if percent value  */
+            (*iter)->renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
+    }
+        
     
     // update children pos
     calcLayoutChildrenPos();

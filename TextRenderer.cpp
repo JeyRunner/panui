@@ -60,7 +60,7 @@ void TextRenderer::calcText()
     for(p = text; *p; p++) {
         
       // check for new line
-      if (*p == '\n' || ((x + charInfo[*p].advanceX) > layoutAttributes.width->intValue))
+      if (*p == '\n' || ((x + charInfo[*p].advanceX) > renderAttributes.width))
       {
           // new line 
           x = 0;                // to row start
@@ -371,8 +371,8 @@ void TextRenderer::render()
     // set attributes / uniformes  
     // set transform and projection matix
     // remove cursor -> to own position
-    glm::mat4 transform =  glm::translate(glm::vec3( -(layoutAttributes.width->floatValue  /2 ) /* X */,
-                                                     +(layoutAttributes.height->floatValue /2)  /* Y */,
+    glm::mat4 transform =  glm::translate(glm::vec3( -(renderAttributes.width  /2 ) /* X */,
+                                                     +(renderAttributes.height /2)  /* Y */,
                                                      +0.0f                                      /* Z */ ))
                                             *GL::transfomMatix;
     
@@ -492,7 +492,7 @@ void TextRenderer::render()
     for(p = ((Text*)view)->text_str.c_str(); *p; p++) {
         
       // check for new line
-      if (*p == '\n' || ((x + charInfo[*p].advanceX) > layoutAttributes.width->intValue))
+      if (*p == '\n' || ((x + charInfo[*p].advanceX) > renderAttributes.width))
       {
           // new line 
           x = 0;                // to row start

@@ -56,6 +56,7 @@ class Renderer
         
         // 4 vertices -> *(x,y,z) = 12
         GLfloat vertices[12]; 
+        GLfloat height, width;  // calculated
         
         ColorAttribute *background_color;
         FloatAttribute *opacity;

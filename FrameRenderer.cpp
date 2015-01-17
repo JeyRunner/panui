@@ -110,6 +110,12 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         // update rootView size
         fr->ui->rootView->style->width->set(width);
         fr->ui->rootView->style->height->set(height);
+           
+        // replace missing parent
+        fr->ui->rootView->renderer->renderAttributes.width  = width;
+        fr->ui->rootView->renderer->renderAttributes.height = height;
+        fr->ui->rootView->renderer->calcLayoutSize();
+        //fr->ui->rootView->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
     });
     
     fr->screen->onCloseScreen([&](){

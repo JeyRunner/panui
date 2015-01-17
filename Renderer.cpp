@@ -69,12 +69,10 @@ void Renderer::calcLayoutPosition()
 
 // -- CALC LAYOUT SIZE
 void Renderer::calcLayoutSize() 
-{
-    // out
-    //cout << "[RN of '" << view->id << "'] " << "calcLayoutSize()" << endl;
-    
-    float heightHalf = layoutAttributes.height->floatValue / 2;
-    float widthHalf  = layoutAttributes.width->floatValue  / 2;
+{    
+    // cout << "[RN of '" << view->id << "'] " << "clac size width: " << renderAttributes.width << ", height:" << renderAttributes.height << endl;
+    float heightHalf = renderAttributes.height / 2;
+    float widthHalf  = renderAttributes.width  / 2;
     
     // -- clac vertices
     GLfloat vertices[12] = {  
@@ -107,7 +105,7 @@ void Renderer::addCalcTask(int type)
     {
         case UI_CALCTASK_LAYOUT_SIZE:
             // add calc task
-            calcTasks[type] = true;
+             calcTasks[type] = true;
             break;
     }        
 }
@@ -128,8 +126,11 @@ int  Renderer::exeCaclTasks()
             switch (i)
             {
                 case UI_CALCTASK_LAYOUT_SIZE:
-                    calcLayoutSize();
-                    calcTasks[i] = false;
+                    // calcLayoutSize();
+                    // calcTasks[i] = false;
+                    // ! not necessary:
+                    // !- already called by parent 
+                    // !--- by calcLayoutChildSize()
                     break;
             }
         }

@@ -29,9 +29,13 @@ FloatAttribute::FloatAttribute(OnChangeListener *listener, Type type, initialize
 // -- SET
 void FloatAttribute::set(string value) 
 {    
+    // @TODO set floatAttribute by percentage string
     // convert string to int and float
     stringstream sstream(value);
     sstream >> this->floatValue;
+    
+    // set mode to float
+    mode = UI_ATTR__MODE_VALUE;
     
     // call onchange callback
     onValueChange();
@@ -41,6 +45,20 @@ void FloatAttribute::set(float value)
 {
     // set floatValue
     this->floatValue = value;
+    
+    // set mode to float
+    mode = UI_ATTR__MODE_VALUE;
+    
+    // call onchange callback
+    onValueChange();
+}
+
+void FloatAttribute::setPercent(float value) 
+{
+    percentValue = value;
+    
+    // set mode to percentage
+    mode = UI_ATTR__MODE_PERCENT;
     
     // call onchange callback
     onValueChange();
@@ -56,6 +74,14 @@ string FloatAttribute::get()
     stream << floatValue;
     return stream.str();
 }
+
+string FloatAttribute::getPercent() 
+{
+    ostringstream stream;
+    stream << percentValue;
+    return stream.str();
+}
+
 /*
 float FloatValue::get()
 {

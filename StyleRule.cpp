@@ -25,8 +25,8 @@ StyleRule::StyleRule(string selector)
 {
     // -- create StyleAttribute objectes 
     //                                                                                   CALC ON SELF                    CALC ON PARRENT
-    height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    width            = new IntAttribute(this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,       UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    width            = new IntAttribute(this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,       UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     left             = new IntAttribute(this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     top              = new IntAttribute(this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     right            = new IntAttribute(this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });

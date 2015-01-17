@@ -35,9 +35,12 @@ class BoxRenderer : public Renderer
       // -- calc layout of children
       void calcLayoutChildrenPos();
       
-      // -- position a child
+      // -- clac position of child
       void calcLayoutChildRelative(View *v);
       void calcLayoutChildAbsolute(View *v);
+      
+      // -- calc size of child
+      void calcLayoutChildSize(View *v);
       
       
       // -- position itself -> update children

@@ -31,15 +31,20 @@ class FloatAttribute : public StyleAttribute
        // set value
       void set(string value);
       void set(float value);
+      void setPercent(float value);
       
       // get value
       string get();
+      string getPercent();
       // float  getFloat();
       
       
-      // ! READ ONLY !
-      float     floatValue;
       
+      float     floatValue;     // ! READ ONLY !
+      float     percentValue;   // ! READ ONLY !
+      
+      // mode: MODE_INT or MODE_PERCENT
+      bool mode;
       
     private:
 };
