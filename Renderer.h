@@ -46,8 +46,8 @@ class Renderer
       // calc Tasks
       bool calcTasks[UI_CALCTASK__SIZE];
       
-      // render Attriubtes                      \n
-      // - includes clalculatet values          \n
+      // render attributes                      \n
+      // - includes calculated values          \n
       // - -> used by render() with openGL
       struct RenderAttributes 
       {
@@ -56,7 +56,8 @@ class Renderer
         
         // 4 vertices -> *(x,y,z) = 12
         GLfloat vertices[12]; 
-        GLfloat height, width;  // calculated
+        GLfloat height, width;                       // calculated
+        GLfloat contendHeight =0, contendWidth =0; // calculated
         
         ColorAttribute *background_color;
         FloatAttribute *opacity;
@@ -70,7 +71,7 @@ class Renderer
 
       // layout Attributes                      \n
       // - need layout calculation              \n
-      // - -> then into render Attriubtes
+      // - -> then into render attributes
       struct LayoutAttributes 
       {
         IntAttribute *top, *left, *right, *bottom, *position;
@@ -79,7 +80,7 @@ class Renderer
       //LayoutAttributes *layoutAttributesPtr;
       
       
-      // -- calculate -> layout Attributes into render Attriubtes
+      // -- calculate -> layout Attributes into render attributes
               void calcLayout(); // calls clacLayoutPosition() and calcLayoutSize()
       virtual void calcLayoutPosition();
       virtual void calcLayoutSize();
@@ -115,7 +116,7 @@ class Renderer
       void bindRule(StyleRule *rule);
       void unbindRule(StyleRule *rule);
       
-      // seaches in Style::rules for fitting one and bind
+      // search in Style::rules for fitting one and bind
       void bindRuleAutomatic();
       
       

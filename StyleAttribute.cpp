@@ -16,6 +16,7 @@
 #include "Ui.h"
 #include "const.h"
 #include "Renderer.h"
+#include "Box.h"
 
 
 // ############################################
@@ -25,6 +26,8 @@ StyleAttribute::StyleAttribute(OnChangeListener *listener, Type type, initialize
     // create value object , set onChangeListener
 //    value = new ValueType();
 //    ((Value*)value)->onChange(this);
+    // default
+    autoMode = UI_ATTR_AUTO_AUTO;
     
     // set type
     this->type = type; 
@@ -125,6 +128,14 @@ void StyleAttribute::set(string value)
 {
     
 }
+
+void StyleAttribute::setAuto(UI_ATTR_AUTO autoMode) 
+{
+    this->autoMode = autoMode;
+    onValueChange();
+}
+
+
 
 string StyleAttribute::get()
 {

@@ -12,6 +12,7 @@
 
 
 #include "Text.h"
+#include "Box.h"
 #include "View.h"
 #include "TextRenderer.h"
 
@@ -49,6 +50,9 @@ string Text::text(string text)
     this->text_str = text;
     
     // recalc textImg
+    renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
+    if (parent)
+        parent->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
     //((TextRenderer*)renderer)->addCalcTask(UI_CALCTASK_TEXT_TEXT);
     
     return this->text_str;

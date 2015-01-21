@@ -36,6 +36,9 @@ void FloatAttribute::set(string value)
     
     // set mode to float
     mode = UI_ATTR__MODE_VALUE;
+        
+    // set auto to none
+    autoMode = UI_ATTR_AUTO_NONE ;
     
     // call onchange callback
     onValueChange();
@@ -48,6 +51,9 @@ void FloatAttribute::set(float value)
     
     // set mode to float
     mode = UI_ATTR__MODE_VALUE;
+        
+    // set auto to none
+    autoMode = UI_ATTR_AUTO_NONE;
     
     // call onchange callback
     onValueChange();
@@ -59,6 +65,9 @@ void FloatAttribute::setPercent(float value)
     
     // set mode to percentage
     mode = UI_ATTR__MODE_PERCENT;
+        
+    // set auto to none
+    autoMode = UI_ATTR_AUTO_NONE;
     
     // call onchange callback
     onValueChange();

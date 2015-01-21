@@ -88,6 +88,9 @@ class StyleAttribute
       
       // set value
       virtual void set(string value);// = 0;
+      
+      // set value mode: auto, noneAuto
+      void setAuto(UI_ATTR_AUTO autoMode);
       //virtual string operator =(string value);
       
       // get value
@@ -96,6 +99,9 @@ class StyleAttribute
       // -- OnChangeListener of value -----------------
       void onValueChange ();  // if value changes -> bouded views->needLayout
       
+      /* auto mode \n
+       * READ ONLY */
+      UI_ATTR_AUTO autoMode;
       
     private:
       // -- own on change listener
@@ -106,7 +112,8 @@ class StyleAttribute
       // bounded Views 
       list<View*> boundedViews;
       list<View*>::iterator iterator;
-
+      
+      
 
 };
 

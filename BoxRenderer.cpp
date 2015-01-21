@@ -31,11 +31,12 @@ void BoxRenderer::calcLayoutChildrenPos()
     //cout << "[RN of '" << view->id << "'] " << " calcLayoutChildrenPos()" << endl;
     
     // reset hightest hight
-    chCur.hightesHight = 0;
+    chCur.hightesHight  = 0;
+    chCur.contendHeight = 0;
     
     // set cursor to left top corner of self
-    chCur.x = -(layoutAttributes.width->floatValue  /2);  // left border
-    chCur.y = +(layoutAttributes.height->floatValue /2);  // top  border
+    chCur.x = -(renderAttributes.width  /2);  // left border
+    chCur.y = +(renderAttributes.height /2);  // top  border
     
     //cout << "[RN of '" << view->id << "'] " << "  => set cursor" << endl;
     
@@ -46,8 +47,7 @@ void BoxRenderer::calcLayoutChildrenPos()
     { 
         // get position, width, height attributes
         IntAttribute *posAttr    = (*iter)->renderer->layoutAttributes.position;      
-        IntAttribute *widthAttr  = (*iter)->renderer->layoutAttributes.width;
-        IntAttribute *heightAttr = (*iter)->renderer->layoutAttributes.height;
+      
         
         // calc child size
         if ((*iter)->renderer->calcTasks[UI_CALCTASK_LAYOUT_SIZE] /* if size attr has changed */)
@@ -65,6 +65,16 @@ void BoxRenderer::calcLayoutChildrenPos()
                 break;
         }
     }
+    
+    // add last row to contend height
+    chCur.contendHeight += chCur.hightesHight;
+        
+    // set own contendSize
+    renderAttributes.contendHeight = chCur.contendHeight;
+    renderAttributes.contendWidth  = renderAttributes.width;
+    
+    // recalculate vertices position
+    // calcLayoutSize();
 }
 
 
@@ -81,32 +91,50 @@ void BoxRenderer::calcLayoutChildSize(View* v)
 
     
     // set width
-    switch (widthAttr->mode)
+    // if not in auto mode
+    if (widthAttr->autoMode == UI_ATTR_AUTO_NONE) 
+    {    
+        switch (widthAttr->mode)
+        {
+            // absolute
+            case UI_ATTR__MODE_VALUE:
+                *widthFinal = widthAttr->floatValue;
+                break;
+
+            // percentage
+            case UI_ATTR__MODE_PERCENT:
+                *widthFinal = widthAttr->percentValue * (renderAttributes.width / 100.0f);
+                break;
+        }
+    }
+    // in auto mode
+    else if (widthAttr->autoMode == UI_ATTR_AUTO_AUTO) 
     {
-        // absolute
-        case UI_ATTR__MODE_VALUE:
-            *widthFinal = widthAttr->floatValue;
-            break;
-       
-        // percentage
-        case UI_ATTR__MODE_PERCENT:
-            *widthFinal = widthAttr->percentValue * (layoutAttributes.width->floatValue / 100.0f);
-            break;
+        *widthFinal = renderAttributes.width - v->renderer->layoutAttributes.right->floatValue;
     }
     
     
     // set height
-    switch (heightAttr->mode)
+    // if not in auto mode
+    if (heightAttr->autoMode == UI_ATTR_AUTO_NONE) 
+    { 
+        switch (heightAttr->mode)
+        {
+            // absolute
+            case UI_ATTR__MODE_VALUE:
+                *heightFinal = heightAttr->floatValue;
+                break;
+
+            // percentage
+            case UI_ATTR__MODE_PERCENT:
+                *heightFinal = heightAttr->percentValue * (renderAttributes.height / 100.0f);
+                break;
+        }
+    }
+    // in auto mode
+    else if (heightAttr->autoMode == UI_ATTR_AUTO_AUTO) 
     {
-        // absolute
-        case UI_ATTR__MODE_VALUE:
-            *heightFinal = heightAttr->floatValue;
-            break;
-       
-        // percentage
-        case UI_ATTR__MODE_PERCENT:
-            *heightFinal = heightAttr->percentValue * (layoutAttributes.height->floatValue / 100.0f);
-            break;
+        *heightFinal = v->renderer->renderAttributes.contendHeight;
     }
     
     // view calc own vertices
@@ -137,6 +165,9 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
         chCur.Y(-chCur.hightesHight);
         chCur.x = -(renderAttributes.width  /2);  // left border
         //cout << "[RN of '" << view->id << "'] " << " --------- child Cursor Y: " << chCur.y << endl;
+        
+        // calc contend height
+        chCur.contendHeight+= chCur.hightesHight;
         
         // reset hightes hight
         chCur.hightesHight = 0;
@@ -194,9 +225,6 @@ void BoxRenderer::calcLayoutChildAbsolute(View* v)
 // -- POSITION ITSELF  ------------------------------
 void BoxRenderer::calcLayoutSize() 
 {
-    // calc self
-    Renderer::calcLayoutSize();
-    
     // percent sized children need calc size
     for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */
          iter != ((Box*)this->view)->children.end();                  /* end if iterator at last pos */
@@ -214,6 +242,9 @@ void BoxRenderer::calcLayoutSize()
     
     // update children pos
     calcLayoutChildrenPos();
+     
+     // calc self
+    Renderer::calcLayoutSize();
 }
 
 // -- ADD CALC TASK
@@ -257,8 +288,10 @@ int  BoxRenderer::exeCaclTasks()
             // -> execute
             switch (i)
             {
+                //case UI_CALCTASK_LAYOUT_SIZE:
                 case UI_CALCTASK_LAYOUT_CHIDREN_POSITION:
-                    calcLayoutChildrenPos();
+                    //calcLayoutChildrenPos();
+                    calcLayoutSize();
                     calcTasks[i] = false;
                     break;
             }

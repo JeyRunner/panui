@@ -69,7 +69,7 @@ class TextRenderer : public Renderer
       // freetype - text
       FT_GlyphSlot ftGlyph;
       FT_Face      ftFace;
-      int          fontRowHight,
+      float        fontRowHeight,
                    fontRowWidht;
       
       GLuint       HANDEL_TEXTURE,

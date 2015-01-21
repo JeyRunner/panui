@@ -26,6 +26,10 @@ ColorAttribute::ColorAttribute(OnChangeListener *listener, Type type, initialize
 // -- SET -- BY HEX
 void ColorAttribute::set(string value) 
 {
+        
+    // set auto to none
+    autoMode = UI_ATTR_AUTO_NONE; 
+    
     // if string is to short for r g b ---
     if (value.length() < 6)
     { return; }

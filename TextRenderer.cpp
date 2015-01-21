@@ -39,7 +39,7 @@ void TextRenderer::calcText()
     const char *text = ((Text*)view)->text_str.c_str(); 
     const char *p; 
     int x = 0;
-    int y = -fontRowHight;
+    int y = -fontRowHeight;
     
     // Vertex
     struct Vertex
@@ -54,8 +54,9 @@ void TextRenderer::calcText()
     // delete old buffer
     // glDeleteBuffers(1, &HANDEL_VERTEX_BUFFER);
    
-    
+    float contendHeight = 0;
     int n = 0;
+    
     // calc lines -> for each character
     for(p = text; *p; p++) {
         
@@ -64,7 +65,11 @@ void TextRenderer::calcText()
       {
           // new line 
           x = 0;                // to row start
-          y-= fontRowHight;     // one line deeper
+          y-= fontRowHeight;     // one line deeper
+          
+                    
+          // add line to contend height
+          contendHeight += fontRowHeight;
       }  
         
 
@@ -76,10 +81,10 @@ void TextRenderer::calcText()
       
       coords[n++] = (Vertex){x2,     -y2    ,           charInfo[*p].texPosX,                                                   0};
       coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHight}; //remember: each glyph occupies a different amount of vertical space
+      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHeight}; //remember: each glyph occupies a different amount of vertical space
       coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHight};
-      coords[n++] = (Vertex){x2 + w, -y2 - h,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         charInfo[*p].texHight / fontRowHight};
+      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHeight};
+      coords[n++] = (Vertex){x2 + w, -y2 - h,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         charInfo[*p].texHight / fontRowHeight};
 
 //      GLfloat box[4][4] = {
 //          {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
@@ -132,6 +137,12 @@ void TextRenderer::calcText()
 //    
 //    glBindBuffer(GL_ARRAY_BUFFER, 0);
     //cout << "[TEXT] calc Text [OK]" << endl; 
+    
+    
+    // add last line to contend height
+    contendHeight += fontRowHeight;
+    
+    renderAttributes.contendHeight = contendHeight;
 }
 
 
@@ -266,7 +277,7 @@ void TextRenderer::calcTextTexAtlas()
     
     
     // set row hight to max hight of font
-    fontRowHight = textureHight;
+    fontRowHeight = textureHight;
     fontRowWidht = textureWidht;
 }
 
@@ -484,8 +495,9 @@ void TextRenderer::render()
 //    glVertexAttribPointer(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS, 4, GL_FLOAT, GL_FALSE, 0, 0);
 //    glEnableVertexAttribArray(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
     
+    float contendHeight = 0;
     int x = 0;
-    int y = -fontRowHight;
+    int y = -fontRowHeight;
     const char *p; 
  
     // render lines -> for each character
@@ -496,7 +508,10 @@ void TextRenderer::render()
       {
           // new line 
           x = 0;                // to row start
-          y-= fontRowHight;     // one line deeper
+          y-= fontRowHeight;     // one line deeper
+          
+          // add line to contend height
+          contendHeight += fontRowHeight;
       }  
         
 
@@ -508,8 +523,8 @@ void TextRenderer::render()
       GLfloat box[4][4] = {
           {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
           {x2 + w, -y2    ,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, 0},
-          {x2,     -y2 - h,  charInfo[*p].texPosX                               / fontRowWidht, charInfo[*p].texHight / fontRowHight},
-          {x2 + w, -y2 - h,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, charInfo[*p].texHight / fontRowHight},
+          {x2,     -y2 - h,  charInfo[*p].texPosX                               / fontRowWidht, charInfo[*p].texHight / fontRowHeight},
+          {x2 + w, -y2 - h,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, charInfo[*p].texHight / fontRowHeight},
       };
 
       
@@ -534,6 +549,9 @@ void TextRenderer::render()
       x += charInfo[*p].advanceX;
       y += charInfo[*p].advanceY;
     }
+    
+    // add last line to contend height
+    contendHeight += fontRowHeight;
     
 
 //    glBindBuffer(GL_ARRAY_BUFFER, 0);
@@ -587,7 +605,8 @@ void TextRenderer::render()
     glDisableVertexAttribArray(HANDEL_ATTRIBUTE_VERTEXPOS);
     */
    
-    
+    // set contend width
+    renderAttributes.contendHeight = contendHeight;
 }
 
 

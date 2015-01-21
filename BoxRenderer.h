@@ -61,6 +61,7 @@ class BoxRenderer : public Renderer
       {
         float x, y;
         float hightesHight; // for nex row
+        float contendHeight;
         
         void X(float x);
         void Y(float y);

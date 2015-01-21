@@ -43,7 +43,7 @@ class View
         string id, class_;
         string type; // View, Box, ...
         
-        // parrent view
+        // parent view
         Box *parent;
         
         // own Style

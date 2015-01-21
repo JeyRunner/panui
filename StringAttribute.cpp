@@ -30,6 +30,9 @@ StringAttribute::StringAttribute(OnChangeListener *listener, Type type, initiali
 void StringAttribute::set(string value) 
 {    
     stringValue = value;
+        
+    // set auto to none
+    autoMode = UI_ATTR_AUTO_NONE;
     
     // call onchange callback
     onValueChange();

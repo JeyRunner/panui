@@ -32,6 +32,12 @@ const int UI_VIEW_SELF                          = 0,
 const int UI_ATTR_POSITION_ABSOLUTE = 0,
           UI_ATTR_POSITION_RELATIVE = 1;
 
+// -- style attribute auto -----------------------------
+enum UI_ATTR_AUTO {
+     UI_ATTR_AUTO_AUTO,
+     UI_ATTR_AUTO_NONE
+};
+
 // -- Int-, FloatAttribute mode ------------------------
 const bool UI_ATTR__MODE_VALUE      = true,
            UI_ATTR__MODE_PERCENT    = false;
