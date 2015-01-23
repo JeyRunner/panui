@@ -39,7 +39,7 @@ void TextRenderer::calcText()
     const char *text = ((Text*)view)->text_str.c_str(); 
     const char *p; 
     int x = 0;
-    int y = -fontRowHeight;
+    int y = -fontAtlasHeight;
     
     // Vertex
     struct Vertex
@@ -69,7 +69,7 @@ void TextRenderer::calcText()
           
                     
           // add line to contend height
-          contendHeight += fontRowHeight;
+          contendHeight += fontAtlasHeight;
       }  
         
 
@@ -81,10 +81,10 @@ void TextRenderer::calcText()
       
       coords[n++] = (Vertex){x2,     -y2    ,           charInfo[*p].texPosX,                                                   0};
       coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHeight}; //remember: each glyph occupies a different amount of vertical space
+      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontAtlasHeight}; //remember: each glyph occupies a different amount of vertical space
       coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHeight};
-      coords[n++] = (Vertex){x2 + w, -y2 - h,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         charInfo[*p].texHight / fontRowHeight};
+      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontAtlasHeight};
+      coords[n++] = (Vertex){x2 + w, -y2 - h,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         charInfo[*p].texHight / fontAtlasHeight};
 
 //      GLfloat box[4][4] = {
 //          {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
@@ -140,7 +140,7 @@ void TextRenderer::calcText()
     
     
     // add last line to contend height
-    contendHeight += fontRowHeight;
+    contendHeight += fontAtlasHeight;
     
     renderAttributes.contendHeight = contendHeight;
 }
@@ -185,8 +185,9 @@ void TextRenderer::calcTextSize()
 void TextRenderer::calcTextTexAtlas() 
 {
     bool error = false;
-    int  textureHight = 0,
+    int  textureHeight = 0,
          textureWidht = 0;
+    float rowHeight = 0;
     
     // fill characterInfo width 0
     for (int i=0; i<128; i++)
@@ -207,7 +208,7 @@ void TextRenderer::calcTextTexAtlas()
         
         // textureHight, widht
         textureWidht += ftGlyph->bitmap.width;
-        textureHight  = max(textureHight, (int)ftGlyph->bitmap.rows);
+        textureHeight  = max(textureHeight, (int)ftGlyph->bitmap.rows);
     }
 //    cout << "[TEXT] calcTextTexAtlas  hight: " << textureHight << ", widht: " << textureWidht << endl;
     
@@ -229,7 +230,7 @@ void TextRenderer::calcTextTexAtlas()
     
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);    
     
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureWidht, textureHight, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureWidht, textureHeight, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
     
     
     
@@ -263,6 +264,8 @@ void TextRenderer::calcTextTexAtlas()
         charInfo[i].advanceX   = ftGlyph->advance.x >> 6;
         charInfo[i].advanceY   = ftGlyph->advance.y >> 6;
         
+        // get max height
+        rowHeight = max(rowHeight, (float)ftGlyph->bitmap.rows);
         
         // move cursor to next position
         xCursor += ftGlyph->bitmap.width;
@@ -277,7 +280,8 @@ void TextRenderer::calcTextTexAtlas()
     
     
     // set row hight to max hight of font
-    fontRowHeight = textureHight;
+    fontAtlasHeight = textureHeight;
+    fontRowHeight = rowHeight;
     fontRowWidht = textureWidht;
 }
 
@@ -497,7 +501,7 @@ void TextRenderer::render()
     
     float contendHeight = 0;
     int x = 0;
-    int y = -fontRowHeight;
+    int y = -fontAtlasHeight;
     const char *p; 
  
     // render lines -> for each character
@@ -523,8 +527,8 @@ void TextRenderer::render()
       GLfloat box[4][4] = {
           {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
           {x2 + w, -y2    ,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, 0},
-          {x2,     -y2 - h,  charInfo[*p].texPosX                               / fontRowWidht, charInfo[*p].texHight / fontRowHeight},
-          {x2 + w, -y2 - h,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, charInfo[*p].texHight / fontRowHeight},
+          {x2,     -y2 - h,  charInfo[*p].texPosX                               / fontRowWidht, charInfo[*p].texHight / fontAtlasHeight},
+          {x2 + w, -y2 - h,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, charInfo[*p].texHight / fontAtlasHeight},
       };
 
       
