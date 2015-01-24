@@ -31,6 +31,7 @@ using namespace std;
 
 class Ui;
 class View;
+class TouchPoint;
 
 class FrameRenderer 
 {
@@ -55,6 +56,8 @@ class FrameRenderer
          *    -> on frames per seoncond change */
         void onFpsChange(function<void (float fps, float fpsRender)> fpsChangeFunction);
         
+        // Touch Point
+        TouchPoint *touchPoint;
         
         
     private:      

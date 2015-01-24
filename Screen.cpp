@@ -146,7 +146,7 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     SDL_GL_CreateContext(window);
     
     // init matrix ...
-    onResizeScreenListener(display_width, display_height);
+    onResizeScreenFunc(display_width, display_height);
     
     // init glew
     glewInit();
@@ -304,7 +304,7 @@ bool Screen::eglInitScreen()
     printf("[DISP] Open Gl max texture size: '%s' \n",  glGetString(GL_MAX_TEXTURE_SIZE));
     
     // init projection matrix ...
-    onResizeScreenListener(display_width, display_height);
+    onResizeScreenFunc(display_width, display_height);
 #endif
 }
 
@@ -390,7 +390,7 @@ void Screen::checkEvents()
                         int display_width = event.window.data1; 
                         int display_height = event.window.data2;
                             
-                        onResizeScreenListener(display_width,
+                        onResizeScreenFunc(display_width,
                                                   display_height);
                             
                         break;
@@ -402,13 +402,13 @@ void Screen::checkEvents()
                 int x, y;
                 x = event.motion.x;
                 y = event.motion.y;
-                onTouchMoveListener(x, y);
+                onTouchMoveFunc(x, y);
                 
                 break;
                 
             // window closed
             case SDL_QUIT:
-                onCloseScreenListener();
+                onCloseScreenFunc();
                 break;
         }
     }
@@ -422,15 +422,15 @@ void Screen::checkEvents()
 
 // -- SET ON RESIZE SCREEN EVENT LISTENER --
 void Screen::onTouchMove(function<void(int x, int y)> onTouchMove) 
-{ this->onTouchMoveListener = onTouchMove; }
+{ this->onTouchMoveFunc = onTouchMove; }
 
 // -- SET ON RESIZE SCREEN EVENT LISTENER --
 void Screen::onResizeScreen(function<void(int width, int height)> onResizeScreen) 
-{ this->onResizeScreenListener = onResizeScreen; }
+{ this->onResizeScreenFunc = onResizeScreen; }
 
 // -- SET ON CLOSE WINDOW EVENT LISTENER --
 void Screen::onCloseScreen(function<void()> onCloseWindow) 
-{ this->onCloseScreenListener = onCloseWindow; }
+{ this->onCloseScreenFunc = onCloseWindow; }
 
 
 

@@ -54,6 +54,8 @@ class BoxRenderer : public Renderer
       virtual void render ();
 
       
+      virtual View *isOver(float x, float y);
+      
       
       // -- help var ---------
       // children cursor stores x, y

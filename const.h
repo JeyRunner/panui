@@ -43,5 +43,10 @@ const bool UI_ATTR__MODE_VALUE      = true,
            UI_ATTR__MODE_PERCENT    = false;
 
 
+
+// -- 2D point -----------------------------------------
+struct Point 
+{ float x, y; };
+
 #endif	/* CONST_H */
 

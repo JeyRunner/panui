@@ -26,6 +26,9 @@ class StyleRule;
 #include <stdlib.h>
 #include <iostream>
 #include <list>
+#include <functional>
+
+#include "const.h"
 
 using namespace std;
 
@@ -49,6 +52,15 @@ class View
         // own Style
         StyleRule *style;
         
+        
+        // set events
+        void onTouchMove(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchMoveFunc);
+        void onTouchEnter(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchEnterFunc);
+        void onTouchLeave(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchLeaveFunc);
+        void onTouchDown(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDownFunc);
+        void onTouchUp(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchUpFunc);
+        
+        
         // list of bonded styles
         list<StyleRule*> styles;
         list<StyleRule*>::iterator stylesIter;
@@ -62,9 +74,13 @@ class View
         void getStyle();
         
 
-    private:
-        
 
+        // events        
+        function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchMoveFunc; 
+        function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchEnterFunc; 
+        function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchLeaveFunc; 
+        function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchUpFunc; 
+        function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDownFunc; 
 };
 
 #endif	/* VIEW_H */

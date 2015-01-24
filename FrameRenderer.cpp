@@ -18,6 +18,7 @@
 #include <glm/gtc/matrix_transform.hpp> // gl Math matix transform
 #include <stdlib.h>
 //#include <bits/sigthread.h>
+#include "TouchPoint.h"
 #include "FrameRenderer.h"
 #include "Ui.h"
 #include "View.h"
@@ -41,6 +42,9 @@ FrameRenderer::FrameRenderer(Ui* ui)
     // -> display renderd stuff
     screen = new Screen();
     //screen->eglInitScreen();
+    
+    // create touchPoint
+    touchPoint = new TouchPoint(ui);
 }
 
 
@@ -97,7 +101,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     fr->screen->onResizeScreen([&](int width, int height){
         fr->screen->resizeScreen(width, height);
         glViewport(0, 0, width, height);
-        
+         
         // calculate + set projection Matix
         GL::projectionMatix = glm::ortho(-(float)width/2  /* left */,
                                              (float)width/2  /* right */,
@@ -122,6 +126,12 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         fr->screen->closeScreen();
         cout << "[ FR ] window is closed [OK]" << endl;
         exit(0);
+    });
+    
+    // touch
+    fr->screen->onTouchMove([&](int x, int y)
+    {
+        fr->touchPoint->move(x,y);
     });
     
     

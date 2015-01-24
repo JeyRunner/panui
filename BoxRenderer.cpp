@@ -324,6 +324,37 @@ void BoxRenderer::render()
 }
 
 
+// -- CHECK TOUCH POINT IS OVER ------------------------------
+View* BoxRenderer::isOver(float x, float y) 
+{
+    // var
+    View *viewChild;
+    
+    if (Renderer::isOver(x,y))
+    {        
+        // make x,y relative to self
+        x-= renderAttributes.positionX;
+        y-= renderAttributes.positionY;
+        
+        cout << "[ RN ] '"<< view->id <<"' isOver: check children ..." << endl;
+        
+        // check all children
+        for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */
+             iter != ((Box*)view)->children.end();                        /* end if iterator at last pos */
+             iter++)
+        {
+            viewChild = (*iter)->renderer->isOver(x,y);
+            
+            if (viewChild)
+                return viewChild;
+        }
+        
+        // is not over child
+        return this->view;
+    }
+    
+    return NULL;
+}
 
 
 

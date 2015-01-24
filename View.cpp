@@ -60,6 +60,14 @@ void View::getStyle()
 }
 
 
+// -- SET EVENTS ---------------------------
+void View::onTouchDown( function<void(View*, Point, Point, Point) > onTouchDownFunc)  { this->onTouchDownFunc = onTouchDownFunc; }
+void View::onTouchEnter(function<void(View*, Point, Point, Point) > onTouchEnterFunc) { this->onTouchEnterFunc = onTouchEnterFunc; }
+void View::onTouchLeave(function<void(View*, Point, Point, Point) > onTouchLeaveFunc) { this->onTouchLeaveFunc = onTouchLeaveFunc; }
+void View::onTouchMove( function<void(View*, Point, Point, Point) > onTouchMoveFunc)  { this->onTouchMoveFunc = onTouchMoveFunc; }
+void View::onTouchUp(   function<void(View*, Point, Point, Point) > onTouchUpFunc)    { this->onTouchUpFunc = onTouchUpFunc;}
+
+
 
 // ###########################################
 // -- DESTROY OBJEKT -----------

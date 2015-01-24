@@ -86,9 +86,9 @@ class Screen
         // -- Var
         
         // eventListener functions
-        function<void (int x, int y)> onTouchMoveListener;
-        function<void (int width, int height)> onResizeScreenListener;
-        function<void ()> onCloseScreenListener;
+        function<void (int x, int y)> onTouchMoveFunc;
+        function<void (int width, int height)> onResizeScreenFunc;
+        function<void ()> onCloseScreenFunc;
         
         //static EGL_DISPMANX_WINDOW_T nativewindow;
 #ifdef pl_pi

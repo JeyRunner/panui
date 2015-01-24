@@ -130,6 +130,15 @@ class Renderer
       // searches in View rules for fitting Attributes and bind them
       void bindAttributeAutomatic();      
       
+      /* check if touchPoint is over
+       * @param 
+       * x,y is relative to parent view 
+       * 
+       * @return 
+       * self (is over)
+       *    null (is not over)  */
+      virtual View *isOver(float x, float y);
+      
       
       // -- help var ----------------------
       struct Vertex 
