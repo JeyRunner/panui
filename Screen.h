@@ -71,6 +71,9 @@ class Screen
         // set on resizeScreen event listener
         void onTouchMove(function<void(int x, int y)> onTouchMove);
         
+        // set on touchButton event listener
+        void onTouchPress(function<void(int button, int type)> onTouchPress);
+        
         // set on resizeScreen event listener
         void onResizeScreen(function<void(int width, int height)> onResizeScreen);
         
@@ -87,6 +90,7 @@ class Screen
         
         // eventListener functions
         function<void (int x, int y)> onTouchMoveFunc;
+        function<void (int button, int type)>onTouchPressFunc;
         function<void (int width, int height)> onResizeScreenFunc;
         function<void ()> onCloseScreenFunc;
         

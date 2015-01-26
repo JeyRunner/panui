@@ -13,6 +13,7 @@
 #include "BoxRenderer.h"
 #include "Box.h"
 #include "View.h"
+#include "Touch.h"
 
 
 
@@ -292,6 +293,7 @@ int  BoxRenderer::exeCaclTasks()
                 case UI_CALCTASK_LAYOUT_CHIDREN_POSITION:
                     //calcLayoutChildrenPos();
                     calcLayoutSize();
+                    Touch::needReCheck = true;
                     calcTasks[i] = false;
                     break;
             }
@@ -335,8 +337,6 @@ View* BoxRenderer::isOver(float x, float y)
         // make x,y relative to self
         x-= renderAttributes.positionX;
         y-= renderAttributes.positionY;
-        
-        cout << "[ RN ] '"<< view->id <<"' isOver: check children ..." << endl;
         
         // check all children
         for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */

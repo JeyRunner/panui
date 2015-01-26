@@ -24,6 +24,7 @@
 #include "View.h"
 #include "Renderer.h"
 #include "GL.h"
+#include "Touch.h"
 
 using namespace std;
 
@@ -43,8 +44,8 @@ FrameRenderer::FrameRenderer(Ui* ui)
     screen = new Screen();
     //screen->eglInitScreen();
     
-    // create touchPoint
-    touchPoint = new TouchPoint(ui);
+    // init Touch
+    Touch::init(ui);
 }
 
 
@@ -128,11 +129,20 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         exit(0);
     });
     
-    // touch
+    // touch move
     fr->screen->onTouchMove([&](int x, int y)
     {
-        fr->touchPoint->move(x,y);
+        Touch::touchPoint->move(x,y);
     });
+    
+    // touch press
+    fr->screen->onTouchPress([&](int button, int type)
+    {
+        //cout << "[ FR ] touch press button:"<< button <<"  type:"<< type << endl;
+        Touch::touchPoint->press(button, type);
+    });
+    
+    
     
     
     // create screen / window
@@ -153,7 +163,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     // set transform Matix for all shaders to middel of screen
     GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
     
-    int    frame_counter = 0;
+    int   frame_counter = 0;
     float timeStart     = 0;
     float timeMiddle    = 0;
     float timeStopp     = 0;
@@ -180,6 +190,9 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         
         // calc Layouts for views
         fr->exe_calcTasks();
+        
+        // reCheck touch if necessary
+        Touch::exe_reCheck();
         
         #ifndef pl_pi
         timeMiddle = SDL_GetTicks();

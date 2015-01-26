@@ -34,11 +34,8 @@ class TouchPoint
       bool state;
       
       
-      // finger/mouse down
-      void down();
-      
-      // finger/mouse up
-      void up();
+      // finger/mouse pressed
+      void press(int button, int type);
       
       // move point
       void move(float x, float y);
@@ -47,8 +44,7 @@ class TouchPoint
       // state values
       bool STATE_DOWN = true;
       bool STATE_UP    = false;
-      
-      
+            
     
       // uis root view
       Ui *ui;

@@ -43,6 +43,12 @@ const bool UI_ATTR__MODE_VALUE      = true,
            UI_ATTR__MODE_PERCENT    = false;
 
 
+// -- touch events -------------------------------------
+const int  UI_TOUCH_BUTTON_DOWN     = 0,
+           UI_TOUCH_BUTTON_UP       = 1,
+           UI_TOUCH_BUTTON_LEFT     = 2,
+           UI_TOUCH_BUTTON_MIDDLE   = 3,
+           UI_TOUCH_BUTTON_RIGHT    = 4;
 
 // -- 2D point -----------------------------------------
 struct Point 

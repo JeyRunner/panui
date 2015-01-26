@@ -27,6 +27,7 @@
 #endif
 
 #include "Screen.h"
+#include "const.h"
 using namespace std;
 
 // static
@@ -403,7 +404,17 @@ void Screen::checkEvents()
                 x = event.motion.x;
                 y = event.motion.y;
                 onTouchMoveFunc(x, y);
+                break;
                 
+            case SDL_MOUSEBUTTONDOWN:
+            case SDL_MOUSEBUTTONUP:
+                int button, type;
+                button = (event.button.button == SDL_BUTTON_LEFT)        ? UI_TOUCH_BUTTON_LEFT      : button;
+                button = (event.button.button == SDL_BUTTON_MIDDLE)      ? UI_TOUCH_BUTTON_MIDDLE    : button;
+                button = (event.button.button == SDL_BUTTON_RIGHT)       ? UI_TOUCH_BUTTON_RIGHT     : button;
+                type   = (event.button.type   == SDL_MOUSEBUTTONDOWN)    ? UI_TOUCH_BUTTON_DOWN      : type;
+                type   = (event.button.type   == SDL_MOUSEBUTTONUP)      ? UI_TOUCH_BUTTON_UP        : type;
+                onTouchPressFunc(button, type);
                 break;
                 
             // window closed
@@ -420,15 +431,19 @@ void Screen::checkEvents()
 
 
 
-// -- SET ON RESIZE SCREEN EVENT LISTENER --
+// -- SET ON TOUCH MOVE EVENT LISTENER -----
 void Screen::onTouchMove(function<void(int x, int y)> onTouchMove) 
 { this->onTouchMoveFunc = onTouchMove; }
+
+// -- SET ON BUTTON EVENT LISTENER ---------
+void Screen::onTouchPress(function<void(int, int) > onTouchPress) 
+{ this->onTouchPressFunc = onTouchPress; }
 
 // -- SET ON RESIZE SCREEN EVENT LISTENER --
 void Screen::onResizeScreen(function<void(int width, int height)> onResizeScreen) 
 { this->onResizeScreenFunc = onResizeScreen; }
 
-// -- SET ON CLOSE WINDOW EVENT LISTENER --
+// -- SET ON CLOSE WINDOW EVENT LISTENER ---
 void Screen::onCloseScreen(function<void()> onCloseWindow) 
 { this->onCloseScreenFunc = onCloseWindow; }
 

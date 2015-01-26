@@ -35,21 +35,23 @@ TouchPoint::TouchPoint(Ui* ui)
 
 // -- MOVE -----------------------
 void TouchPoint::move(float x, float y) 
-{
-    cout << "[TOCH] move" << endl;
-    
+{   
     // new over
     View *newOver;
+    
+    // set
+    this->x = x;
+    this->y = y;
     
     // make x,y relative to gl coordinate system
     x = +x - (ui->rootView->renderer->renderAttributes.width  /2);
     y = -y + (ui->rootView->renderer->renderAttributes.height /2);
-    cout << "before isOver" << endl;
+    
     
     // check over
     newOver = ui->rootView->renderer->isOver(x,y);
-    cout << "after isOver" << endl;
     if (newOver == NULL)
+        //cout << "touch return null" << endl;
         return;
             
     // check for null 
@@ -62,10 +64,8 @@ void TouchPoint::move(float x, float y)
     // over new view
     if (newOver != over)
     {
-        cout << "over view changed" << endl;
-        
         if (over->onTouchLeaveFunc)
-        { cout<<"function is set"<<endl; over->onTouchLeaveFunc(over, {0,0}, {0,0}, {x,y});}
+        {over->onTouchLeaveFunc(over, {0,0}, {0,0}, {x,y});}
             
         if (newOver->onTouchEnterFunc)
         {newOver->onTouchEnterFunc(newOver, {0,0}, {0,0}, {x,y});}
@@ -77,23 +77,27 @@ void TouchPoint::move(float x, float y)
     {over->onTouchMoveFunc(newOver, {0,0}, {0,0}, {x,y});}   
 }
 
-// -- DOWN -----------------------
-void TouchPoint::down() 
+
+
+// -- PRESS -----------------------
+void TouchPoint::press(int button, int type) 
 {
-    cout << "[TOCH] down" << endl;
+    // cout << "[TOCH] press" << endl;
     
-    if (over->onTouchDownFunc)
-        over->onTouchDownFunc(over, {0,0}, {0,0}, {x,y});
+    switch (type)
+    {
+        case UI_TOUCH_BUTTON_DOWN:
+            if (over->onTouchDownFunc)
+                over->onTouchDownFunc(over, {0,0}, {0,0}, {x,y});
+            break;
+            
+        case UI_TOUCH_BUTTON_UP:
+            if (over->onTouchUpFunc)
+                over->onTouchUpFunc(over, {0,0}, {0,0}, {x,y});
+            break;
+    }
 }
 
-// -- UP -------------------------
-void TouchPoint::up() 
-{
-    cout << "[TOCH] up" << endl;
-    
-    if (over->onTouchUpFunc)
-        over->onTouchUpFunc(over, {0,0}, {0,0}, {x,y});
-}
 
 
 

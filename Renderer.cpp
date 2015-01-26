@@ -529,9 +529,9 @@ void Renderer::bindAttributeAutomatic()
 // -- CHECK TOUCH POINT IS OVER ------------------------------
 View* Renderer::isOver(float x, float y) 
 {
-    cout << "--------------------" << endl;
-     cout << "[ RN ] '"<< view->id <<"' isOverX  "<< renderAttributes.positionX - renderAttributes.width/2 <<" < " << x << " < " << renderAttributes.positionX + renderAttributes.width/2 << endl;
-     cout << "[ RN ] '"<< view->id <<"' isOverY  "<< renderAttributes.positionY - renderAttributes.height/2 <<" < " << y << " < " << renderAttributes.positionY + renderAttributes.height/2 << endl;
+//    cout << "--------------------" << endl;
+//    cout << "[ RN ] '"<< view->id <<"' isOverX  "<< renderAttributes.positionX - renderAttributes.width/2 <<" < " << x << " < " << renderAttributes.positionX + renderAttributes.width/2 << endl;
+//    cout << "[ RN ] '"<< view->id <<"' isOverY  "<< renderAttributes.positionY - renderAttributes.height/2 <<" < " << y << " < " << renderAttributes.positionY + renderAttributes.height/2 << endl;
      
     if (    (x > renderAttributes.positionX - renderAttributes.width/2)
          && (x < renderAttributes.positionX + renderAttributes.width/2)   
@@ -539,7 +539,7 @@ View* Renderer::isOver(float x, float y)
          && (y < renderAttributes.positionY + renderAttributes.height/2)
          && (y > renderAttributes.positionY - renderAttributes.height/2))  
     {
-        cout << "[ RN ] '"<< view->id <<"' isOver: true" << endl;
+        // cout << "[ RN ] '"<< view->id <<"' isOver: true" << endl;
         return this->view;
     } 
     else
