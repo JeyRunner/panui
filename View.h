@@ -39,7 +39,7 @@ class View
         View();
         View(string id, string class_);
         View(bool DoNothing);
-        ~View();
+        virtual ~View();
 
         
         // View properties ---------------

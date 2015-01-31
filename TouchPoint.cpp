@@ -14,7 +14,9 @@
 #include "TouchPoint.h"
 #include "Renderer.h"
 #include "FrameRenderer.h"
+#include "Box.h"
 #include "View.h"
+#include "BoxRenderer.h"
 
 
 // ############################################
@@ -65,16 +67,45 @@ void TouchPoint::move(float x, float y)
     if (newOver != over)
     {
         if (over->onTouchLeaveFunc)
-        {over->onTouchLeaveFunc(over, {0,0}, {0,0}, {x,y});}
+        {over->onTouchLeaveFunc(over, over->renderer->touchAttributes.relativeSelf, over->renderer->touchAttributes.relativeParent, {x,y});}
             
         if (newOver->onTouchEnterFunc)
-        {newOver->onTouchEnterFunc(newOver, {0,0}, {0,0}, {x,y});}
+        {newOver->onTouchEnterFunc(newOver, newOver->renderer->touchAttributes.relativeSelf, newOver->renderer->touchAttributes.relativeParent, {x,y});}
             
         over = newOver;
     }
     
-    if (over->onTouchMoveFunc) 
-    {over->onTouchMoveFunc(newOver, {0,0}, {0,0}, {x,y});}   
+    // for all parents
+    for (View *i = newOver; i; i = i->parent) 
+    {
+        if (i->onTouchMoveFunc) 
+        {i->onTouchMoveFunc(i, i->renderer->touchAttributes.relativeSelf, i->renderer->touchAttributes.relativeParent, {x,y});}   
+    }
+
+    
+    // for each view
+//    eachView(ui->rootView, [&](View *view)
+//    {
+//        // move
+//        if (view->renderer->touchAttributes.isOver && view->onTouchMoveFunc)
+//        {view->onTouchMoveFunc(view, {0,0}, {0,0}, {x,y});}
+//        
+//        // leave
+//        if (view->renderer->touchAttributes.leave)
+//        { 
+//            view->renderer->touchAttributes.leave = false;
+//            if (view->onTouchLeaveFunc) 
+//            {view->onTouchLeaveFunc(view, {0,0}, {0,0}, {x,y});}
+//        }
+//                
+//        // enter
+//        if (view->renderer->touchAttributes.enter)
+//        {
+//            view->renderer->touchAttributes.enter = false;
+//            if (view->onTouchEnterFunc)
+//            {view->onTouchEnterFunc(view, {0,0}, {0,0}, {x,y});}
+//        }
+//    });
 }
 
 
@@ -88,13 +119,50 @@ void TouchPoint::press(int button, int type)
     {
         case UI_TOUCH_BUTTON_DOWN:
             if (over->onTouchDownFunc)
+                down = over;
                 over->onTouchDownFunc(over, {0,0}, {0,0}, {x,y});
             break;
             
         case UI_TOUCH_BUTTON_UP:
             if (over->onTouchUpFunc)
+                down = NULL;
                 over->onTouchUpFunc(over, {0,0}, {0,0}, {x,y});
             break;
+    }
+}
+
+
+//// -- ADD OVER ---------------------
+//void TouchPoint::addOver(View* view) 
+//{
+//    // not already exists
+//    if (find(overList.begin(), overList.end(), view) != overList.end())
+//    {
+//        overList.push_back(view);
+//    }
+//}
+//
+//// -- REMOVE OVER ------------------
+//void TouchPoint::removeOver(View* view) 
+//{
+//    overList.remove(view);
+//}
+
+// -- FOR EACH VIEW ------------------
+void TouchPoint::eachView(View *container, function<void(View*)> func)
+{
+    Box *b = (Box*)(container);
+    func(container);
+    
+    if (dynamic_cast<Box*>(container))
+    {
+        // loop
+        for (list<View*>::iterator iter = ((Box*)b)->children.begin(); /* iterator to start pos */
+                 iter != ((Box*)b)->children.end();                        /* end if iterator at last pos */
+                 iter++)
+        {
+            eachView(*iter, func);
+        }
     }
 }
 

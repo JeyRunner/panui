@@ -79,6 +79,16 @@ class Renderer
       } layoutAttributes;
       //LayoutAttributes *layoutAttributesPtr;
       
+      // touch Attributes
+      struct TouchAttributes
+      {
+          bool isOver = false;
+          bool leave  = false,
+               enter  = false;
+          Point relativeSelf   = {0,0},
+                relativeParent = {0,0};
+      } touchAttributes;
+      
       
       // -- calculate -> layout Attributes into render attributes
               void calcLayout(); // calls clacLayoutPosition() and calcLayoutSize()

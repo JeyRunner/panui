@@ -15,6 +15,7 @@
 #define	TOUCHPOINT_H
 
 #include <stdlib.h>
+#include <functional>
 #include "View.h"
 #include "Ui.h"
 using namespace std;
@@ -40,6 +41,11 @@ class TouchPoint
       // move point
       void move(float x, float y);
       
+//      // views add themselves when isOver
+//      void addOver(View *view);
+//      
+//      // views remove themselves when not isOver
+//      void removeOver(View *view);
       
       // state values
       bool STATE_DOWN = true;
@@ -49,8 +55,18 @@ class TouchPoint
       // uis root view
       Ui *ui;
       
-      // actual view point is over
+      // actual top view point is over
       View *over;
+      
+      // actual view touch on top is down
+      View *down;
+      
+      
+      // actual views point is over
+//      list<View*> overList;
+      
+    private:
+        void eachView(View *container,function<void (View *view)> func);
 };
 
 #endif	/* TOUCHPOINT_H */

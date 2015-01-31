@@ -540,10 +540,51 @@ View* Renderer::isOver(float x, float y)
          && (y > renderAttributes.positionY - renderAttributes.height/2))  
     {
         // cout << "[ RN ] '"<< view->id <<"' isOver: true" << endl;
+        
+        // set relative to parent
+        if (view->parent) 
+        {
+            touchAttributes.relativeParent.x = x + view->parent->renderer->renderAttributes.width/2;
+            touchAttributes.relativeParent.y = y + view->parent->renderer->renderAttributes.height/2;
+        }
+        
+        
+        // make x,y relative to self
+        x-= renderAttributes.positionX;
+        y-= renderAttributes.positionY;
+        
+        // enter
+        if (!touchAttributes.isOver)
+        {
+            // cout << view->id << ": enter" << endl;
+            touchAttributes.enter = true;
+            touchAttributes.isOver = true;
+        }
+        else
+        {
+            //touchAttributes.enter = false;
+        }
+        
+        // set relative to self
+        touchAttributes.relativeSelf.x = x + renderAttributes.width/2;
+        touchAttributes.relativeSelf.y = y + renderAttributes.height/2;
+        
         return this->view;
     } 
     else
     {
+        // leave
+        if (touchAttributes.isOver)
+        {
+            // cout << view->id << ": leave" << endl;
+            touchAttributes.leave = true;
+            touchAttributes.isOver = false;
+        }
+        else
+        {
+            //touchAttributes.leave = false;
+        }
+        
         return NULL;
     }
 }
