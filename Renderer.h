@@ -82,11 +82,14 @@ class Renderer
       // touch Attributes
       struct TouchAttributes
       {
-          bool isOver = false;
+          bool isOver = false,
+               childNeedIsOver = false;
           bool leave  = false,
-               enter  = false;
-          Point relativeSelf   = {0,0},
-                relativeParent = {0,0};
+               enter  = false,
+               drag   = false;
+          Point relativeSelf      = {0,0},
+                relativeSelfDrag = {0,0},
+                relativeParent   = {0,0};
       } touchAttributes;
       
       

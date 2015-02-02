@@ -10,6 +10,7 @@
 // const
 TouchPoint *Touch::touchPoint;
 bool        Touch::needReCheck;
+int         Touch::isOverCount;
 //void        Touch::exe_reCheck();
 
 
@@ -17,7 +18,8 @@ bool        Touch::needReCheck;
 void Touch::init(Ui* ui) 
 {
     needReCheck = false;
-    touchPoint = new TouchPoint(ui);
+    isOverCount = 0;
+    touchPoint  = new TouchPoint(ui);
 }
 
 

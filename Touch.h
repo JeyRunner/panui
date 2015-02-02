@@ -32,6 +32,9 @@ class Touch {
         
       // need reCheck
       static bool needReCheck;
+      
+      // touch isOver call count
+      static int isOverCount;
 };
 
 //TouchPoint *Touch::touchPoint;

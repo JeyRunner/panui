@@ -17,6 +17,7 @@
 #include "Box.h"
 #include "View.h"
 #include "BoxRenderer.h"
+#include "Touch.h"
 
 
 // ############################################
@@ -49,6 +50,8 @@ void TouchPoint::move(float x, float y)
     x = +x - (ui->rootView->renderer->renderAttributes.width  /2);
     y = -y + (ui->rootView->renderer->renderAttributes.height /2);
     
+    // reset is over count
+    Touch::isOverCount = 0;
     
     // check over
     newOver = ui->rootView->renderer->isOver(x,y);
@@ -73,7 +76,9 @@ void TouchPoint::move(float x, float y)
         {newOver->onTouchEnterFunc(newOver, newOver->renderer->touchAttributes.relativeSelf, newOver->renderer->touchAttributes.relativeParent, {x,y});}
             
         over = newOver;
+        //down = NULL;
     }
+    
     
     // for all parents
     for (View *i = newOver; i; i = i->parent) 
@@ -82,6 +87,30 @@ void TouchPoint::move(float x, float y)
         {i->onTouchMoveFunc(i, i->renderer->touchAttributes.relativeSelf, i->renderer->touchAttributes.relativeParent, {x,y});}   
     }
 
+    
+    // drag and drop
+    if (down != NULL)
+    {
+        // drag start
+        if (!down->renderer->touchAttributes.drag)
+        {
+            if (down->onTouchDragFunc)
+            {down->onTouchDragFunc(down, down->renderer->touchAttributes.relativeSelf, down->renderer->touchAttributes.relativeParent, {x,y});}
+            down->renderer->touchAttributes.drag = true;
+            down->renderer->touchAttributes.relativeSelfDrag = down->renderer->touchAttributes.relativeSelf;
+            
+            // for all parents
+            for (View *i = down; i; i = i->parent) 
+            {
+                // child need touch move updates
+                i->renderer->touchAttributes.childNeedIsOver = true;
+            }
+        }
+        
+        if (down->onTouchDragMoveFunc)
+        {down->onTouchDragMoveFunc(down, down->renderer->touchAttributes.relativeSelfDrag, down->renderer->touchAttributes.relativeParent, {x,y});}
+    }
+    
     
     // for each view
 //    eachView(ui->rootView, [&](View *view)
@@ -119,14 +148,32 @@ void TouchPoint::press(int button, int type)
     {
         case UI_TOUCH_BUTTON_DOWN:
             if (over->onTouchDownFunc)
+            {
                 down = over;
-                over->onTouchDownFunc(over, {0,0}, {0,0}, {x,y});
+                over->onTouchDownFunc(over, {0,0}, {0,0}, {x,y});                
+            }
             break;
             
         case UI_TOUCH_BUTTON_UP:
             if (over->onTouchUpFunc)
-                down = NULL;
                 over->onTouchUpFunc(over, {0,0}, {0,0}, {x,y});
+                
+            // drop (drag end)
+            if (down && down->renderer->touchAttributes.drag)
+            {
+                if (down->onTouchDropFunc)
+                {down->onTouchDropFunc(down, down->renderer->touchAttributes.relativeSelf, down->renderer->touchAttributes.relativeParent, {x,y});}
+                
+                down->renderer->touchAttributes.drag = false;
+
+                // for all parents
+                for (View *i = down; i; i = i->parent) 
+                {
+                    // child not need touch move updates
+                    i->renderer->touchAttributes.childNeedIsOver = false;
+                }
+            }
+            down = NULL;
             break;
     }
 }

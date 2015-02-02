@@ -59,6 +59,9 @@ class View
         void onTouchLeave(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchLeaveFunc);
         void onTouchDown(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDownFunc);
         void onTouchUp(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchUpFunc);
+        void onTouchDrag(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDragFunc);
+        void onTouchDragMove(function<void (View *v, Point relativeSelfDrag, Point relativeParent, Point absolute)> onTouchDragMoveFunc);
+        void onTouchDrop(function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDropFunc);
         
         
         // list of bonded styles
@@ -81,6 +84,9 @@ class View
         function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchLeaveFunc; 
         function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchUpFunc; 
         function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDownFunc; 
+        function<void (View *v, Point relativeSelfDrag, Point relativeParent, Point absolute)> onTouchDragFunc;
+        function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDragMoveFunc; 
+        function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDropFunc; 
 };
 
 #endif	/* VIEW_H */

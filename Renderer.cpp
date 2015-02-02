@@ -19,6 +19,7 @@
 #include "BoxRenderer.h"
 #include "Ui.h"
 #include "GL.h"
+#include "Touch.h"
 
 
 
@@ -533,6 +534,25 @@ View* Renderer::isOver(float x, float y)
 //    cout << "[ RN ] '"<< view->id <<"' isOverX  "<< renderAttributes.positionX - renderAttributes.width/2 <<" < " << x << " < " << renderAttributes.positionX + renderAttributes.width/2 << endl;
 //    cout << "[ RN ] '"<< view->id <<"' isOverY  "<< renderAttributes.positionY - renderAttributes.height/2 <<" < " << y << " < " << renderAttributes.positionY + renderAttributes.height/2 << endl;
      
+    // isOver count
+    Touch::isOverCount++;
+    
+    // child need is over
+    if (touchAttributes.childNeedIsOver)
+    {
+         // set relative to parent
+        if (view->parent) 
+        {
+            touchAttributes.relativeParent.x =  x + view->parent->renderer->renderAttributes.width/2;
+            touchAttributes.relativeParent.y = -y + view->parent->renderer->renderAttributes.height/2;
+        }
+        
+        // set relative to self
+        touchAttributes.relativeSelf.x =  x + renderAttributes.width/2;
+        touchAttributes.relativeSelf.y = -y + renderAttributes.height/2;
+    }
+    
+    // is over
     if (    (x > renderAttributes.positionX - renderAttributes.width/2)
          && (x < renderAttributes.positionX + renderAttributes.width/2)   
          
@@ -544,8 +564,8 @@ View* Renderer::isOver(float x, float y)
         // set relative to parent
         if (view->parent) 
         {
-            touchAttributes.relativeParent.x = x + view->parent->renderer->renderAttributes.width/2;
-            touchAttributes.relativeParent.y = y + view->parent->renderer->renderAttributes.height/2;
+            touchAttributes.relativeParent.x =  x + view->parent->renderer->renderAttributes.width/2;
+            touchAttributes.relativeParent.y = -y + view->parent->renderer->renderAttributes.height/2;
         }
         
         
@@ -566,8 +586,8 @@ View* Renderer::isOver(float x, float y)
         }
         
         // set relative to self
-        touchAttributes.relativeSelf.x = x + renderAttributes.width/2;
-        touchAttributes.relativeSelf.y = y + renderAttributes.height/2;
+        touchAttributes.relativeSelf.x =  x + renderAttributes.width/2;
+        touchAttributes.relativeSelf.y = -y + renderAttributes.height/2;
         
         return this->view;
     } 

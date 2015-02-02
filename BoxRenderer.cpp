@@ -332,8 +332,11 @@ View* BoxRenderer::isOver(float x, float y)
     // var
     View *viewChild;
     
-    if (Renderer::isOver(x,y))
-    {        
+    if (Renderer::isOver(x,y) || touchAttributes.childNeedIsOver)
+    {     
+        // var
+        View *v;
+        
         // make x,y relative to self
         x-= renderAttributes.positionX;
         y-= renderAttributes.positionY;
@@ -346,7 +349,12 @@ View* BoxRenderer::isOver(float x, float y)
             viewChild = (*iter)->renderer->isOver(x,y);
             
             if (viewChild)
-                return viewChild;
+            {
+                v = viewChild;
+                if (!touchAttributes.childNeedIsOver)
+                    return v;
+            }
+           
         }
         
         // is not over child
