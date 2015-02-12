@@ -30,7 +30,7 @@ class TouchPoint
       // position, read only
       float x, y;
       
-      /* state, ready only
+      /* state, read only
        * @param STATE_UP or STATE_DOWN */
       bool state;
       
@@ -48,8 +48,8 @@ class TouchPoint
 //      void removeOver(View *view);
       
       // state values
-      bool STATE_DOWN = true;
-      bool STATE_UP    = false;
+      static bool STATE_DOWN;
+      static bool STATE_UP;
             
     
       // uis root view

@@ -20,6 +20,9 @@
 #include "Touch.h"
 
 
+bool TouchPoint::STATE_DOWN = true;
+bool TouchPoint::STATE_UP    = false;
+
 // ############################################
 // -- CREATE OBJEKT --------------
 TouchPoint::TouchPoint(Ui* ui)
@@ -201,7 +204,7 @@ void TouchPoint::eachView(View *container, function<void(View*)> func)
     Box *b = (Box*)(container);
     func(container);
     
-    if (dynamic_cast<Box*>(container))
+    //if (dynamic_cast<Box*>(container))
     {
         // loop
         for (list<View*>::iterator iter = ((Box*)b)->children.begin(); /* iterator to start pos */

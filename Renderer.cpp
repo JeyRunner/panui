@@ -30,6 +30,19 @@ Renderer::Renderer()
     // set pointer var
     //renderAttributesPtr = &renderAttributes;
     //layoutAttributesPtr = &layoutAttributes;
+    
+    // default
+    renderAttributes.contendHeight    = 0;
+    renderAttributes.contendWidth     = 0;
+    touchAttributes.isOver             = false;
+    touchAttributes.drag               = false;    
+    touchAttributes.childNeedIsOver   = false;
+    touchAttributes.enter              = false;
+    touchAttributes.leave              = false;
+    touchAttributes.relativeParent    = {0,0};
+    touchAttributes.relativeSelf      = {0,0};
+    touchAttributes.relativeSelfDrag = {0,0};
+    
 }
 
 Renderer::Renderer(View *view) 

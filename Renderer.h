@@ -56,8 +56,8 @@ class Renderer
         
         // 4 vertices -> *(x,y,z) = 12
         GLfloat vertices[12]; 
-        GLfloat height, width;                       // calculated
-        GLfloat contendHeight =0, contendWidth =0; // calculated
+        GLfloat height, width;                  // calculated
+        GLfloat contendHeight, contendWidth;  // calculated
         
         ColorAttribute *background_color;
         FloatAttribute *opacity;
@@ -82,14 +82,14 @@ class Renderer
       // touch Attributes
       struct TouchAttributes
       {
-          bool isOver = false,
-               childNeedIsOver = false;
-          bool leave  = false,
-               enter  = false,
-               drag   = false;
-          Point relativeSelf      = {0,0},
-                relativeSelfDrag = {0,0},
-                relativeParent   = {0,0};
+          bool isOver,
+               childNeedIsOver;
+          bool leave,
+               enter,
+               drag;
+          Point relativeSelf,
+                relativeSelfDrag,
+                relativeParent;
       } touchAttributes;
       
       
