@@ -331,6 +331,10 @@ int Renderer::checkRuleBinding(StyleRule *rule)
     if (rule->selectorType == StyleRule::CLASS_SELECTOR and  rule->selector == view->class_ )
     { return 1; }
     
+    // -- Global selector
+    if (rule->selectorType == StyleRule::GLOBAL_SELECTOR)
+    { return 1; cout << "GLOBAL SELECTOR" << endl; }
+    
     // -- nothing fits
     return 0;
 }
@@ -344,7 +348,7 @@ void Renderer::bindRule(StyleRule *rule)
     rule->addBoundedView(view);
     
     // out 
-    // cout << "[RN of '" << view->id << "'] bind StyleRule '" << rule->selector << "'" <<  endl; 
+    cout << "[RN of '" << view->id << "'] bind StyleRule '" << rule->selector << "'" <<  endl; 
 }
 
 void Renderer::unbindRule(StyleRule *rule) 
@@ -367,9 +371,9 @@ void Renderer::bindRuleAutomatic()
         // out
         // cout << "[RN of '" << view->id << "'] check StyleRule '" << (*iter)->selector << "'" <<  endl;
         
-        // -- check if rule fits
-        int doseRuleFit = checkRuleBinding(*iter);
-        if (doseRuleFit >= 1)
+        // -- check if rule fits 
+        int doesRuleFit = checkRuleBinding(*iter);
+        if (doesRuleFit >= 1)
         {
             // first
             bindRule(*iter);
@@ -486,7 +490,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
     attribute->addBoundedView(view);
     
     // -- out
-    // cout << "[RN of '" << view->id << "'] bind StyleAttribute '" << attribute->type << "'" <<  endl;
+    cout << "[RN of '" << view->id << "'] bind StyleAttribute '" << attribute->type << "'" <<  endl;
 }
 
 // -- UNBIND ATTRIBUTE 

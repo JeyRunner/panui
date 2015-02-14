@@ -27,6 +27,9 @@ Text::Text() : View(true)
 {
     // create renderer
     View::renderer =  new TextRenderer(this);
+    
+    // -- bind rules and attributes
+    getStyle();
 }
 
 Text::Text(string id, string class_)  : View(true)

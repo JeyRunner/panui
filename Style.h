@@ -24,7 +24,10 @@ using namespace std;
 class Style
 {
     public:
-      // Style ();
+      /* init 
+       * @description creates default styleRules*/
+      static void init();
+        
       StyleRule* operator()(string selector);
       StyleRule* operator()(StyleRule *rule);
         

@@ -29,6 +29,9 @@ Box::Box() : View(true)
     cout << "[BOX ] create BoxRenderer" << endl;
     View::renderer =  new BoxRenderer(this);
     cout << "[BOX ] create BoxRenderer [OK]" << endl;
+    
+    // -- bind rules and attributes
+    getStyle();
 }
 
 Box::Box(string id, string class_)  : View(true)

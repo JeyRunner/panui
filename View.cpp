@@ -33,6 +33,9 @@ View::View()
     
     // create own renderer
     renderer = new Renderer(this);
+    
+    // -- bind rules and attributes
+    getStyle();
 }
 View::View(string id, string class_) 
 {

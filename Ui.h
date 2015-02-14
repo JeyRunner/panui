@@ -33,6 +33,9 @@ class Ui
         Ui(int width, int height, string title);
         ~Ui();
         
+        // init - call before any other commands !
+        static void init();
+        
         // var
         static View *rootView;
         static FrameRenderer *frameRenderer;

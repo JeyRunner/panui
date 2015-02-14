@@ -63,6 +63,7 @@ void StyleRule::setSelectorType(string selector)
     if      (selectorTypeStr == '~') { selectorType = OWN_SELECTOR; }
     else if (selectorTypeStr == '#') { selectorType = ID_SELECTOR; }
     else if (selectorTypeStr == '.') { selectorType = CLASS_SELECTOR; }
+    else if (selectorTypeStr == '*') { selectorType = GLOBAL_SELECTOR; }
     else                             { selectorType = VIEW_SELECTOR; }
 }
 
@@ -76,6 +77,7 @@ void StyleRule::setImportance(SelectorType selectorType)
         case ID_SELECTOR:     importance = 100; break;
         case CLASS_SELECTOR:  importance = 20;  break;
         case VIEW_SELECTOR:   importance = 10;  break;
+        case GLOBAL_SELECTOR: importance = 1;   break;
         default:              importance = 0;   break;
     }
     cout << "[RULE] add rule '" << selector << "' with importance " << importance << endl;
@@ -165,7 +167,7 @@ void StyleRule::onAktiveStateChange(StyleAttribute *styleAttribute)
         // bind new fitting Attribute
        (*iterator)->renderer->bindAttribute(calculatedAttribute);
        
-       cout << "[STRULE] reset Attribute (type '" << styleAttribute->type << "') (in progress...)" << endl;
+       cout << "[RULE] reset Attribute (type '" << styleAttribute->type << "') (in progress...)" << endl;
     }
 }
 

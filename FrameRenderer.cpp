@@ -24,6 +24,7 @@
 #include "View.h"
 #include "Renderer.h"
 #include "GL.h"
+#include "Style.h"
 #include "Touch.h"
 
 using namespace std;

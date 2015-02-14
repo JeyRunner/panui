@@ -15,6 +15,7 @@
 #include "Ui.h"
 #include "View.h"
 #include "Renderer.h"
+#include "Style.h"
 #include "GL.h"
 using namespace std;
 
@@ -33,10 +34,6 @@ Ui::Ui()
     // -> init screen
     // -> render in intervalles
     frameRenderer = new FrameRenderer(this);
-    
-    // init pre
-    // => before any View is created
-    GL::initPre();
 }
 
 // -- CREATE OBJEKT --------------
@@ -51,11 +48,19 @@ Ui::Ui(int width, int height, string title)
     frameRenderer->screen->display_width  = width;
     frameRenderer->screen->display_height = height;
     frameRenderer->screen->display_title    = title;
-    
+}
+
+// -- INIT ---------------------
+void Ui::init() 
+{
     // init pre
     // => before any View is created
     GL::initPre();
+    
+    // create default style
+    Style::init();
 }
+
 
 
 

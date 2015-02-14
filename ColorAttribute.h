@@ -35,7 +35,7 @@ class ColorAttribute : public StyleAttribute
       void setR(float red);     // set red
       void setG(float green);   // set green
       void setB(float blue);    // set blue
-      void setAlpha(float red); // set alpha
+      void setAlpha(float alpha); // set alpha
       
       // get value
       string get();             // get as hex: R G B Alpha

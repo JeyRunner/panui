@@ -40,13 +40,14 @@ class StyleRule : public StyleAttribute::OnChangeListener
       
       // selector type - view, id, ...
       enum SelectorType
-      { OWN_SELECTOR, ID_SELECTOR, CLASS_SELECTOR, VIEW_SELECTOR } selectorType;  
+      { OWN_SELECTOR, ID_SELECTOR, CLASS_SELECTOR, VIEW_SELECTOR, GLOBAL_SELECTOR } selectorType;  
       
       /* how important is styleRule compared to others
        * has OWN_SELCTOR     => 100 
        * has ID_SELECTOR     => 100 
        * has CLASS_SELECTOR  => 20
        * has VIEW_SELECTOR   => 10  
+       * has GLOBAL_SELECTOR => 1
        */
       int  importance;        
       
