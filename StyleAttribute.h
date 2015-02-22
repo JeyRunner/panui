@@ -111,10 +111,6 @@ class StyleAttribute
       
       // bounded Views 
       list<View*> boundedViews;
-      list<View*>::iterator iterator;
-      
-      
-
 };
 
 

@@ -32,6 +32,8 @@ Renderer::Renderer()
     //layoutAttributesPtr = &layoutAttributes;
     
     // default
+    renderAttributes.positionX         = 0;
+    renderAttributes.positionY         = 0;
     renderAttributes.contendHeight    = 0;
     renderAttributes.contendWidth     = 0;
     touchAttributes.isOver             = false;
@@ -288,8 +290,8 @@ void Renderer::resetCursor()
     // => render next view
     // remove cursor -> to own position
     glm::mat4 transform = glm::translate(glm::vec3( -renderAttributes.positionX /* X */,
-                                                    -renderAttributes.positionY /* Y */,
-                                                    -0.0f                       /* Z */ ))
+                                                     -renderAttributes.positionY /* Y */,
+                                                     -0.0f                       /* Z */ ))
                                                      * GL::transfomMatix;
     glm::mat4 model     = GL::projectionMatix * transform;
     

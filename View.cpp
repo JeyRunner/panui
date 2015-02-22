@@ -20,6 +20,9 @@ using namespace std;
 // -- CREATE OBJEKT --------------
 View::View(bool DoNothing) 
 {
+    // default
+    parent = NULL;
+    
     // create own style rule
     style = new StyleRule("~");
     
@@ -28,6 +31,9 @@ View::View(bool DoNothing)
 
 View::View() 
 {
+    // default
+    parent = NULL;
+    
     // create own style rule
     style = new StyleRule("~");
     
@@ -39,9 +45,13 @@ View::View()
 }
 View::View(string id, string class_) 
 {
+    // default
+    parent = NULL;
+    
     // set var
     this->id = id;
     this->class_ = class_;
+    //strcpy(this->c_id , id.c_str());
     
     // create own style rule
     style = new StyleRule("~");

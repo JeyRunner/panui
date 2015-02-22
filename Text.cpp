@@ -54,8 +54,10 @@ string Text::text(string text)
     
     // recalc textImg
     renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
-    if (parent)
+    if (parent && parent != 0 && parent != NULL)
+    {
         parent->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
+    }
     //((TextRenderer*)renderer)->addCalcTask(UI_CALCTASK_TEXT_TEXT);
     
     return this->text_str;

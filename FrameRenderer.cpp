@@ -161,7 +161,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     // glEnable(GL_DEPTH_TEST);
   
     
-    // set transform Matix for all shaders to middel of screen
+    // set transform Matix for all shaders to middle of screen
     GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
     
     int   frame_counter = 0;
@@ -286,6 +286,12 @@ void FrameRenderer::exe_render()
     glViewport(0,0, screen->display_width, screen->display_height);
     // -> already set after window resize event
 #endif
+    // reset projection matrix
+    // @TODO bug: add view at runtime -> transform matrix is shifted 
+    // set transform Matix for all shades to middle of screen
+    GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
+    
+    
     
     // set background color of screen -> white
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);

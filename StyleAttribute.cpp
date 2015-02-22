@@ -51,21 +51,27 @@ void StyleAttribute::addBoundedView(View *view)
 {
     // add view to end of list
     boundedViews.push_back(view);
+    
+    // add calc tasks
+//    if (view)
+//        view->renderer->addCalcTask(causeCalc[UI_VIEW_SELF]);
+//    if (view->parent)
+//        view->parent->renderer->addCalcTask(causeCalc[UI_VIEW_PARRENT]);
 }
 
 // -- REMOVE
 void StyleAttribute::removeBoundedView(View *view)
 {
     // -- search for View in list 
-    for (iterator = boundedViews.begin(); /* iterator to start pos */
-         iterator != boundedViews.end();  /* end if iterator at last pos */
-         iterator++)
+    for (list<View*>::iterator it = boundedViews.begin(); /* iterator to start pos */
+         it != boundedViews.end();  /* end if iterator at last pos */
+         it++)
     {
-        if (*iterator == view)
+        if (*it == view)
         {
             //  found View
             //  => remove
-            boundedViews.erase(iterator);
+            boundedViews.erase(it);
             return;
      }}
 }
@@ -84,22 +90,22 @@ void StyleAttribute::onValueChange()
             
             //cout << "[STATTR] boundedViews need Layout" << endl;
             // update each view -> add it to task list
-            for (iterator = boundedViews.begin(); iterator != boundedViews.end(); iterator++)
+            for (list<View*>::iterator it = boundedViews.begin(); it != boundedViews.end(); it++)
             {
                 //cout << "[STATTR] add view to calculationTasks" << endl << endl;
                 // to parrent or self
                 if (i == UI_VIEW_SELF)
                 {
                     // add calc task to view self
-                    (*iterator)->renderer->addCalcTask(causeCalc[i]);
+                    (*it)->renderer->addCalcTask(causeCalc[i]);
                 }
                 else if (i == UI_VIEW_PARRENT)
                 {
                     // add calc task to view parrent
-                    View *parrent = (View*)(*iterator)->parent;
-                    if (parrent != NULL)
+                    View *parent = (View*)(*it)->parent;
+                    if (parent != NULL)
                     {
-                        parrent->renderer->addCalcTask(causeCalc[i]);
+                        parent->renderer->addCalcTask(causeCalc[i]);
                     }
                 }
 

@@ -120,15 +120,15 @@ void StyleRule::addBoundedView(View *view)
 void StyleRule::removeBoundedView(View *view)
 {
     // -- search for View in list 
-    for (iterator = boundedViews.begin(); /* iterator to start pos */
-         iterator != boundedViews.end();  /* end if iterator at last pos */
-         iterator++)
+    for (list<View*>::iterator it = boundedViews.begin(); /* iterator to start pos */
+         it != boundedViews.end();  /* end if iterator at last pos */
+         it++)
     {
-        if (*iterator == view)
+        if (*it == view)
         {
             //  found View
             //  => remove
-            boundedViews.erase(iterator);
+            boundedViews.erase(it);
             return;
      }}
 }
@@ -155,17 +155,17 @@ bool StyleRule::compareRules(StyleRule* a, StyleRule* b)
 void StyleRule::onAktiveStateChange(StyleAttribute *styleAttribute) 
 {
     // bounded views -> each
-    for (iterator = boundedViews.begin(); /* iterator to start pos */
-         iterator != boundedViews.end();  /* end if iterator at last pos */
-         iterator++)
+    for (list<View*>::iterator it = boundedViews.begin(); /* iterator to start pos */
+         it != boundedViews.end();  /* end if iterator at last pos */
+         it++)
     {
         // @TODO unbind views of unused Attributes form unused Attributes @FOR_BETTER_PERFORMANCE 
          
         // get Attribute that fits to view
-        StyleAttribute *calculatedAttribute = (*iterator)->renderer->checkAttributeBinding(styleAttribute->type);
+        StyleAttribute *calculatedAttribute = (*it)->renderer->checkAttributeBinding(styleAttribute->type);
         
         // bind new fitting Attribute
-       (*iterator)->renderer->bindAttribute(calculatedAttribute);
+       (*it)->renderer->bindAttribute(calculatedAttribute);
        
        cout << "[RULE] reset Attribute (type '" << styleAttribute->type << "') (in progress...)" << endl;
     }

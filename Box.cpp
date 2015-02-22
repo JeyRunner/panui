@@ -62,6 +62,9 @@ void Box::addChild(View* child)
     
     // set self as parrent
     child->parent = this;
+    
+    // recalc children
+    renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
 }
 
 // -- GET CHILD ------------------

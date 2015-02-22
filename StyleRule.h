@@ -97,8 +97,6 @@ class StyleRule : public StyleAttribute::OnChangeListener
       
       // bounded Views 
       list<View*> boundedViews;
-      list<View*>::iterator iterator;
-
 };
 
 #endif	/* STYLERULE_H */
