@@ -18,10 +18,13 @@
 // ## INCLUDE
 #include <stdio.h>
 #include <iostream>
+#include <sstream>
 
 
 #ifdef pl_pi
 #include <GLES2/gl2.h>
+#elif defined pl_andr
+#include <SDL.h>
 #else
 #include <SDL2/SDL.h>
 #endif
@@ -113,8 +116,6 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     
 #ifndef pl_pi
     
-    display_width  = width;
-    display_height = height;
     int error = 0;
     SDL_Surface *surface = NULL;
     
@@ -135,7 +136,10 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     // enable antialasing with multisampeling
     // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLEBUFFERS, 1);
     // SDL_GL_SetAttribute(SDL_GL_MULTISAMPLESAMPLES, 8);
-    
+    SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
+    SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
+    SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+
 
     // open window - init projection matrix ...
     window = SDL_CreateWindow(title.c_str(), 
@@ -146,11 +150,27 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     // create context
     SDL_GL_CreateContext(window);
     
+    
+    // set full screen for android
+#ifdef pl_andr
+    SDL_GetWindowSize(window, &width, &height);
+    ostringstream os;
+    os << "[DISP] get SDL window size, height: " << height << ", width: " << width;
+    SDL_Log(os.str().c_str());
+#endif
+    
+    
+    // set var
+    display_width  = width;
+    display_height = height;
+    
     // init matrix ...
     onResizeScreenFunc(display_width, display_height);
     
+#ifndef pl_andr
     // init glew
     glewInit();
+#endif
     
     // output ok
     cout << "[DISP] create Window with sdl [OK]" << endl;

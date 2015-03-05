@@ -8,8 +8,12 @@
  * ---------------------------------------
  */
 
+#ifdef pl_andr
+#include <SDL.h>
+#endif
 
 #include <string.h>
+#include <sstream>
 //#include <GLES2/gl2.h>
 #include <glm/gtc/matrix_transform.hpp>
 
@@ -242,7 +246,7 @@ void Renderer::renderGl_1()
     cout << "                                        color: r=" << renderAttributes.background_color->r << " g:" << renderAttributes.background_color->g 
                                                                 << " b:" << renderAttributes.background_color->b << " alpha:" << renderAttributes.background_color->alpha << endl;
     */ 
-    
+#ifndef pl_andr
     // remove cursor -> to own position
     glTranslatef(
             renderAttributes.positionX /* x */,
@@ -279,6 +283,7 @@ void Renderer::renderGl_1()
     // deactivate vertex Array mode
     // => end of operation
     glDisableClientState(GL_VERTEX_ARRAY);
+#endif
 }
 
 
@@ -487,7 +492,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             renderAttributes.text_family = dynamic_cast<StringAttribute*>(attribute);
             break; 
             
-        default: cout << "[RN of '" << view->id << "'] error: bindAttribute (attribute->type '" << attribute->type << "' does not fit)" << endl;
+        default: cout << "[RN of '" + view->id << "'] error: bindAttribute (attribute->type '" << attribute->type << "' does not fit)" << endl;
     }
     attribute->addBoundedView(view);
     

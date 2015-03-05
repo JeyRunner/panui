@@ -12,6 +12,8 @@
 
 //#include <GLES/gl.h>
 #include "GL.h"
+#include <sstream>
+#include "out.h"
 
 // static
 GLint GL::SHADER_VIEW_BACKGROUND,
@@ -42,11 +44,15 @@ GL::GL() {
 void GL::initPre() 
 {
     // -- init Freetype lib
-     bool error = FT_Init_FreeType( &ftLib );
+    bool error = FT_Init_FreeType( &ftLib );
     if ( error )
+    {
       cout << "[ GL ] init Freetype lib [ERR]" << endl;
+    }
     else
+    {
       cout << "[ GL ] init Freetype lib [OK]" << endl;
+    }
 }
 
 
@@ -55,6 +61,7 @@ void GL::init()
 {
     // -- create view background shader ---------------------------------------------------
     createShader(/* -- vertexShader ---------------------------------------- */
+                 "#version 100                                             \n" 
                  "attribute vec3 vertexPos;                                \n"
                  "uniform   mat4 transformMatrix;                          \n" // uniform can be set by cpu
                  "                                                         \n"
@@ -64,6 +71,8 @@ void GL::init()
                  "}                                                        \n",
             
                  /* -- fragmentShader ---------------------------------------- */
+                 "#version 100                             \n" 
+                 "precision highp float;                   \n" 
                  "uniform vec4 color;                      \n" // uniform can be set by cpu
                  "                                         \n"
                  "void main() {                            \n"
@@ -80,6 +89,7 @@ void GL::init()
     
     // -- create Text Character Shader ----------------------------------------------------
     createShader(/* -- vertexShader ---------------------------------------- */
+                 "#version 100                                             \n" 
                  "attribute vec4 vertexPos;                                \n"
                  "uniform   mat4 transformMatrix;                          \n" // uniform can be set by cpu
                  "varying vec2 texcoord;                                   \n"
@@ -91,6 +101,8 @@ void GL::init()
                  "}                                                        \n",
             
                  /* -- fragmentShader ---------------------------------------- */
+                 "#version 100                             \n"  
+                 "precision highp float;                   \n" 
                  "uniform vec4 color;                      \n" // uniform can be set by cpu
                  "varying vec2 texcoord;                   \n"
                  "uniform sampler2D tex;                   \n"
@@ -126,18 +138,26 @@ void GL::createShader(const GLchar* vertexShader, const GLchar* fragmentShader, 
     // create shader programm 
     prog = glCreateProgram();
     if (prog == 0)
-        cout << "[ GL ] create shader program [ERR]" << endl;
-    else 
-        cout << "[ GL ] create shader program [OK]" << endl;
+    {
+      cout  << "[ GL ] create shader program [ERR]" << endl;
+    }
+    else
+    {
+      cout  << "[ GL ] create shader program [OK]" << endl;
+    }
     
     
     // create shader container --------
     shaderVertex   = glCreateShader(GL_VERTEX_SHADER);   // for vertext-shader
     shaderFragment = glCreateShader(GL_FRAGMENT_SHADER); // for fragment-shader
     if (shaderVertex == 0  ||  shaderFragment == 0)
-        cout << "[ GL ] create shader [ERR]" << endl;
+    {
+      cout  << "[ GL ] create shader [ERR]" << endl;
+    }
     else 
-        cout << "[ GL ] create shader [OK]" << endl;
+    {
+      cout  << "[ GL ] create shader [OK]" << endl;
+    }
     
     
     // load shaders into char vars
@@ -152,6 +172,8 @@ void GL::createShader(const GLchar* vertexShader, const GLchar* fragmentShader, 
     // compile shader
     glCompileShader(shaderVertex);
     glCompileShader(shaderFragment);    
+    checkShaderError(shaderVertex,   false, GL_COMPILE_STATUS, "compile vertex shader");
+    checkShaderError(shaderFragment, false, GL_COMPILE_STATUS, "compile fragment shader");
     
     
     // add shader to programm

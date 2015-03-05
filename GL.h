@@ -13,12 +13,15 @@
 #ifndef GL_H
 #define	GL_H 
 
-#ifdef pl_pi
+#if defined pl_pi || defined pl_andr
 #include <GLES2/gl2.h>
 #else
 #include <GL/glew.h>
 #include <GL/glu.h>
-#include <SDL/SDL.h>
+#endif
+
+#ifndef pl_pi
+#include <SDL.h>
 #endif
 
 #include <stdlib.h>
@@ -72,10 +75,10 @@ class GL
        * by vertex + Fragemnt shader */
       static void createShader(const GLchar *vertexShader, const GLchar *fragmentShader, GLint *shaderProgramHandle, GLint *shaderAttributeVertexPosHandle, GLint *shaderUniformColorHandle, GLint *shaderUniformTransformMatixHandle);
 
-      
+       static void checkShaderError(GLuint shader, bool isProgram, GLint flag, string message) ;
     private:
       // check if shader causes error
-      static void checkShaderError(GLuint shader, bool isProgram, GLint flag, string message) ;
+     
 
 };
 
