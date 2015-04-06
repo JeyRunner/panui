@@ -86,7 +86,11 @@ void BoxRenderer::calcLayoutChildSize(View* v)
     // get var
     IntAttribute *widthAttr   = v->renderer->layoutAttributes.width;
     IntAttribute *heightAttr  = v->renderer->layoutAttributes.height;
-    
+    IntAttribute *topAttr     = v->renderer->layoutAttributes.top;
+    IntAttribute *bottomAttr  = v->renderer->layoutAttributes.bottom;
+    IntAttribute *leftAttr    = v->renderer->layoutAttributes.left;
+    IntAttribute *rightAttr   = v->renderer->layoutAttributes.right;
+
     GLfloat       *widthFinal  = &(v->renderer->renderAttributes.width);
     GLfloat       *heightFinal = &(v->renderer->renderAttributes.height);
 
@@ -104,14 +108,14 @@ void BoxRenderer::calcLayoutChildSize(View* v)
 
             // percentage
             case UI_ATTR__MODE_PERCENT:
-                *widthFinal = widthAttr->percentValue * (renderAttributes.width / 100.0f);
+                *widthFinal = widthAttr->percentValue * (renderAttributes.width / 100.0f) - leftAttr->floatValue - rightAttr->floatValue;
                 break;
         }
     }
     // in auto mode
     else if (widthAttr->autoMode == UI_ATTR_AUTO_AUTO) 
     {
-        *widthFinal = renderAttributes.width - v->renderer->layoutAttributes.right->floatValue;
+        *widthFinal = renderAttributes.width - leftAttr->floatValue - rightAttr->floatValue;
     }
     
     
@@ -128,7 +132,7 @@ void BoxRenderer::calcLayoutChildSize(View* v)
 
             // percentage
             case UI_ATTR__MODE_PERCENT:
-                *heightFinal = heightAttr->percentValue * (renderAttributes.height / 100.0f);
+                *heightFinal = heightAttr->percentValue * (renderAttributes.height / 100.0f) - topAttr->floatValue - bottomAttr->floatValue;
                 break;
         }
     }
