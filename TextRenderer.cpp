@@ -45,7 +45,7 @@ void TextRenderer::calcText()
     const char *text = ((Text*)view)->text_str.c_str(); 
     const char *p; 
     int x = 0;
-    int y = -fontRowHeight;
+    int y = -fontRowHeight; // @TODO calc text with padding
     
     // Vertex
     struct Vertex
@@ -566,18 +566,18 @@ void TextRenderer::render()
 //    glEnableVertexAttribArray(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
     
     float contendHeight = 0;
-    int x = 0;
-    int y = -fontRowHeight;
+    int x = layoutAttributes.paddingLeft->floatValue;
+    int y = -fontRowHeight - layoutAttributes.paddingTop->floatValue;
     const char *p; 
  
     // render lines -> for each character
     for(p = ((Text*)view)->text_str.c_str(); *p; p++) {
         
       // check for new line
-      if (*p == '\n' || ((x + charInfo[*p].advanceX) > renderAttributes.width))
+      if (*p == '\n' || ((x + charInfo[*p].advanceX) > (renderAttributes.width - layoutAttributes.paddingRight->floatValue - layoutAttributes.paddingLeft->floatValue)))
       {
           // new line 
-          x = 0;                // to row start
+          x = layoutAttributes.paddingLeft->floatValue; // to row start
           y-= fontRowHeight;     // one line deeper
           
           // add line to contend height
@@ -622,6 +622,9 @@ void TextRenderer::render()
     
     // add last line to contend height
     contendHeight += fontRowHeight;
+
+    // add padding to contend height
+    contendHeight = contendHeight + layoutAttributes.paddingTop->floatValue + layoutAttributes.paddingBottom->floatValue;
     
 
 //    glBindBuffer(GL_ARRAY_BUFFER, 0);

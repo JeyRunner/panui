@@ -33,6 +33,11 @@ void Style::init()
     rBase->left->set(0);
     rBase->bottom->set(0);
     rBase->position->set(UI_ATTR_POSITION_RELATIVE);
+
+    rBase->paddingTop->set(0);
+    rBase->paddingBottom->set(0);
+    rBase->paddingLeft->set(0);
+    rBase->paddingRight->set(0);
     
     rBase->height->setAuto(UI_ATTR_AUTO_AUTO);
     rBase->width->setAuto(UI_ATTR_AUTO_AUTO);

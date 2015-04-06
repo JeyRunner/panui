@@ -61,6 +61,11 @@ class StyleRule : public StyleAttribute::OnChangeListener
       IntAttribute    *top;
       IntAttribute    *right;
       IntAttribute    *bottom;
+
+      IntAttribute    *paddingLeft;
+      IntAttribute    *paddingTop;
+      IntAttribute    *paddingRight;
+      IntAttribute    *paddingBottom;
       
       IntAttribute    *position;
       

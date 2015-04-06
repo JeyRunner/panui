@@ -56,7 +56,7 @@ class Renderer
         
         // 4 vertices -> *(x,y,z) = 12
         GLfloat vertices[12]; 
-        GLfloat height, width;                  // calculated
+        GLfloat height, width;                // calculated
         GLfloat contendHeight, contendWidth;  // calculated
         
         ColorAttribute *background_color;
@@ -75,6 +75,7 @@ class Renderer
       struct LayoutAttributes 
       {
         IntAttribute *top, *left, *right, *bottom, *position;
+        IntAttribute *paddingTop, *paddingLeft, *paddingRight, *paddingBottom;
         IntAttribute *height, *width;
       } layoutAttributes;
       //LayoutAttributes *layoutAttributesPtr;

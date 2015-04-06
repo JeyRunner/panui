@@ -30,14 +30,18 @@ BoxRenderer::BoxRenderer(Box *view) : Renderer(view)
 void BoxRenderer::calcLayoutChildrenPos() 
 {
     //cout << "[RN of '" << view->id << "'] " << " calcLayoutChildrenPos()" << endl;
-    
+    IntAttribute *padLeftAttr   = layoutAttributes.paddingLeft;
+    IntAttribute *padRightAttr  = layoutAttributes.paddingRight;
+    IntAttribute *padTopAttr    = layoutAttributes.paddingTop;
+    IntAttribute *padBottonAttr = layoutAttributes.paddingBottom;
+
     // reset hightest hight
     chCur.hightesHight  = 0;
     chCur.contendHeight = 0;
     
     // set cursor to left top corner of self
-    chCur.x = -(renderAttributes.width  /2);  // left border
-    chCur.y = +(renderAttributes.height /2);  // top  border
+    chCur.x = -(renderAttributes.width  /2) + padLeftAttr->floatValue;  // left border
+    chCur.y = +(renderAttributes.height /2) - padTopAttr->floatValue;   // top  border
     
     //cout << "[RN of '" << view->id << "'] " << "  => set cursor" << endl;
     
@@ -71,8 +75,8 @@ void BoxRenderer::calcLayoutChildrenPos()
     chCur.contendHeight += chCur.hightesHight;
         
     // set own contendSize
-    renderAttributes.contendHeight = chCur.contendHeight;
-    renderAttributes.contendWidth  = renderAttributes.width;
+    renderAttributes.contendHeight = chCur.contendHeight + padTopAttr->floatValue + padBottonAttr->floatValue /* padding */;
+    renderAttributes.contendWidth  = renderAttributes.width + padLeftAttr->floatValue + padRightAttr->floatValue;
     
     // recalculate vertices position
     // calcLayoutSize();
@@ -84,15 +88,21 @@ void BoxRenderer::calcLayoutChildrenPos()
 void BoxRenderer::calcLayoutChildSize(View* v)
 {
     // get var
-    IntAttribute *widthAttr   = v->renderer->layoutAttributes.width;
-    IntAttribute *heightAttr  = v->renderer->layoutAttributes.height;
-    IntAttribute *topAttr     = v->renderer->layoutAttributes.top;
-    IntAttribute *bottomAttr  = v->renderer->layoutAttributes.bottom;
-    IntAttribute *leftAttr    = v->renderer->layoutAttributes.left;
-    IntAttribute *rightAttr   = v->renderer->layoutAttributes.right;
+    IntAttribute *widthAttr     = v->renderer->layoutAttributes.width;
+    IntAttribute *heightAttr    = v->renderer->layoutAttributes.height;
+    IntAttribute *topAttr       = v->renderer->layoutAttributes.top;
+    IntAttribute *bottomAttr    = v->renderer->layoutAttributes.bottom;
+    IntAttribute *leftAttr      = v->renderer->layoutAttributes.left;
+    IntAttribute *rightAttr     = v->renderer->layoutAttributes.right;
 
-    GLfloat       *widthFinal  = &(v->renderer->renderAttributes.width);
-    GLfloat       *heightFinal = &(v->renderer->renderAttributes.height);
+    IntAttribute *padLeft       = layoutAttributes.paddingLeft;
+    IntAttribute *padRight      = layoutAttributes.paddingRight;
+    IntAttribute *padTop        = layoutAttributes.paddingTop;
+    IntAttribute *padBotton     = layoutAttributes.paddingBottom;
+
+
+    GLfloat       *widthFinal   = &(v->renderer->renderAttributes.width);
+    GLfloat       *heightFinal  = &(v->renderer->renderAttributes.height);
 
     
     // set width
@@ -108,14 +118,14 @@ void BoxRenderer::calcLayoutChildSize(View* v)
 
             // percentage
             case UI_ATTR__MODE_PERCENT:
-                *widthFinal = widthAttr->percentValue * (renderAttributes.width / 100.0f) - leftAttr->floatValue - rightAttr->floatValue;
+                *widthFinal = widthAttr->percentValue * (renderAttributes.width / 100.0f) - leftAttr->floatValue - rightAttr->floatValue - padLeft->floatValue - padRight->floatValue;
                 break;
         }
     }
     // in auto mode
     else if (widthAttr->autoMode == UI_ATTR_AUTO_AUTO) 
     {
-        *widthFinal = renderAttributes.width - leftAttr->floatValue - rightAttr->floatValue;
+        *widthFinal = renderAttributes.width - leftAttr->floatValue - rightAttr->floatValue - padLeft->floatValue - padRight->floatValue;
     }
     
     
@@ -132,7 +142,7 @@ void BoxRenderer::calcLayoutChildSize(View* v)
 
             // percentage
             case UI_ATTR__MODE_PERCENT:
-                *heightFinal = heightAttr->percentValue * (renderAttributes.height / 100.0f) - topAttr->floatValue - bottomAttr->floatValue;
+                *heightFinal = heightAttr->percentValue * (renderAttributes.height / 100.0f) - topAttr->floatValue - bottomAttr->floatValue - padTop->floatValue - padBotton->floatValue;
                 break;
         }
     }
@@ -157,18 +167,20 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
     // cout << "[RN of '" << view->id << "'] " << "  => pos child relative ['" << v->id << "']" << endl;
     // get render
     Renderer *ren = v->renderer;
+    IntAttribute *padLeft   = layoutAttributes.paddingLeft;
+    IntAttribute *padRight  = layoutAttributes.paddingRight;
     
     // check if open next row
     // cout << "[RN of '" << view->id << "'] " << "  child Cursor X: " << chCur.x << "     Self widht: " << layoutAttributes.width->floatValue << endl;
     if ((chCur.x +
-            /* next View */ (ren->layoutAttributes.left->floatValue /* margin */      +ren->renderAttributes.width /* to right */) ) 
-            >= (renderAttributes.width/2))
+        /* next View */ (ren->layoutAttributes.left->floatValue /* margin */      +ren->renderAttributes.width /* to right */) )
+            >= (renderAttributes.width/2 - padLeft->floatValue - padRight->floatValue))
     {
         // if next view would positioned out of own border
         // => open nex row
         //cout << "[RN of '" << view->id << "'] " << " --------- open new row" << endl;
         chCur.Y(-chCur.hightesHight);
-        chCur.x = -(renderAttributes.width  /2);  // left border
+        chCur.x = -(renderAttributes.width  /2) + padLeft->floatValue;  // left border
         //cout << "[RN of '" << view->id << "'] " << " --------- child Cursor Y: " << chCur.y << endl;
         
         // calc contend height

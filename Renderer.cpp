@@ -465,7 +465,23 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
         case StyleAttribute::RIGHT: 
             layoutAttributes.right = dynamic_cast<IntAttribute*>(attribute);
             break;
-            
+
+        case StyleAttribute::PADDING_LEFT:
+            layoutAttributes.paddingLeft = dynamic_cast<IntAttribute*>(attribute);
+            break;
+
+        case StyleAttribute::PADDING_RIGHT:
+            layoutAttributes.paddingRight = dynamic_cast<IntAttribute*>(attribute);
+            break;
+
+        case StyleAttribute::PADDING_TOP:
+            layoutAttributes.paddingTop = dynamic_cast<IntAttribute*>(attribute);
+            break;
+
+        case StyleAttribute::PADDING_BOTTOM:
+            layoutAttributes.paddingBottom = dynamic_cast<IntAttribute*>(attribute);
+            break;
+
         case StyleAttribute::POSITION: 
             layoutAttributes.position = dynamic_cast<IntAttribute*>(attribute);
             break;
