@@ -91,7 +91,7 @@ class StyleAttribute
       virtual void set(string value);// = 0;
       
       // set value mode: auto, noneAuto
-      void setAuto(UI_ATTR_AUTO autoMode);
+      virtual void setAuto(UI_ATTR_AUTO autoMode);
       //virtual string operator =(string value);
       
       // get value

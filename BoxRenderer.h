@@ -6,6 +6,17 @@
  * BOXRENDERER CLASS
  * render BOX(VIEW)
  * extends RENDERER
+ *
+ * layout calculation:
+ * 1. self width
+ * 2. children (for each child)
+ * 2.1 width, height
+ * 2.2 position
+ * 3. self height
+ *
+ * if use height = AUTO
+ * * own height only dependent on
+ *   children with non percent height
  * ---------------------------------------
  */
 
@@ -14,10 +25,7 @@
 #define	BOXRENDERER_H
 
 #include <stdlib.h>
-
-//#include "GLES/gl.h"
 #include "GL.h"
-
 #include "Renderer.h"
 class Box;
 using namespace std;

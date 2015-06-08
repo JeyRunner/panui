@@ -4,8 +4,19 @@
  *
  * ---------------------------------------
  * BOXRENDERER CLASS
- * render BOXVIEW
+ * render BOX(VIEW)
  * extends RENDERER
+ *
+ * layout calculation:
+ * 1. self width
+ * 2. children (for each child)
+ * 2.1 width, height
+ * 2.2 position
+ * 3. self height
+ *
+ * if use height = AUTO
+ * * own height only dependent on
+ *   children with non percent height
  * ---------------------------------------
  */
 
@@ -212,15 +223,26 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
         +ren->layoutAttributes.right->floatValue     /* margin */
         +ren->renderAttributes.width /2 /* to right */);
     
-    
-    // calc hole hight width top, bottom
-    int holeHight = ren->renderAttributes.height + ren->layoutAttributes.top->floatValue + ren->layoutAttributes.bottom->floatValue;
-    
-    // -- update hightes hight
-    if (chCur.hightesHight < holeHight)
+
+    // only effect hightes height if no percent height  while parent has no AUTO height
+    if (!(   (ren->layoutAttributes.height->mode == UI_ATTR__MODE_PERCENT)
+          && (v->parent->renderer->layoutAttributes.height->autoMode == UI_ATTR_AUTO_AUTO)))
     {
-        // => update
-        chCur.hightesHight = holeHight;
+        // calc whole hight width top, bottom
+        int wholeHight = ren->renderAttributes.height + ren->layoutAttributes.top->floatValue +
+                                                        ren->layoutAttributes.bottom->floatValue;
+    
+        // -- update hightes hight
+        if (chCur.hightesHight < wholeHight)
+        {
+            // => update
+            chCur.hightesHight = wholeHight;
+        }
+    }
+
+    else
+    {
+        cout << "[BREN] height of '"<< v->id << ", " << v->class_ <<"' will not effect '"<< v->parent->id << ", " << v->parent->class_ <<"'" << endl;
     }
 }
 
@@ -402,4 +424,3 @@ void BoxRenderer::ChildrenCursor::XY(float x, float y)
 // -- DESTROY OBJEKT -----------
 BoxRenderer::~BoxRenderer() {
 }
-

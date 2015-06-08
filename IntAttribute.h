@@ -32,6 +32,7 @@ class IntAttribute : public StyleAttribute
       void set(string value);
       void set(int value);
       void setPercent(float value);
+      virtual void setAuto(UI_ATTR_AUTO autoMode);
       
       // get value
       string get();

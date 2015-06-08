@@ -76,7 +76,11 @@ void IntAttribute::setPercent(float value)
     onValueChange();
 }
 
-
+void IntAttribute::setAuto(UI_ATTR_AUTO autoMode)
+{
+    StyleAttribute::setAuto(autoMode);
+    mode = UI_ATTR__MODE_VALUE;
+}
 
 
 // -- GET
