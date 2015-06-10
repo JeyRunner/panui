@@ -17,6 +17,7 @@
 #include "StyleRule.h"
 #include "View.h"
 #include "Renderer.h"
+#include "Style.h"
 
 
 // ############################################
@@ -53,6 +54,10 @@ StyleRule::StyleRule(string selector)
     // -- get Selector, Type
     setSelectorType(selector);
     setImportance(this->selectorType);
+
+
+    // add self to style list
+    Style::addRule(this);
 }
 
 
