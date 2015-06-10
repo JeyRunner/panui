@@ -5,6 +5,13 @@
  * ---------------------------------------
  * RENDERER CLASS
  * render VIEW
+ *
+ * * layout calculation:
+ * 1. self width                    => UI_CALCTASK_LAYOUT_SIZE
+ * 2. self height                   => UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND
+ * 3. own vertices                  => UI_CALCTASK_LAYOUT_SIZE_VERTICES
+ *
+ * * connects StyleRules, StyleAttributes
  * ---------------------------------------
  */
 
@@ -95,15 +102,15 @@ class Renderer
       
       
       // -- calculate -> layout Attributes into render attributes
-              void calcLayout(); // calls clacLayoutPosition() and calcLayoutSize()
-      virtual void calcLayoutPosition();
       virtual void calcLayoutSize();
+      virtual bool calcLayoutSizeAutoContend(); // calc own height dependent on contend
+      virtual void calcLayoutSizeVertices();    // calc vertices pos
       
       // add calculation Task
       virtual void  addCalcTask(int type);
       
       // execute all calc Tasks
-      virtual int exeCaclTasks();
+      virtual int exeCalcTasks();
       
       
       // render itself

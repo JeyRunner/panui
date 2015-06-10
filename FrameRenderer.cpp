@@ -120,8 +120,10 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         // replace missing parent
         fr->ui->rootView->renderer->renderAttributes.width  = width;
         fr->ui->rootView->renderer->renderAttributes.height = height;
-        fr->ui->rootView->renderer->calcLayoutSize();
-        //fr->ui->rootView->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
+        //fr->ui->rootView->renderer->calcLayoutSize();
+
+        // recalc
+        fr->ui->rootView->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
     });
     
     fr->screen->onCloseScreen([&](){
@@ -177,7 +179,8 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     {    
         //cout << "---------- FRAME ----------------------------" << endl;
         // -- timestamp --------
-        
+
+
         // get current time since 1.1.1970 in milli seconds
         #ifndef pl_pi
         timeStart = SDL_GetTicks();
@@ -248,7 +251,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
 // -- EXECUTE CALCULATION TASKS --------
 void FrameRenderer::exe_calcTasks() 
 {
-    ui->rootView->renderer->exeCaclTasks();
+    ui->rootView->renderer->exeCalcTasks();
     
     /*
     if (!calcTasks.empty())

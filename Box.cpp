@@ -26,7 +26,6 @@ using namespace std;
 Box::Box() : View(true)
 {
     // create renderer
-    cout << "[BOX ] create BoxRenderer" << endl;
     View::renderer =  new BoxRenderer(this);
     cout << "[BOX ] create BoxRenderer [OK]" << endl;
     

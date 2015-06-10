@@ -43,9 +43,10 @@ void TextRenderer::calcText()
     // @TODO make calc text working
     // var
     const char *text = ((Text*)view)->text_str.c_str(); 
-    const char *p; 
-    int x = 0;
-    int y = -fontRowHeight; // @TODO calc text with padding
+    const char *p;
+    float contendHeight = 0;
+    int x = layoutAttributes.paddingLeft->floatValue;
+    int y = -fontRowHeight - layoutAttributes.paddingTop->floatValue;
     
     // Vertex
     struct Vertex
@@ -59,38 +60,38 @@ void TextRenderer::calcText()
     
     // delete old buffer
     // glDeleteBuffers(1, &HANDEL_VERTEX_BUFFER);
-   
-    float contendHeight = 0;
+
     int n = 0;
     
     // calc lines -> for each character
     for(p = text; *p; p++) {
-        
-      // check for new line
-      if (*p == '\n' || ((x + charInfo[*p].advanceX) > renderAttributes.width))
-      {
-          // new line 
-          x = 0;                // to row start
-          y-= fontRowHeight;     // one line deeper
-          
-                    
-          // add line to contend height
-          contendHeight += fontRowHeight;
-      }  
-        
 
-      float x2 = x +  charInfo[*p].marginLeft; //ftGlyph->bitmap_left
-      float y2 = -y - charInfo[*p].marginTop;  //ftGlyph->bitmap_top
-      float w =       charInfo[*p].texWidht;   //ftGlyph->bitmap.width
-      float h =       charInfo[*p].texHight;   //ftGlyph->bitmap.rows
+        // check for new line
+        if (*p == '\n' || ((x + charInfo[*p].advanceX) > (renderAttributes.width - layoutAttributes.paddingRight->floatValue - layoutAttributes.paddingLeft->floatValue)))
+        {
+            // new line
+            x = layoutAttributes.paddingLeft->floatValue; // to row start
+            y-= fontRowHeight;     // one line deeper
 
-      
-      coords[n++] = (Vertex){x2,     -y2    ,           charInfo[*p].texPosX,                                                   0};
-      coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHeight}; //remember: each glyph occupies a different amount of vertical space
-      coords[n++] = (Vertex){x2 + w, -y2    ,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         0};
-      coords[n++] = (Vertex){x2,     -y2 - h,           charInfo[*p].texPosX,                                                charInfo[*p].texHight / fontRowHeight};
-      coords[n++] = (Vertex){x2 + w, -y2 - h,           charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,         charInfo[*p].texHight / fontRowHeight};
+            // add line to contend height
+            contendHeight += fontRowHeight;
+        }
+
+
+        float x2 = x +  charInfo[*p].marginLeft; //ftGlyph->bitmap_left
+        float y2 = -y - charInfo[*p].marginTop;  //ftGlyph->bitmap_top
+        float w =       charInfo[*p].texWidht;   //ftGlyph->bitmap.width
+        float h =       charInfo[*p].texHight;   //ftGlyph->bitmap.rows
+
+
+        coords[n++] = (Vertex) {x2, -y2, charInfo[*p].texPosX, 0};
+        coords[n++] = (Vertex) {x2 + w, -y2, charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht, 0};
+        coords[n++] = (Vertex) {x2, -y2 - h, charInfo[*p].texPosX, charInfo[*p].texHight /
+                                                                   fontRowHeight}; //remember: each glyph occupies a different amount of vertical space
+        coords[n++] = (Vertex) {x2 + w, -y2, charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht, 0};
+        coords[n++] = (Vertex) {x2, -y2 - h, charInfo[*p].texPosX, charInfo[*p].texHight / fontRowHeight};
+        coords[n++] = (Vertex) {x2 + w, -y2 - h, charInfo[*p].texPosX + charInfo[*p].texWidht / fontRowWidht,
+                                charInfo[*p].texHight / fontRowHeight};
 
 //      GLfloat box[4][4] = {
 //          {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
@@ -104,7 +105,7 @@ void TextRenderer::calcText()
 //            GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS       /* pass vertices to vertex Pos attribute of vertexShader */,
 //            4                                               /* 3 Aruments: x,y,z */,
 //            GL_FLOAT                                        /* Format: float     */,
-//            GL_FALSE                                        /* take values as-is */,   
+//            GL_FALSE                                        /* take values as-is */,
 //            0                                               /* Entry lenght ?    */,
 //            box                                             /* vertices Array    */ );
 //
@@ -115,11 +116,18 @@ void TextRenderer::calcText()
 //            0 /* Array start pos   */,
 //            4 /* how much vertices */);
 
-      x += charInfo[*p].advanceX;
-      y += charInfo[*p].advanceY;
+        x += charInfo[*p].advanceX;
+        y += charInfo[*p].advanceY;
     }
     n = 0;
-    
+
+    // add last line to contend height
+    contendHeight += fontRowHeight;
+
+    // add padding to contend height
+    contendHeight = contendHeight + layoutAttributes.paddingTop->floatValue + layoutAttributes.paddingBottom->floatValue;
+
+
 //    coords[n++] = (Vertex){ 0,0, 0,0 };
 //    coords[n++] = (Vertex){ 0,10, 0,0 };
 //    coords[n++] = (Vertex){ 10,10, 0,0 };
@@ -143,12 +151,12 @@ void TextRenderer::calcText()
 //    
 //    glBindBuffer(GL_ARRAY_BUFFER, 0);
     //cout << "[TEXT] calc Text [OK]" << endl; 
-    
-    
-    // add last line to contend height
-    contendHeight += fontRowHeight;
-    
+
+    // done
+    // cout << "[DONE] calcText of '"<< view->id << ", " << view->class_ <<"'" << endl;
+    calcTasks[UI_CALCTASK_TEXT_TEXT] = false;
     renderAttributes.contendHeight = contendHeight;
+
 }
 
 
@@ -231,6 +239,9 @@ void TextRenderer::calcTextFamily()
     
     // recalc TextAtlas
     addCalcTask(UI_CALCTASK_TEXT_ATLAS);
+
+    // done
+    calcTasks[UI_CALCTASK_TEXT_FAMILY] = false;
 }
 
 // -- CALC TEXT SIZE -------
@@ -248,6 +259,8 @@ void TextRenderer::calcTextSize()
         
     // recalc TextAtlas
     addCalcTask(UI_CALCTASK_TEXT_ATLAS);
+    // done
+    calcTasks[UI_CALCTASK_TEXT_SIZE] = false;
 }
 
 // -- CALC TEXT - TEXTURE ATLAS -> CONTAINS CHARACTER BITMAPS
@@ -349,6 +362,9 @@ void TextRenderer::calcTextTexAtlas()
     // set row hight to max hight of font
     fontRowHeight = textureHight;
     fontRowWidht = textureWidht;
+
+    // done
+    calcTasks[UI_CALCTASK_TEXT_ATLAS] = false;
 }
 
 
@@ -360,56 +376,46 @@ void TextRenderer::addCalcTask(int type)
     // check for own possible task types
     switch (type)
     {
+        case UI_CALCTASK_LAYOUT_SIZE:
+            calcTasks[UI_CALCTASK_TEXT_TEXT] = true;
+            break;
+
         case UI_CALCTASK_TEXT_SIZE:
         case UI_CALCTASK_TEXT_FAMILY:
         case UI_CALCTASK_TEXT_ATLAS:
         case UI_CALCTASK_TEXT_TEXT:
             calcTasks[type] = true;
+            break;
     }
 }
 
 
 // -- EXE CALC TAKKS
-int  TextRenderer::exeCaclTasks() 
+int  TextRenderer::exeCalcTasks()
 {
-    int lastTask = Renderer::exeCaclTasks();
-    int i;
+    if(calcTasks[UI_CALCTASK_LAYOUT_SIZE])
+        calcLayoutSize();
+
+    if (calcTasks[UI_CALCTASK_TEXT_FAMILY])
+        calcTextFamily();
+
+    if (calcTasks[UI_CALCTASK_TEXT_SIZE])
+        calcTextSize();
+
+    if (calcTasks[UI_CALCTASK_TEXT_ATLAS])
+        calcTextTexAtlas();
+
+    if (calcTasks[UI_CALCTASK_TEXT_TEXT])
+        calcText();
+
+    if (calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND])
+        calcLayoutSizeAutoContend();
+
+    if (calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES])
+        calcLayoutSizeVertices();
+
     
-    // for each calc task
-    for (i =lastTask; i <= UI_CALCTASK__SIZE+1; i++)
-    {
-        // if true 
-        if (calcTasks[i])
-        {
-//            cout << "[TEXT] execute calc task num." << i << endl;
-            
-            // -> execute
-            switch (i)
-            {
-                case UI_CALCTASK_TEXT_FAMILY:
-                    calcTextFamily();
-                    calcTasks[i] = false;
-                    break;
-                    
-                case UI_CALCTASK_TEXT_SIZE:
-                    calcTextSize();
-                    calcTasks[i] = false;
-                    break;   
-                    
-                case UI_CALCTASK_TEXT_ATLAS:
-                    calcTextTexAtlas();
-                    calcTasks[i] = false;
-                    break;   
-                    
-                case UI_CALCTASK_TEXT_TEXT:
-                    calcText();
-                    calcTasks[i] = false;
-                    break;  
-            }
-        }
-    }
-    
-    return i;
+    return 0;
 }
 
 
@@ -679,7 +685,7 @@ void TextRenderer::render()
     */
    
     // set contend width
-    renderAttributes.contendHeight = contendHeight;
+    // renderAttributes.contendHeight = contendHeight;
 }
 
 

@@ -7,12 +7,24 @@
  * render BOX(VIEW)
  * extends RENDERER
  *
+ *
  * layout calculation:
- * 1. self width
+ * [if self height = AUTO]
+ * 1. self width                    => UI_CALCTASK_LAYOUT_SIZE
  * 2. children (for each child)
- * 2.1 width, height
- * 2.2 position
- * 3. self height
+ * 2.1 width, height                => child->exeCalcTasks()
+ * 2.2 position                     => UI_CALCTASK_LAYOUT_CHIDREN_POSITION
+ * 3. self height                   => UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND
+ * 4. own vertices                  => UI_CALCTASK_LAYOUT_SIZE_VERTICES
+ *
+ * layout calculation:
+ * * [if self height = VALUE, PERCENT]
+ * 1. self width, height            => UI_CALCTASK_LAYOUT_SIZE
+ * 2. children (for each child)
+ * 2.1 width, height                => child->exeCalcTasks()
+ * 2.2 position                     => UI_CALCTASK_LAYOUT_CHIDREN_POSITION
+ * 3. own vertices                  => UI_CALCTASK_LAYOUT_SIZE_VERTICES
+ *
  *
  * if use height = AUTO
  * * own height only dependent on
@@ -40,7 +52,6 @@ BoxRenderer::BoxRenderer(Box *view) : Renderer(view)
 // -- CLAC POS
 void BoxRenderer::calcLayoutChildrenPos() 
 {
-    //cout << "[RN of '" << view->id << "'] " << " calcLayoutChildrenPos()" << endl;
     IntAttribute *padLeftAttr   = layoutAttributes.paddingLeft;
     IntAttribute *padRightAttr  = layoutAttributes.paddingRight;
     IntAttribute *padTopAttr    = layoutAttributes.paddingTop;
@@ -53,8 +64,7 @@ void BoxRenderer::calcLayoutChildrenPos()
     // set cursor to left top corner of self
     chCur.x = -(renderAttributes.width  /2) + padLeftAttr->floatValue;  // left border
     chCur.y = +(renderAttributes.height /2) - padTopAttr->floatValue;   // top  border
-    
-    //cout << "[RN of '" << view->id << "'] " << "  => set cursor" << endl;
+
     
     // position each child
     for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */
@@ -64,11 +74,7 @@ void BoxRenderer::calcLayoutChildrenPos()
         // get position, width, height attributes
         IntAttribute *posAttr    = (*iter)->renderer->layoutAttributes.position;      
       
-        
-        // calc child size
-        if ((*iter)->renderer->calcTasks[UI_CALCTASK_LAYOUT_SIZE] /* if size attr has changed */)
-            calcLayoutChildSize(*iter);
-        
+
         // check for position type
         switch (posAttr->intValue)
         {
@@ -89,85 +95,9 @@ void BoxRenderer::calcLayoutChildrenPos()
     renderAttributes.contendHeight = chCur.contendHeight + padTopAttr->floatValue + padBottonAttr->floatValue /* padding */;
     renderAttributes.contendWidth  = renderAttributes.width + padLeftAttr->floatValue + padRightAttr->floatValue;
     
-    // recalculate vertices position
-    // calcLayoutSize();
-}
-
-
-
-// -- CALC CHILD SIZE
-void BoxRenderer::calcLayoutChildSize(View* v)
-{
-    // get var
-    IntAttribute *widthAttr     = v->renderer->layoutAttributes.width;
-    IntAttribute *heightAttr    = v->renderer->layoutAttributes.height;
-    IntAttribute *topAttr       = v->renderer->layoutAttributes.top;
-    IntAttribute *bottomAttr    = v->renderer->layoutAttributes.bottom;
-    IntAttribute *leftAttr      = v->renderer->layoutAttributes.left;
-    IntAttribute *rightAttr     = v->renderer->layoutAttributes.right;
-
-    IntAttribute *padLeft       = layoutAttributes.paddingLeft;
-    IntAttribute *padRight      = layoutAttributes.paddingRight;
-    IntAttribute *padTop        = layoutAttributes.paddingTop;
-    IntAttribute *padBotton     = layoutAttributes.paddingBottom;
-
-
-    GLfloat       *widthFinal   = &(v->renderer->renderAttributes.width);
-    GLfloat       *heightFinal  = &(v->renderer->renderAttributes.height);
-
-    
-    // set width
-    // if not in auto mode
-    if (widthAttr->autoMode == UI_ATTR_AUTO_NONE) 
-    {    
-        switch (widthAttr->mode)
-        {
-            // absolute
-            case UI_ATTR__MODE_VALUE:
-                *widthFinal = widthAttr->floatValue;
-                break;
-
-            // percentage
-            case UI_ATTR__MODE_PERCENT:
-                *widthFinal = widthAttr->percentValue * (renderAttributes.width / 100.0f) - leftAttr->floatValue - rightAttr->floatValue - padLeft->floatValue - padRight->floatValue;
-                break;
-        }
-    }
-    // in auto mode
-    else if (widthAttr->autoMode == UI_ATTR_AUTO_AUTO) 
-    {
-        *widthFinal = renderAttributes.width - leftAttr->floatValue - rightAttr->floatValue - padLeft->floatValue - padRight->floatValue;
-    }
-    
-    
-    // set height
-    // if not in auto mode
-    if (heightAttr->autoMode == UI_ATTR_AUTO_NONE) 
-    { 
-        switch (heightAttr->mode)
-        {
-            // absolute
-            case UI_ATTR__MODE_VALUE:
-                *heightFinal = heightAttr->floatValue;
-                break;
-
-            // percentage
-            case UI_ATTR__MODE_PERCENT:
-                *heightFinal = heightAttr->percentValue * (renderAttributes.height / 100.0f) - topAttr->floatValue - bottomAttr->floatValue - padTop->floatValue - padBotton->floatValue;
-                break;
-        }
-    }
-    // in auto mode
-    else if (heightAttr->autoMode == UI_ATTR_AUTO_AUTO) 
-    {
-        *heightFinal = v->renderer->renderAttributes.contendHeight;
-    }
-    
-    // view calc own vertices
-    v->renderer->calcLayoutSize();
-    
     // done
-    v->renderer->calcTasks[UI_CALCTASK_LAYOUT_SIZE] = false;
+    // cout << "[DONE] calcLayoutChildrenPos of '"<< view->id << ", " << view->class_ <<"'" << endl;
+    calcTasks[UI_CALCTASK_LAYOUT_CHIDREN_POSITION] = false;
 }
 
 
@@ -175,24 +105,20 @@ void BoxRenderer::calcLayoutChildSize(View* v)
 // -- CALC CHILD POS RELATIVE
 void BoxRenderer::calcLayoutChildRelative(View* v) 
 {
-    // cout << "[RN of '" << view->id << "'] " << "  => pos child relative ['" << v->id << "']" << endl;
     // get render
     Renderer *ren = v->renderer;
     IntAttribute *padLeft   = layoutAttributes.paddingLeft;
     IntAttribute *padRight  = layoutAttributes.paddingRight;
     
     // check if open next row
-    // cout << "[RN of '" << view->id << "'] " << "  child Cursor X: " << chCur.x << "     Self widht: " << layoutAttributes.width->floatValue << endl;
     if ((chCur.x +
         /* next View */ (ren->layoutAttributes.left->floatValue /* margin */      +ren->renderAttributes.width /* to right */) )
             >= (renderAttributes.width/2 - padLeft->floatValue - padRight->floatValue))
     {
         // if next view would positioned out of own border
         // => open nex row
-        //cout << "[RN of '" << view->id << "'] " << " --------- open new row" << endl;
         chCur.Y(-chCur.hightesHight);
         chCur.x = -(renderAttributes.width  /2) + padLeft->floatValue;  // left border
-        //cout << "[RN of '" << view->id << "'] " << " --------- child Cursor Y: " << chCur.y << endl;
         
         // calc contend height
         chCur.contendHeight+= chCur.hightesHight;
@@ -239,11 +165,6 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
             chCur.hightesHight = wholeHight;
         }
     }
-
-    else
-    {
-        cout << "[BREN] height of '"<< v->id << ", " << v->class_ <<"' will not effect '"<< v->parent->id << ", " << v->parent->class_ <<"'" << endl;
-    }
 }
 
 
@@ -258,33 +179,30 @@ void BoxRenderer::calcLayoutChildAbsolute(View* v)
                                                   -  v->renderer->layoutAttributes.top->floatValue
                                                   + (renderAttributes.height /2);  // top  border
 }
- 
 
 
-// -- POSITION ITSELF  ------------------------------
-void BoxRenderer::calcLayoutSize() 
+// -- CALC LAYOUT SIZE HEIGHT DEPENDT ON CONTEND
+bool BoxRenderer::calcLayoutSizeAutoContend()
 {
-    // percent sized children need calc size
-    for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */
-         iter != ((Box*)this->view)->children.end();                  /* end if iterator at last pos */
-         iter++)
-    { 
-        // attributes
-        IntAttribute *widthAttr  = (*iter)->renderer->layoutAttributes.width;
-        IntAttribute *heightAttr = (*iter)->renderer->layoutAttributes.height;
-        
-        if (widthAttr->mode  == UI_ATTR__MODE_PERCENT  /* if percent value  */
-         || heightAttr->mode == UI_ATTR__MODE_PERCENT) /* if percent value  */
-            (*iter)->renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
+    // get var
+    GLfloat heightOld  = renderAttributes.height;
+    GLfloat heightNew  = renderAttributes.contendHeight;
+
+    // if height is auto
+    if (Renderer::calcLayoutSizeAutoContend())
+    {
+        // correct vertical position of all children
+        // calc shift amount
+        GLfloat shift = (heightNew - heightOld) / 2.0;
+
+        // shift each child
+        for (auto child : ((Box*)view)->children)
+        {
+            child->renderer->renderAttributes.positionY+= shift;
+        }
     }
-        
-    
-    // update children pos
-    calcLayoutChildrenPos();
-     
-     // calc self
-    Renderer::calcLayoutSize();
 }
+
 
 // -- ADD CALC TASK
 void BoxRenderer::addCalcTask(int type) 
@@ -295,50 +213,74 @@ void BoxRenderer::addCalcTask(int type)
     switch (type)
     {
         case UI_CALCTASK_LAYOUT_CHIDREN_POSITION:
-            calcTasks[type] = true;
+            calcTasks[UI_CALCTASK_LAYOUT_CHIDREN_POSITION]  = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND] = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES]     = true;
+            break;
+
+        case UI_CALCTASK_LAYOUT_SIZE:
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE]              = true;
+            calcTasks[UI_CALCTASK_LAYOUT_CHIDREN_POSITION]  = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND] = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES]     = true;
     }
 }
 
 
 // -- EXE CALC TAKKS
-int  BoxRenderer::exeCaclTasks() 
+int  BoxRenderer::exeCalcTasks()
 {
+    // remember calc size
+    bool needCalcSize = calcTasks[UI_CALCTASK_LAYOUT_SIZE];
+
+    /* calc width, (height if not depends on contend)
+     * [!] do befor children calc size (may depend on parent width or height)
+     */
+    if(calcTasks[UI_CALCTASK_LAYOUT_SIZE])
+        calcLayoutSize();
+
+
     // children calc tasks
     // for each child
      for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */
          iter != ((Box*)view)->children.end();                          /* end if iterator at last pos */
          iter++)
     {
-        // render child
-        (*iter)->renderer->exeCaclTasks();
+        // if own size changed
+        // => percent sized children need calc size
+        if(needCalcSize)
+        {
+            // attributes
+            IntAttribute *widthAttr = (*iter)->renderer->layoutAttributes.width;
+            IntAttribute *heightAttr = (*iter)->renderer->layoutAttributes.height;
+
+            if (widthAttr->mode == UI_ATTR__MODE_PERCENT     /* if percent value  */
+                || heightAttr->mode == UI_ATTR__MODE_PERCENT /* if percent value  */
+                || widthAttr->autoMode == UI_ATTR_AUTO_AUTO  /* if auto width */)
+            {
+                (*iter)->renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
+            }
+        }
+
+
+        // calc child
+        (*iter)->renderer->exeCalcTasks();
     }
     
      
     // own calc tasks
-    int lastTask = Renderer::exeCaclTasks();
-    int i;
-    
-    // for each calc task
-    for (i =lastTask; i <= UI_CALCTASK_LAYOUT_CHIDREN_POSITION; i++)
-    {
-        // if true 
-        if (calcTasks[i])
-        {
-            // -> execute
-            switch (i)
-            {
-                //case UI_CALCTASK_LAYOUT_SIZE:
-                case UI_CALCTASK_LAYOUT_CHIDREN_POSITION:
-                    //calcLayoutChildrenPos();
-                    calcLayoutSize();
-                    Touch::needReCheck = true;
-                    calcTasks[i] = false;
-                    break;
-            }
-        }
+    if (calcTasks[ UI_CALCTASK_LAYOUT_CHIDREN_POSITION]) {
+        calcLayoutChildrenPos();
+        Touch::needReCheck = true;
     }
-    
-    return i;
+
+    if (calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND])
+        calcLayoutSizeAutoContend();
+
+    if (calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES])
+        calcLayoutSizeVertices();
+
+    return 0;
 }
 
 

@@ -18,11 +18,13 @@
 const int UI_CALCTASK_NONE                      = 0,
           UI_CALCTASK_LAYOUT_SIZE               = 1,
           UI_CALCTASK_LAYOUT_CHIDREN_POSITION   = 2,
-          UI_CALCTASK_TEXT_FAMILY               = 3,
-          UI_CALCTASK_TEXT_SIZE                 = 4,
-          UI_CALCTASK_TEXT_ATLAS                = 5,
-          UI_CALCTASK_TEXT_TEXT                 = 6,
-          UI_CALCTASK__SIZE                     = 6;
+          UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND  = 3,    // calc own height dependent on contend
+          UI_CALCTASK_LAYOUT_SIZE_VERTICES      = 4,
+          UI_CALCTASK_TEXT_FAMILY               = 5,
+          UI_CALCTASK_TEXT_SIZE                 = 6,
+          UI_CALCTASK_TEXT_ATLAS                = 7,
+          UI_CALCTASK_TEXT_TEXT                 = 8,
+          UI_CALCTASK__SIZE                     = 8;
 
 // -- view ---------------------------------------------
 const int UI_VIEW_SELF                          = 0,

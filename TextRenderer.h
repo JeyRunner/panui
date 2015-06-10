@@ -43,7 +43,7 @@ class TextRenderer : public Renderer
         void calcTextTexAtlas(); // call when change text-family or size \n -> recalculate texture atlas that contains all character bitmaps
         
         virtual void addCalcTask (int type);
-        virtual int  exeCaclTasks ();
+        virtual int  exeCalcTasks();
         
         // render
         virtual void render ();

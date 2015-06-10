@@ -7,12 +7,22 @@
  * render BOX(VIEW)
  * extends RENDERER
  *
+ *
  * layout calculation:
+ * [if self height = AUTO]
  * 1. self width
  * 2. children (for each child)
  * 2.1 width, height
  * 2.2 position
  * 3. self height
+ *
+ * layout calculation:
+ * * [if self height = VALUE, PERCENT]
+ * 1. self width, height
+ * 2. children (for each child)
+ * 2.1 width, height
+ * 2.2 position
+ *
  *
  * if use height = AUTO
  * * own height only dependent on
@@ -47,14 +57,11 @@ class BoxRenderer : public Renderer
       void calcLayoutChildRelative(View *v);
       void calcLayoutChildAbsolute(View *v);
       
-      // -- calc size of child
-      void calcLayoutChildSize(View *v);
-      
       
       // -- position itself -> update children
-      virtual void calcLayoutSize ();
+      virtual bool calcLayoutSizeAutoContend();
       virtual void addCalcTask (int type);
-      virtual int  exeCaclTasks ();
+      virtual int  exeCalcTasks();
 
 
 
@@ -78,8 +85,6 @@ class BoxRenderer : public Renderer
         
         void XY(float x, float y);
       } chCur;
-     
-
 };
 
 #endif	/* BOXRENDERER_H */

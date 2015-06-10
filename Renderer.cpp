@@ -5,6 +5,13 @@
  * ---------------------------------------
  * RENDERER CLASS
  * render VIEW
+ *
+ * * layout calculation:
+ * 1. self width                    => UI_CALCTASK_LAYOUT_SIZE
+ * 2. self height                   => UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND
+ * 3. own vertices                  => UI_CALCTASK_LAYOUT_SIZE_VERTICES
+ *
+ * * connects StyleRules, StyleAttributes
  * ---------------------------------------
  */
 
@@ -36,19 +43,24 @@ Renderer::Renderer()
     //layoutAttributesPtr = &layoutAttributes;
     
     // default
-    renderAttributes.positionX         = 0;
-    renderAttributes.positionY         = 0;
-    renderAttributes.contendHeight    = 0;
-    renderAttributes.contendWidth     = 0;
-    touchAttributes.isOver             = false;
-    touchAttributes.drag               = false;    
-    touchAttributes.childNeedIsOver   = false;
-    touchAttributes.enter              = false;
-    touchAttributes.leave              = false;
-    touchAttributes.relativeParent    = {0,0};
-    touchAttributes.relativeSelf      = {0,0};
-    touchAttributes.relativeSelfDrag = {0,0};
-    
+    renderAttributes.positionX          = 0;
+    renderAttributes.positionY          = 0;
+    renderAttributes.contendHeight      = 0;
+    renderAttributes.contendWidth       = 0;
+    touchAttributes.isOver              = false;
+    touchAttributes.drag                = false;
+    touchAttributes.childNeedIsOver     = false;
+    touchAttributes.enter               = false;
+    touchAttributes.leave               = false;
+    touchAttributes.relativeParent      = {0,0};
+    touchAttributes.relativeSelf        = {0,0};
+    touchAttributes.relativeSelfDrag    = {0,0};
+
+    // need to calc all
+    for (int i = 0; i <= UI_CALCTASK__SIZE; ++i)
+    {
+        calcTasks[i] = true;
+    }
 }
 
 Renderer::Renderer(View *view) 
@@ -67,55 +79,153 @@ Renderer::Renderer(View *view)
 
 
 // == CALCULATE LAYOUT ==================================
-
-// -- CALC LAYOUT POSITION
-void Renderer::calcLayoutPosition() 
-{
-    // out
-    //cout << "[RN of '" << view->id << "'] " << "calcLayoutPosition()" << endl;
-    
-    // check if have parrent
-    if (view->parent == NULL)
-    {
-         //cout << "[RN of '" << view->id << "'] " << "has no parrent => is root view" << endl;
-        // is root view
-        // => position manuall
-        // => to 0,0
-        renderAttributes.positionX = 0.0f;
-        renderAttributes.positionY = 0.0f;
-    }
-}
-
-
 // -- CALC LAYOUT SIZE
 void Renderer::calcLayoutSize() 
-{    
-    // cout << "[RN of '" << view->id << "'] " << "clac size width: " << renderAttributes.width << ", height:" << renderAttributes.height << endl;
-    float heightHalf = renderAttributes.height / 2;
-    float widthHalf  = renderAttributes.width  / 2;
-    
-    // -- clac vertices
-    GLfloat vertices[12] = {  
-                                    -widthHalf, -heightHalf, 0.0f, /* left  Bottom */
-                                    -widthHalf,  heightHalf, 0.0f, /* left  Top */
-                                     widthHalf, -heightHalf, 0.0f, /* right Bottom */
-                                     widthHalf,  heightHalf, 0.0f  /* right Top */};
-    
-    // -- copy into vertices
-    memcpy(renderAttributes.vertices, vertices, sizeof(vertices));
-    
-    // -> need position update
-    // calcLayoutPosition();
+{
+    // if is root view
+    if (view->parent == NULL)
+    {
+        // done
+        calcTasks[UI_CALCTASK_LAYOUT_SIZE] = false;
+        return;
+    }
+
+
+    // get var
+    IntAttribute *widthAttr     = view->renderer->layoutAttributes.width;
+    IntAttribute *heightAttr    = view->renderer->layoutAttributes.height;
+    IntAttribute *topAttr       = view->renderer->layoutAttributes.top;
+    IntAttribute *bottomAttr    = view->renderer->layoutAttributes.bottom;
+    IntAttribute *leftAttr      = view->renderer->layoutAttributes.left;
+    IntAttribute *rightAttr     = view->renderer->layoutAttributes.right;
+
+    IntAttribute *parentPadLeft     = view->parent->renderer->layoutAttributes.paddingLeft;
+    IntAttribute *parentPadRight    = view->parent->renderer->layoutAttributes.paddingRight;
+    IntAttribute *parentPadTop      = view->parent->renderer->layoutAttributes.paddingTop;
+    IntAttribute *parentPadBotton   = view->parent->renderer->layoutAttributes.paddingBottom;
+    GLfloat      *parentWidth       = &(view->parent->renderer->renderAttributes.width);
+    GLfloat      *parentHeight      = &(view->parent->renderer->renderAttributes.height);
+
+    GLfloat       *widthFinal   = &(view->renderer->renderAttributes.width);
+    GLfloat       *heightFinal  = &(view->renderer->renderAttributes.height);
+
+
+    // set width
+    // if not in auto mode
+    if (widthAttr->autoMode == UI_ATTR_AUTO_NONE)
+    {
+        switch (widthAttr->mode)
+        {
+            // absolute
+            case UI_ATTR__MODE_VALUE:
+                *widthFinal = widthAttr->floatValue;
+                break;
+
+                // percentage
+            case UI_ATTR__MODE_PERCENT:
+            {
+
+                *widthFinal = widthAttr->percentValue * (*parentWidth / 100.0f) - leftAttr->floatValue - rightAttr->floatValue - parentPadLeft->floatValue - parentPadRight->floatValue;
+            }
+                break;
+        }
+    }
+        // in auto mode
+    else if (widthAttr->autoMode == UI_ATTR_AUTO_AUTO)
+    {
+        *widthFinal = *parentWidth - leftAttr->floatValue - rightAttr->floatValue - parentPadLeft->floatValue - parentPadRight->floatValue;
+    }
+
+
+    // set height
+    // if not in auto mode
+    if (heightAttr->autoMode == UI_ATTR_AUTO_NONE)
+    {
+        switch (heightAttr->mode)
+        {
+            // absolute
+            case UI_ATTR__MODE_VALUE:
+                *heightFinal = heightAttr->floatValue;
+                break;
+
+                // percentage
+            case UI_ATTR__MODE_PERCENT:
+                // only set height if parent heigt depends not on contend
+                if (view->parent->renderer->layoutAttributes.height->autoMode != UI_ATTR_AUTO_AUTO)
+                    *heightFinal = heightAttr->percentValue * (*parentHeight / 100.0f) - topAttr->floatValue - bottomAttr->floatValue - parentPadTop->floatValue - parentPadBotton->floatValue;
+                else
+                    *heightFinal = 0.0;
+                break;
+        }
+    }
+        // in auto mode
+    else if (heightAttr->autoMode == UI_ATTR_AUTO_AUTO)
+    {
+        // calculated later in calcLayoutSizeAutoContend()
+    }
+
+
+    // done
+    // cout << "[DONE] calcLayoutSize of '"<< view->id << ", " << view->class_ <<"'" << endl;
+    calcTasks[UI_CALCTASK_LAYOUT_SIZE] = false;
+
+    // later -> calcLayoutSizeVertices()
 }
 
-// -- CALC ALL
-void Renderer::calcLayout() 
+// -- CALC LAYOUT SIZE HEIGHT DEPENDT ON CONTEND
+bool Renderer::calcLayoutSizeAutoContend()
 {
-    // out
-    //cout << endl << "[RN of '" << view->id << "'] " << " calcLayout()" << endl;
-    
-    calcLayoutSize();
+    // get var
+    IntAttribute *heightAttr    = view->renderer->layoutAttributes.height;
+    GLfloat      *heightFinal   = &(view->renderer->renderAttributes.height);
+    GLfloat       heightOld     = (view->renderer->renderAttributes.height);
+
+    // set height
+    // in auto mode
+    bool Auto = (heightAttr->autoMode == UI_ATTR_AUTO_AUTO);
+    if (Auto)
+    {
+        // set new height
+        *heightFinal = view->renderer->renderAttributes.contendHeight;
+
+        // if height has changed
+        // => parent need to rePos children
+        if (heightOld != *heightFinal)
+        {
+            if ((view->parent) != NULL)
+            {
+                view->parent->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
+            }
+        }
+    }
+
+    // done
+    // cout << "[DONE] calcLayoutSizeAutoContend of '"<< view->id << ", " << view->class_ <<"'" << endl;
+    calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND] = false;
+    return Auto;
 }
+
+// -- CALC LAYOUT VERTICES WITH HEIGHT AND WIDTH VALUES
+void Renderer::calcLayoutSizeVertices()
+{
+    float heightHalf = renderAttributes.height / 2;
+    float widthHalf  = renderAttributes.width  / 2;
+
+    // -- clac vertices
+    GLfloat vertices[12] = {
+            -widthHalf, -heightHalf, 0.0f, /* left  Bottom */
+            -widthHalf,  heightHalf, 0.0f, /* left  Top */
+            widthHalf, -heightHalf, 0.0f, /* right Bottom */
+            widthHalf,  heightHalf, 0.0f  /* right Top */};
+
+    // -- copy into vertices
+    memcpy(renderAttributes.vertices, vertices, sizeof(vertices));
+
+    // done
+    // cout << "[DONE] calcLayoutSizeVertices of '"<< view->id << ", " << view->class_ <<"'" << endl;
+    calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES] = false;
+}
+
 
 // -- ADD CALC TASK
 void Renderer::addCalcTask(int type)
@@ -125,38 +235,38 @@ void Renderer::addCalcTask(int type)
     {
         case UI_CALCTASK_LAYOUT_SIZE:
             // add calc task
-             calcTasks[type] = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE] = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND] = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES] = true;
+            break;
+
+        case UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND:
+            // add calc task
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND] = true;
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES] = true;
+            break;
+
+        case UI_CALCTASK_LAYOUT_SIZE_VERTICES:
+            // add calc task
+            calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES] = true;
             break;
     }        
 }
 
 
 // -- EXE CALC TASKS
-int  Renderer::exeCaclTasks() 
+int  Renderer::exeCalcTasks()
 {
-    int i;
+    if(calcTasks[UI_CALCTASK_LAYOUT_SIZE])
+        calcLayoutSize();
+
+    if (calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND])
+    calcLayoutSizeAutoContend();
+
+    if (calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES])
+        calcLayoutSizeVertices();
     
-    // for each calc task
-    for (i =0; i <= UI_CALCTASK_LAYOUT_SIZE; i++)
-    {
-        // if true 
-        if (calcTasks[i])
-        {
-            // -> execute
-            switch (i)
-            {
-                case UI_CALCTASK_LAYOUT_SIZE:
-                    // calcLayoutSize();
-                    // calcTasks[i] = false;
-                    // ! not necessary:
-                    // !- already called by parent 
-                    // !--- by calcLayoutChildSize()
-                    break;
-            }
-        }
-    }
-    
-    return i;
+    return 0;
 }
 
 
@@ -355,7 +465,7 @@ void Renderer::bindRule(StyleRule *rule)
     rule->addBoundedView(view);
     
     // out 
-    cout << "[RN of '" << view->id << "'] bind StyleRule '" << rule->selector << "'" <<  endl; 
+    // cout << "[RN of '" << view->id << "'] bind StyleRule '" << rule->selector << "'" <<  endl;
 }
 
 void Renderer::unbindRule(StyleRule *rule) 
@@ -513,7 +623,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
     attribute->addBoundedView(view);
     
     // -- out
-    cout << "[RN of '" << view->id << "'] bind StyleAttribute '" << attribute->type << "'" <<  endl;
+    // cout << "[RN of '" << view->id << "'] bind StyleAttribute '" << attribute->type << "'" <<  endl;
 }
 
 // -- UNBIND ATTRIBUTE 
