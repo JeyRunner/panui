@@ -13,7 +13,6 @@
 //#include <GLES/gl.h>
 #include "GL.h"
 #include <sstream>
-#include "out.h"
 
 // static
 GLint GL::SHADER_VIEW_BACKGROUND,
@@ -32,27 +31,25 @@ glm::mat4  GL::transfomMatix,
            GL::projectionMatix;
 
 FT_Library GL::ftLib;
+Log        GL::log;
 
 
 
 // ###########################################
 // -- CREATE OBJEKT ------------------
-GL::GL() {
+GL::GL()
+{
+    log.setLogName(" GL ");
 }
 
 // -- INIT PRE --------------------------------
 void GL::initPre() 
 {
+    log.setLogName(" GL ");
+
     // -- init Freetype lib
     bool error = FT_Init_FreeType( &ftLib );
-    if ( error )
-    {
-      cout << "[ GL ] init Freetype lib [ERR]" << endl;
-    }
-    else
-    {
-      cout << "[ GL ] init Freetype lib [OK]" << endl;
-    }
+    log.out("init Freetype lib", error, "");
 }
 
 
@@ -137,28 +134,12 @@ void GL::createShader(const GLchar* vertexShader, const GLchar* fragmentShader, 
     
     // create shader programm 
     prog = glCreateProgram();
-    if (prog == 0)
-    {
-      cout  << "[ GL ] create shader program [ERR]" << endl;
-    }
-    else
-    {
-      cout  << "[ GL ] create shader program [OK]" << endl;
-    }
-    
+    log.out("create shader program", (prog == 0), "");
     
     // create shader container --------
     shaderVertex   = glCreateShader(GL_VERTEX_SHADER);   // for vertext-shader
     shaderFragment = glCreateShader(GL_FRAGMENT_SHADER); // for fragment-shader
-    if (shaderVertex == 0  ||  shaderFragment == 0)
-    {
-      cout  << "[ GL ] create shader [ERR]" << endl;
-    }
-    else 
-    {
-      cout  << "[ GL ] create shader [OK]" << endl;
-    }
-    
+    log.out("create shader", (shaderVertex == 0  ||  shaderFragment == 0), "");
     
     // load shaders into char vars
     // => not necessary
@@ -194,12 +175,11 @@ void GL::createShader(const GLchar* vertexShader, const GLchar* fragmentShader, 
     uniTransformMatix   = glGetUniformLocation(prog, "transformMatrix");  
     uniColor            = glGetUniformLocation(prog, "color");
     
-    if ( attrVertexPos     == -1 
-      || uniTransformMatix == -1
-      || uniColor          == -1 )
-        cout << "[ GL ] get Attribute/Uniform [ERR]" << endl;
-    else 
-        cout << "[ GL ] get Attribute/Uniform [OK]"  << endl;
+    log.out( "get Attribute/Uniform",
+             attrVertexPos     == -1
+          || uniTransformMatix == -1
+          || uniColor          == -1,
+             "");
     
     
     // set var --
@@ -237,8 +217,5 @@ void GL::checkShaderError(GLuint shader, bool isProgram, GLint flag, string mess
     }
     
     // out
-    if (success == GL_FALSE)
-        cout << "[ GL ] " << message << " [ERR] '" << errorText << "'" << endl;
-    else
-        cout << "[ GL ] " << message << " [OK]" << endl;
+    log.out(message, success == GL_FALSE, errorText);
 }

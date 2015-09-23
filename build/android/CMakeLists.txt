@@ -15,8 +15,8 @@ set (target ${PROJECT}Android)
 # ### panui ###################################################################################################
 add_definitions (-Dpl_andr)
 add_definitions (-DGLM_FORCE_RADIANS)
-include_directories( /home/joshua/Dokumente/Projekte/panui/ )
-include_directories( /home/joshua/Dokumente/Projekte/panui/include )
+include_directories( ${CMAKE_SOURCE_DIR} )
+include_directories( ${CMAKE_SOURCE_DIR}/include )
 
 
 

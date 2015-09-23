@@ -28,7 +28,7 @@
 using namespace std;
 
 
-class StyleRule : public StyleAttribute::OnChangeListener
+class StyleRule : public StyleAttribute::OnChangeListener, public Log
 {
     public:
       StyleRule (string selector);

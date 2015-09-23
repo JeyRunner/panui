@@ -38,7 +38,7 @@ class View; // => problems with circular including
 using namespace std;
 
 
-class Renderer
+class Renderer : public Log
 {
     public:
       Renderer (View *view);

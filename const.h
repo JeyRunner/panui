@@ -56,5 +56,17 @@ const int  UI_TOUCH_BUTTON_DOWN     = 0,
 struct Point 
 { float x, y; };
 
+// -- LOG LEVEL ----------------------------------------
+enum UI_LOG_LEVEL {
+    UI_LOG_LEVEL_NOTHING,
+    UI_LOG_LEVEL_ERROR,
+    UI_LOG_LEVEL_WARNING,
+    UI_LOG_LEVEL_OK,
+    UI_LOG_LEVEL_DEBUG,
+    UI_LOG_LEVEL_INFORMATION,
+    UI_LOG_LEVEL_TRACE,
+    UI_LOG_LEVEL_ALL
+};
+
 #endif	/* CONST_H */
 

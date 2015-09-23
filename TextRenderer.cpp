@@ -33,6 +33,7 @@ using namespace std;
 // -- CREATE OBJEKT ------------------
 TextRenderer::TextRenderer(Text *view) : Renderer(view) 
 {
+    setLogName("TEXT");
 }
 
 
@@ -169,11 +170,11 @@ void TextRenderer::calcTextFamily()
     // load font face
     error = FT_New_Face( GL::ftLib, renderAttributes.text_family->stringValue.c_str(), 0, &ftFace );
 #endif
-    
+
     
     // @TODO other font loading on android
 #ifdef pl_andr
-    SDL_Log("[TEXT] going to find class [...]");
+    trace("going to find class ... ");
 
     // retrieve the JNI environment.
     JNIEnv* env = (JNIEnv*)SDL_AndroidGetJNIEnv();
@@ -184,31 +185,24 @@ void TextRenderer::calcTextFamily()
     // find the Java class of the activity. It should be SDLActivity or a subclass of it.
     jclass sdlClass(env->GetObjectClass(activity));
 
-    SDL_Log("[TEXT] found class [OK]");
+    ok("found class");
     
     
     
     jfieldID assman = env->GetStaticFieldID(sdlClass,
             "mAssetMgr", "Landroid/content/res/AssetManager;");
 
-    if (assman == 0) {
-        ostringstream os;
-        os << "[ GL ] Could not find mAssetMgr. [ERR]" << endl;
-        cout << os;
-        SDL_Log(os.str().c_str());
-    }
+    if (assman == 0)
+        err("could not find mAssetMgr");
+
 
     jobject assets = env->GetStaticObjectField(sdlClass, assman);
 
-    if (assets == 0) {
-        ostringstream os;
-        os << "[ GL ] Could not get mAssetMgr. [ERR]" << endl;
-        cout << os;
-    }
+    if (assets == 0)
+        err("could not get mAssetMgr");
+
     AAssetManager* manager = AAssetManager_fromJava((env), assets);
-    ostringstream oso;
-    oso << "[ GL ] get AAssetManager [OK]" << endl;
-    SDL_Log(oso.str().c_str());
+    ok("get AAssetManager");
     
     AAsset* fontFile = AAssetManager_open(manager, renderAttributes.text_family->stringValue.c_str(), AASSET_MODE_BUFFER);
     // const void* fontData = AAsset_getBuffer(fontFile);
@@ -217,10 +211,8 @@ void TextRenderer::calcTextFamily()
     memset (buffer, 0, fontLen*sizeof(unsigned char));
     AAsset_read (fontFile, buffer, fontLen);
     AAsset_close (fontFile);
-    
-    ostringstream oso2;
-    oso2 << "[ GL ] font file [OK]" << endl;
-    SDL_Log(oso2.str().c_str());
+
+    ok("font file");
     
     error = FT_New_Memory_Face( GL::ftLib,
                                     buffer,    /* first byte in memory */
@@ -228,12 +220,8 @@ void TextRenderer::calcTextFamily()
                                     0,         /* face_index           */
                                     &ftFace );
 #endif
-    
-    
-    if ( error )
-      cout << "[TEXT] load font face [ERR]" << endl;
-    else
-      cout << "[TEXT] load font face [OK]" << endl;
+
+    out("load font face", error, "");
       
     ftGlyph = ftFace->glyph;
     
@@ -283,8 +271,7 @@ void TextRenderer::calcTextTexAtlas()
         // load character        
         if (FT_Load_Char(ftFace, i /* character number (ascii) */, FT_LOAD_RENDER)) {
             error = true;
-            //cout << "[TEXT] calcTextTexAtlas FT_Load_Char " << i << " '" << to_string((char)i) << "' [ERR]" << endl;
-            cout << "[TEXT] calcTextTexAtlas FT_Load_Char " << i << " [ERR]" << endl;
+            err("calcTextTexAtlas FT_Load_Char " + str(i));
             continue; 
         }
         
@@ -324,7 +311,7 @@ void TextRenderer::calcTextTexAtlas()
         // load character
         if (FT_Load_Char(ftFace, i /* character number (asci) */, FT_LOAD_RENDER)) {
             error = true;
-            cout << "[TEXT] calcTextTexAtlas FT_Load_Char [ERR]" << endl;
+            err("calcTextTexAtlas FT_Load_Char");
             continue;
         }
         

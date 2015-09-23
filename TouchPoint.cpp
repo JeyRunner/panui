@@ -27,7 +27,8 @@ bool TouchPoint::STATE_UP    = false;
 // -- CREATE OBJEKT --------------
 TouchPoint::TouchPoint(Ui* ui)
 {
-    cout << "[TOCH] create" << endl;
+    setLogName("TOCH");
+    trace("create");
     
     // set view
     this->ui   = ui;
@@ -65,7 +66,7 @@ void TouchPoint::move(float x, float y)
     // check for null 
     if (over == NULL)
     {
-        cout << "over is null" << endl;
+        info("over is null");
         over = newOver;
     }
     

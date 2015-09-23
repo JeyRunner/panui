@@ -25,6 +25,8 @@ using namespace std;
 // -- CREATE OBJEKT --------------
 Text::Text() : View(true)
 {
+    setLogName("TEXT");
+
     // create renderer
     View::renderer =  new TextRenderer(this);
     
@@ -34,6 +36,8 @@ Text::Text() : View(true)
 
 Text::Text(string id, string class_)  : View(true)
 {
+    setLogName("TEXT");
+
     // set var
     this->id = id;
     this->class_ = class_;

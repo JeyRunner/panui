@@ -38,6 +38,8 @@
 // -- CREATE OBJEKT ------------------
 Renderer::Renderer()
 {
+    setLogName(" RN ");
+
     // set pointer var
     //renderAttributesPtr = &renderAttributes;
     //layoutAttributesPtr = &layoutAttributes;
@@ -65,6 +67,8 @@ Renderer::Renderer()
 
 Renderer::Renderer(View *view) 
 {
+    setLogName("");
+
     // set view
     this->view = view;
     
@@ -450,7 +454,7 @@ int Renderer::checkRuleBinding(StyleRule *rule)
     
     // -- Global selector
     if (rule->selectorType == StyleRule::GLOBAL_SELECTOR)
-    { return 1; cout << "GLOBAL SELECTOR" << endl; }
+    { return 1; trace("GLOBAL SELECTOR"); }
     
     // -- nothing fits
     return 0;
@@ -618,7 +622,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             renderAttributes.text_family = dynamic_cast<StringAttribute*>(attribute);
             break; 
             
-        default: cout << "[RN of '" + view->id << "'] error: bindAttribute (attribute->type '" << attribute->type << "' does not fit)" << endl;
+        default: out("of '" + view->id + "' bindAttribute", false, "attribute->type '" + str(attribute->type) + "' does not fit");
     }
     attribute->addBoundedView(view);
     

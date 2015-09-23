@@ -19,7 +19,7 @@
 class View;
 
 #include "const.h"
-
+#include "Log.h"
 #include <list>
 #include <string>
 #include <iostream>
@@ -39,7 +39,7 @@ using namespace std;
 // enum StyleAttributeBase::Type;
 
 
-class StyleAttribute
+class StyleAttribute : public Log
 {
     public:
         // -- CONSTAND

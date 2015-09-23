@@ -18,7 +18,7 @@
 #include "TouchPoint.h"
 
 
-class Touch {
+class Touch : public Log {
     public:
       // init
       static void init(Ui *ui);

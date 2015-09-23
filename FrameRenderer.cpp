@@ -34,6 +34,8 @@ using namespace std;
 // -- CREATE OBJEKT --------------
 FrameRenderer::FrameRenderer(Ui* ui) 
 {
+    setLogName(" FR ");
+
     this->ui         = ui;
     
     // default params
@@ -62,33 +64,17 @@ void FrameRenderer::start()
                             &thread_render      /*thread function*/,
                             this                /*transpher classes to thread*/);
     // check if successful
-    switch(result)
-    {
-        case 0:
-            printf("[ FR ] create render thread [OK] \n");
-            break;
-            
-        default:
-            printf("[ FR ] create render thread [ERR] \n");
-    }
+    out("create render thread", result != 0, "");
 }
 
 // -- STOP ---------------------
 void FrameRenderer::stop() 
 {
-    int result = 0;
+    int result = 1;
     //result = pthread_kill(thread_render_id, 1);
     
     // check if successful
-    switch(result)
-    {
-        case 0:
-            printf("[ FR ] kill render thread [OK] \n");
-            break;
-            
-        default:
-            printf("[ FR ] kill render thread [ERR] \n");
-    }
+    out("kill render thread", result != 0, "");
 }
 
 
@@ -128,7 +114,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     
     fr->screen->onCloseScreen([&](){
         fr->screen->closeScreen();
-        cout << "[ FR ] window is closed [OK]" << endl;
+        fr->ok("window is closed");
         exit(0);
     });
     

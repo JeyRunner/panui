@@ -28,12 +28,12 @@
 #include <string>
 #include <iostream>
 #include <glm/glm.hpp>
-
+#include "Log.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 using namespace std;
 
-class GL
+class GL : public Log
 {
     public:
       GL ();
@@ -75,11 +75,12 @@ class GL
        * by vertex + Fragemnt shader */
       static void createShader(const GLchar *vertexShader, const GLchar *fragmentShader, GLint *shaderProgramHandle, GLint *shaderAttributeVertexPosHandle, GLint *shaderUniformColorHandle, GLint *shaderUniformTransformMatixHandle);
 
-       static void checkShaderError(GLuint shader, bool isProgram, GLint flag, string message) ;
-    private:
       // check if shader causes error
-     
+      static void checkShaderError(GLuint shader, bool isProgram, GLint flag, string message) ;
 
+
+    private:
+      static Log log;
 };
 
 /*

@@ -20,13 +20,13 @@
 #endif
 
 #include "FrameRenderer.h"
-
+#include "Log.h"
 #include "Screen.h"
 //#include "View.h"
 class View;
 class FrameRenderer;
 
-class Ui 
+class Ui : public Log
 {
     public:
         Ui();

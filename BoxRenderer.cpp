@@ -44,6 +44,7 @@
 // -- CREATE OBJEKT ------------------
 BoxRenderer::BoxRenderer(Box *view) : Renderer(view)
 {
+    setLogName("RBOX");
     //this->view = view;
 }
 

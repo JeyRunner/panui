@@ -68,6 +68,8 @@ uint32_t Screen::display_height;
 // -- CREATE OBJEKT --------------
 Screen::Screen() 
 {
+    setLogName("DISP");
+
     // default
     display_width  = 500;
     display_height = 500;
@@ -112,7 +114,7 @@ void Screen::setTitle(string title)
 // -- SDL INIT SCREEN --------------------------------------------
 bool Screen::sdlInitScreen(int width, int height, string title) 
 {
-    cout << "[DISP] create Window with sdl [...]" << endl;
+    info("create Window with sdl");
     
 #ifndef pl_pi
     
@@ -123,11 +125,11 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     error = SDL_Init(SDL_INIT_VIDEO);
     if (error != 0)
     {
-        cout << "[DISP] SDL_Init [ERR]" << endl;
+        err("SDL_Init");
         return false;
     }
-    else 
-        cout << "[DISP] SDL_Init [OK]" << endl;
+    else
+        ok("SDL_Init");
     
     
     // activate doublebuffering
@@ -173,14 +175,14 @@ bool Screen::sdlInitScreen(int width, int height, string title)
 #endif
     
     // output ok
-    cout << "[DISP] create Window with sdl [OK]" << endl;
+    ok("create Window with sdl");
     
     // print open gl info
-    printf("[DISP] Open Gl version: '%s' \n",     glGetString(GL_VERSION));
-    printf("[DISP] Open GlSl version: '%s' \n",   glGetString(GL_SHADING_LANGUAGE_VERSION));
-    printf("[DISP] Open Gl renderer: '%s' \n",    glGetString(GL_RENDERER));
-    printf("[DISP] Open Gl extensions: '%s' \n",  glGetString(GL_EXTENSIONS));
-    printf("[DISP] Open Gl max texture size: '%s' \n",  glGetString(GL_MAX_TEXTURE_SIZE));
+    info("Open Gl version: '" + str(glGetString(GL_VERSION)) + "'");
+    info("Open GlSl version: '" + str(glGetString(GL_SHADING_LANGUAGE_VERSION)) + "'");
+    info("Open Gl renderer: '" + str(glGetString(GL_RENDERER)) + "'");
+    info("Open Gl extensions: '" + str(glGetString(GL_EXTENSIONS)) + "'");
+    info("Open Gl max texture size: '" + str(glGetString(GL_MAX_TEXTURE_SIZE)) + "'");
     
     // enable antialiasing with multisampeling
     // glEnable(GL_MULTISAMPLE);
@@ -193,7 +195,7 @@ bool Screen::sdlInitScreen(int width, int height, string title)
 // -- INIT SCREEN WITH EGL ----------------------------------------
 bool Screen::eglInitScreen()
 {   
-    cout << "[DISP] init screen with egl ..." << endl;
+    info("init screen with egl ...");
     
 #ifdef pl_pi
     // -- Var
@@ -203,17 +205,19 @@ bool Screen::eglInitScreen()
     bcm_host_init();
 
     // start ----
-    printf("[DISP] egl Init \n");
+    info("egl Init");
 
 
     // create EGL(necessary at no xwidow)indow surface, passing context width/height
     int success = graphics_get_display_size(0 /*LCD Mode*/,
                                             &display_width,  &display_height);
     if (success < 0)
-        printf("[DISP] at graphics_get_display_size() [ERR]");
+        err("at graphics_get_display_size()");
     else
-        printf("[DISP] graphics_get_display_size [OK] \n");
-        printf("[DISP] width: %d  height: %d  \n", display_width, display_height);
+    {
+        ok("graphics_get_display_size");
+        info("width: "+ str(display_width) +"  height: " + str(display_height));
+    }
 
 
     // manual displaysize
@@ -259,9 +263,9 @@ bool Screen::eglInitScreen()
     // get an EGL display connection
     display = eglGetDisplay(EGL_DEFAULT_DISPLAY);
     if ( display == EGL_NO_DISPLAY )
-        printf("[DISP] at eglGetDisplay() [ERR] \n");
+        err("at eglGetDisplay()");
     else
-        printf("[DISP] eglGetDisplay [OK] \n");
+        ok("at eglGetDisplay()");
 
 
 
@@ -269,11 +273,11 @@ bool Screen::eglInitScreen()
     int major,minor;
 
     EGLBoolean result = eglInitialize(display, &major, &minor);
-    printf("[DISP] EGL init version %d.%d \n", major, minor);
+    info("EGL init version "+ str(major) +"." + str(minor));
     if(result == EGL_FALSE)
-        printf("[DISP] at eglInitialize() [ERR] \n");
+        err("at eglInitialize()");
     else
-        printf("[DISP] eglInitialize [OK] \n");
+        ok("at eglInitialize()");
     
 
     // get, set our config from the config class
@@ -290,39 +294,30 @@ bool Screen::eglInitScreen()
     
     // create context ----------------------------
     context = eglCreateContext(display, config, EGL_NO_CONTEXT, context_attribute_list /* define Open Gl version (default 1.x) */);
-    if(context ==EGL_NO_CONTEXT)
-        printf("[DISP] at eglCreateContext() [ERR] \n");
-    else
-        printf("[DISP] eglCreateContext [OK] \n");
-
-    
+    out("eglCreateContext()", context ==EGL_NO_CONTEXT, "");
     
     
     // create a new surface using this window
     surface = eglCreateWindowSurface(display, config,
                              &nativewindow, NULL);
-    if ( surface == EGL_NO_SURFACE )
-        printf("[DISP] at eglCreateWindowSurface() [ERR] \n");
-    else
-        printf("[DISP] eglCreateWindowSurface [OK] \n");
-   
+    out("at eglCreateWindowSurface()", surface == EGL_NO_SURFACE, "");
     
     
     // connect the context to the surface
     // and connect to actual thread !!!!!!!
     if ( !eglMakeCurrent(display, surface, surface, context) )
-        printf("[DISP] at eglMakeCurrent() [ERR] \n");
+        err("at eglMakeCurrent()");
     else
-        printf("[DISP] eglMakeCurrent [OK] \n");
-              
-    
-    
+        ok("at eglMakeCurrent()");
+
+
+
     // print open gl info
-    printf("[DISP] Open Gl version: '%s' \n",     glGetString(GL_VERSION));
-    printf("[DISP] Open GlSl version: '%s' \n",   glGetString(GL_SHADING_LANGUAGE_VERSION));
-    printf("[DISP] Open Gl renderer: '%s' \n",    glGetString(GL_RENDERER));
-    printf("[DISP] Open Gl extensions: '%s' \n",  glGetString(GL_EXTENSIONS));
-    printf("[DISP] Open Gl max texture size: '%s' \n",  glGetString(GL_MAX_TEXTURE_SIZE));
+    info("Open Gl version: '" + str(glGetString(GL_VERSION)) + "'");
+    info("Open GlSl version: '" + str(glGetString(GL_SHADING_LANGUAGE_VERSION)) + "'");
+    info("Open Gl renderer: '" + str(glGetString(GL_RENDERER)) + "'");
+    info("Open Gl extensions: '" + str(glGetString(GL_EXTENSIONS)) + "'");
+    info("Open Gl max texture size: '" + str(glGetString(GL_MAX_TEXTURE_SIZE)) + "'");
     
     // init projection matrix ...
     onResizeScreenFunc(display_width, display_height);

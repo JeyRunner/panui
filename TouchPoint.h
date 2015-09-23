@@ -21,7 +21,7 @@
 using namespace std;
 
 
-class TouchPoint 
+class TouchPoint : public Log
 {
     public:
       TouchPoint(Ui *ui);

@@ -21,7 +21,7 @@
 using namespace std;
 
 
-class Style
+class Style : public Log
 {
     public:
       /* init 

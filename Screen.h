@@ -20,6 +20,7 @@
 #include <stdio.h>
 #include <string>
 #include <functional>
+#include "Log.h"
 using namespace std;
 
 #ifdef pl_pi
@@ -33,7 +34,7 @@ using namespace std;
 #endif
 
 
-class Screen 
+class Screen : public Log
 {
     public:
         // create , destroy

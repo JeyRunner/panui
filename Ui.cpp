@@ -30,6 +30,8 @@ FrameRenderer *(Ui::frameRenderer);
 // -- CREATE OBJEKT --------------
 Ui::Ui()
 {
+    setLogName(" UI ");
+
     // create frameRenderer object
     // -> init screen
     // -> render in intervalles
@@ -37,13 +39,8 @@ Ui::Ui()
 }
 
 // -- CREATE OBJEKT --------------
-Ui::Ui(int width, int height, string title)
+Ui::Ui(int width, int height, string title) : Ui()
 {
-    // create frameRenderer object
-    // -> init screen
-    // -> render in intervalles
-    frameRenderer = new FrameRenderer(this);
-
     // set window props
     frameRenderer->screen->display_width  = width;
     frameRenderer->screen->display_height = height;

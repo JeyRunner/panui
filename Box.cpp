@@ -25,9 +25,11 @@ using namespace std;
 // -- CREATE OBJEKT --------------
 Box::Box() : View(true)
 {
+    setLogName("BOX ");
+
     // create renderer
     View::renderer =  new BoxRenderer(this);
-    cout << "[BOX ] create BoxRenderer [OK]" << endl;
+    trace("create BoxRenderer");
     
     // -- bind rules and attributes
     getStyle();
@@ -35,12 +37,14 @@ Box::Box() : View(true)
 
 Box::Box(string id, string class_)  : View(true)
 {
+    setLogName("BOX ");
+
     // set var
     this->id = id;
     this->class_ = class_;
     
     // create own renderer
-    cout << "[BOX ] create BoxRenderer" << endl;
+    trace("create BoxRenderer");
     View::renderer =  new BoxRenderer(this);
     
     // -- bind rules and attributes

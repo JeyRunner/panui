@@ -15,7 +15,7 @@
 
 //#include "StyleRule.h"
 //class StyleRule;
-
+#include "Log.h"
 //#include "Renderer.h"
 //#include "BoxView.h" // => problems with circular including
 class Renderer;
@@ -33,7 +33,7 @@ class StyleRule;
 using namespace std;
 
 
-class View 
+class View : public Log
 {
     public:
         View();

@@ -20,13 +20,15 @@ using namespace std;
 // -- CREATE OBJEKT --------------
 View::View(bool DoNothing) 
 {
+    setLogName("VIEW");
+
     // default
     parent = NULL;
     
     // create own style rule
     style = new StyleRule("~");
     
-    cout << "[VIEW] do nothing" << endl; 
+    trace("do nothing");
 }
 
 View::View() 

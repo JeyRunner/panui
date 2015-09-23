@@ -33,7 +33,7 @@ class Ui;
 class View;
 class TouchPoint;
 
-class FrameRenderer 
+class FrameRenderer : public Log
 {
     public:
         FrameRenderer(Ui *ui);

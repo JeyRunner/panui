@@ -24,6 +24,8 @@
 // -- CREATE OBJEKT --------------
 StyleRule::StyleRule(string selector) 
 {
+    setLogName("RULE");
+
     // -- create StyleAttribute objectes 
     //                                                                                   CALC ON SELF                    CALC ON PARRENT
     height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
@@ -90,7 +92,7 @@ void StyleRule::setImportance(SelectorType selectorType)
         case GLOBAL_SELECTOR: importance = 1;   break;
         default:              importance = 0;   break;
     }
-    cout << "[RULE] add rule '" << selector << "' with importance " << importance << endl;
+    trace("add rule '" + str(selector) + "' with importance " + str(importance));
 }
 
 
@@ -116,7 +118,7 @@ StyleAttribute* StyleRule::getAttribute(StyleAttribute::Type type)
         case StyleAttribute::TEXT_COLOR:         return textColor;
         case StyleAttribute::TEXT_FAMILY:        return textFamily;
         
-        default:                                    cout << "[RULE] getAttribute [type does not fit] ->default" << endl; return NULL;
+        default:                                 warn("[RULE] getAttribute [type does not fit] ->default"); return NULL;
     }    
 }
 
@@ -181,7 +183,7 @@ void StyleRule::onAktiveStateChange(StyleAttribute *styleAttribute)
         // bind new fitting Attribute
        (*it)->renderer->bindAttribute(calculatedAttribute);
        
-       cout << "[RULE] reset Attribute (type '" << styleAttribute->type << "') (in progress...)" << endl;
+       trace("[RULE] reset Attribute (type '" + str(styleAttribute->type) + "') (in progress...)");
     }
 }
 

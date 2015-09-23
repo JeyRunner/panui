@@ -16,10 +16,11 @@
 
 #include <string>
 #include <stdlib.h>
+#include "Log.h"
 using namespace std;
 
 
-class Value
+class Value : public Log
 {
     public:
       Value ();
