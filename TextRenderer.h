@@ -23,7 +23,7 @@
 //#include "GL.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-
+#include <list>
 #include "Renderer.h"
 class Text;
 using namespace std;
@@ -40,7 +40,7 @@ class TextRenderer : public Renderer
         void calcText();
         void calcTextFamily();
         void calcTextSize();
-        void calcTextTexAtlas(); // call when change text-family or size \n -> recalculate texture atlas that contains all character bitmaps
+        //void calcTextTexAtlas(); // call when change text-family or size \n -> recalculate texture atlas that contains all character bitmaps
         
         virtual void addCalcTask (int type);
         virtual int  exeCalcTasks();
@@ -56,9 +56,34 @@ class TextRenderer : public Renderer
           float marginTop,marginLeft;   // to position character
           float advanceX, advanceY;
         };
-        CharacterInfo charInfo[128];
+        //CharacterInfo charInfo[128];
         int charAmount;
-        
+
+        // Font
+        class Font : public Log
+        {
+            public:
+            string name;
+            float  size;
+            GLuint HANDEL_TEXTURE_ATLAS;
+
+            // freetype - text
+            FT_GlyphSlot ftGlyph;
+            FT_Face      ftFace;
+            float        fontRowHeight,
+                         fontRowWidht;
+
+            Font(string name, float size);
+            void calcTextTexAtlas(); // call when change text-family or size \n -> recalculate texture atlas that contains all character bitmaps
+            void calcTextSize(float size);
+            CharacterInfo charInfo[128];
+        };
+
+        // list of fonts
+        static list<Font*> fonts;
+
+        // own font
+        Font *font;
       
     private:
       
@@ -67,13 +92,14 @@ class TextRenderer : public Renderer
 //      bool bufferCreated;
 
       // freetype - text
+      /*
       FT_GlyphSlot ftGlyph;
       FT_Face      ftFace;
       float        fontRowHeight,
-                   fontRowWidht;
+                   fontRowWidht; */
       
       GLuint       HANDEL_TEXTURE,
-                   HANDEL_TEXTURE_ATLAS,
+      //             HANDEL_TEXTURE_ATLAS,
                    HANDEL_VERTEX_BUFFER;
 };
 
