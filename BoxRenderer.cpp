@@ -312,32 +312,32 @@ View* BoxRenderer::isOver(float x, float y)
 {
     // var
     View *viewChild;
-    
+
     if (Renderer::isOver(x,y) || touchAttributes.childNeedIsOver)
-    {     
+    {
         // var
         View *v;
-        
+
         // make x,y relative to self
         x-= renderAttributes.positionX;
         y-= renderAttributes.positionY;
-        
-        // check all children
-        for (list<View*>::iterator iter = ((Box*)view)->children.begin(); /* iterator to start pos */
-             iter != ((Box*)view)->children.end();                        /* end if iterator at last pos */
-             iter++)
+
+        // check all children - backwards
+        for (list<View*>::reverse_iterator iter = ((Box*)view)->children.rbegin(); /* iterator to start pos */
+             iter != ((Box*)view)->children.rend();                        /* end if iterator at last pos */
+             ++iter)
         {
             viewChild = (*iter)->renderer->isOver(x,y);
-            
+
             if (viewChild)
             {
                 v = viewChild;
                 if (!touchAttributes.childNeedIsOver)
                     return v;
             }
-           
+
         }
-        
+
         // is not over child
         return this->view;
     }

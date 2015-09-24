@@ -33,6 +33,7 @@ TouchPoint::TouchPoint(Ui* ui)
     // set view
     this->ui   = ui;
     this->over = NULL;
+    this->down = NULL;
     
     // default parameter
     x = 0;
