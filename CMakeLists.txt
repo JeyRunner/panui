@@ -11,6 +11,12 @@ project(${PROJECT} )
 
 ############################################
 ## importend variables #####################
+# raspberry
+set (RASPBERRY_CROSS_COMPILE        ON )
+set (RASPBERRY_TOOLCHAIN            /home/joshua/Dokumente/raspberrypi)
+set (RASPBERRY_GCC_NAME             arm-linux-gnueabihf-g++)
+
+
 # android
 set (ANDROID_TOOLCHAIN 		        /home/joshua/Dokumente/android/android-toolchain )
 set (ANDROID_LIB_FREETYPE_STATIC	/home/joshua/Dokumente/android/android_libs/freetype2/objs/.libs/)
@@ -71,3 +77,4 @@ endfunction()
 # sub
 add_subDirectory (build/android)
 add_subDirectory (build/ubuntu)
+add_subDirectory (build/raspberry)

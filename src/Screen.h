@@ -24,10 +24,10 @@
 using namespace std;
 
 #ifdef pl_pi
-#include "bcm_host.h"
-#include "GLES/gl.h"
-#include "EGL/egl.h"
-#include "EGL/eglext.h"
+#include <bcm_host.h>
+#include <GLES/gl.h>
+#include <EGL/egl.h>
+#include <EGL/eglext.h>
 #else
 #include <stdint.h>
 #include "GL.h"

@@ -60,7 +60,9 @@ class TouchPoint : public Log
       
       // actual view touch on top is down
       View *down;
-      
+
+      // actual view is focused
+      View *focus;
       
       // actual views point is over
 //      list<View*> overList;
