@@ -183,7 +183,7 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     info("Open Gl renderer: '" + str(glGetString(GL_RENDERER)) + "'");
     info("Open Gl extensions: '" + str(glGetString(GL_EXTENSIONS)) + "'");
     info("Open Gl max texture size: '" + str(glGetString(GL_MAX_TEXTURE_SIZE)) + "'");
-    
+
     // enable antialiasing with multisampeling
     // glEnable(GL_MULTISAMPLE);
     
@@ -398,7 +398,7 @@ void Screen::checkEvents()
         switch (event.type)
         {
             
-            // event from window
+            // -- event from window --------------------------------------
             case SDL_WINDOWEVENT:
                 switch(event.window.event)
                 {
@@ -412,8 +412,43 @@ void Screen::checkEvents()
                         break;
                 }
                 break;
-                
-                
+
+
+            // -- keyboard ------------------------------------------------
+            case SDL_TEXTINPUT:
+                /* Add new text onto the end of our text */
+                debug("text input:'"+ str(event.text.text) +"'");
+                break;
+            case SDL_TEXTEDITING:
+            {
+                char *composition = event.edit.text;
+                int  cursor = event.edit.start;
+                int  selection_len = event.edit.length;
+                debug("text edit text:'"+ str(composition) +"'  cursorPos: "+ str(cursor) + "   selectionLen: " + str(selection_len));
+                break;
+            }
+            case SDL_KEYDOWN:
+            {
+                //Handle backspace
+                if (event.key.keysym.sym == SDLK_BACKSPACE)
+                {
+                    debug("key down backspace");
+                }
+                //Handle copy
+                else if (event.key.keysym.sym == SDLK_c && SDL_GetModState() & KMOD_CTRL)
+                {
+                    debug("key down copy");
+                    SDL_SetClipboardText("this function is not implemented yet");
+                }
+                    //Handle paste
+                else if (event.key.keysym.sym == SDLK_v && SDL_GetModState() & KMOD_CTRL)
+                {
+                    debug("key down paste: " + str(SDL_GetClipboardText()));
+                }
+            }
+
+
+            // -- mouse --------------------------------------------------
             case SDL_MOUSEMOTION:
                 int x, y;
                 x = event.motion.x;
@@ -431,6 +466,10 @@ void Screen::checkEvents()
                 type   = (event.button.type   == SDL_MOUSEBUTTONUP)      ? UI_TOUCH_BUTTON_UP        : type;
                 onTouchPressFunc(button, type);
                 break;
+            case SDL_MOUSEWHEEL:
+                //debug("mouseweel x: " + str(event.wheel.x) + "  y: " + str(event.wheel.y));
+                onWeelScrollFunc(event.wheel.x, event.wheel.y);
+                break;
                 
             // window closed
             case SDL_QUIT:
@@ -442,26 +481,6 @@ void Screen::checkEvents()
     
 #endif
 }
-
-
-
-
-// -- SET ON TOUCH MOVE EVENT LISTENER -----
-void Screen::onTouchMove(function<void(int x, int y)> onTouchMove) 
-{ this->onTouchMoveFunc = onTouchMove; }
-
-// -- SET ON BUTTON EVENT LISTENER ---------
-void Screen::onTouchPress(function<void(int, int) > onTouchPress) 
-{ this->onTouchPressFunc = onTouchPress; }
-
-// -- SET ON RESIZE SCREEN EVENT LISTENER --
-void Screen::onResizeScreen(function<void(int width, int height)> onResizeScreen) 
-{ this->onResizeScreenFunc = onResizeScreen; }
-
-// -- SET ON CLOSE WINDOW EVENT LISTENER ---
-void Screen::onCloseScreen(function<void()> onCloseWindow) 
-{ this->onCloseScreenFunc = onCloseWindow; }
-
 
 
 // -- CLOSE SCREEN -------------------------------------------

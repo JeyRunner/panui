@@ -61,7 +61,7 @@ void BoxRenderer::calcLayoutChildrenPos()
     // reset hightest hight
     chCur.hightesHight  = 0;
     chCur.contendHeight = 0;
-    
+
     // set cursor to left top corner of self
     chCur.x = -(renderAttributes.width  /2) + padLeftAttr->floatValue;  // left border
     chCur.y = +(renderAttributes.height /2) - padTopAttr->floatValue;   // top  border
@@ -119,7 +119,8 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
         // if next view would positioned out of own border
         // => open nex row
         chCur.Y(-chCur.hightesHight);
-        chCur.x = -(renderAttributes.width  /2) + padLeft->floatValue;  // left border
+        chCur.x = -(renderAttributes.width  /2) + padLeft->floatValue  // left border
+                  +(layoutAttributes.scrollX->floatValue); // scroll x
         
         // calc contend height
         chCur.contendHeight+= chCur.hightesHight;
@@ -138,12 +139,14 @@ void BoxRenderer::calcLayoutChildRelative(View* v)
         +ren->renderAttributes.width /2 /* to center */);
         
     // set pos X
-    ren->renderAttributes.positionX = +chCur.x;
+    ren->renderAttributes.positionX = +chCur.x
+                                      + (renderAttributes.scrollX); // scroll x
     
     // set pos Y
     ren->renderAttributes.positionY = +chCur.y 
                                       -ren->layoutAttributes.top->floatValue        /* margin */
-                                      -ren->renderAttributes.height /2  /* to center */;
+                                      -ren->renderAttributes.height /2  /* to center */
+                                      - (renderAttributes.scrollY); // scroll y
     
     // cursor to end of view
     chCur.X(
@@ -174,11 +177,13 @@ void BoxRenderer::calcLayoutChildAbsolute(View* v)
 {
     v->renderer->renderAttributes.positionX = + (v->renderer->renderAttributes.width / 2) 
                                                   +  v->renderer->layoutAttributes.left->floatValue
-                                                  - (renderAttributes.width  /2);  // left border
+                                                  - (renderAttributes.width  /2)            // left border
+                                                  + (layoutAttributes.scrollX->floatValue); // scroll x
     
     v->renderer->renderAttributes.positionY = - (v->renderer->renderAttributes.height / 2) 
                                                   -  v->renderer->layoutAttributes.top->floatValue
                                                   + (renderAttributes.height /2);  // top  border
+                                                  - (layoutAttributes.scrollY->floatValue); // scroll y
 }
 
 
@@ -332,7 +337,7 @@ View* BoxRenderer::isOver(float x, float y)
             if (viewChild)
             {
                 v = viewChild;
-                if (!touchAttributes.childNeedIsOver)
+                //if (!touchAttributes.childNeedIsOver)
                     return v;
             }
 

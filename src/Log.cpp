@@ -83,6 +83,7 @@ void Log::print(string text)
 
     // android
 #ifdef pl_andr
-    SDL_Log(text.c_str());
+    string out =  "[ " + logName + " ] " + text;
+    SDL_Log(out.c_str());
 #endif
 }

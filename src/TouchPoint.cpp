@@ -34,6 +34,7 @@ TouchPoint::TouchPoint(Ui* ui)
     this->ui   = ui;
     this->over = NULL;
     this->down = NULL;
+    this->focus= NULL;
     
     // default parameter
     x = 0;
@@ -57,20 +58,20 @@ void TouchPoint::move(float x, float y)
     
     // reset is over count
     Touch::isOverCount = 0;
-    
+
     // check over
     newOver = ui->rootView->renderer->isOver(x,y);
     if (newOver == NULL)
         //cout << "touch return null" << endl;
         return;
-            
+
     // check for null 
     if (over == NULL)
     {
         info("over is null");
         over = newOver;
     }
-    
+
     // over new view
     if (newOver != over)
     {
@@ -111,12 +112,18 @@ void TouchPoint::move(float x, float y)
                 i->renderer->touchAttributes.childNeedIsOver = true;
             }
         }
+        else
+        {
+            // scroll
+            scroll(-x +lastScroll.x, -y +lastScroll.y);
+        }
         
         if (down->onTouchDragMoveFunc)
         {down->onTouchDragMoveFunc(down, down->renderer->touchAttributes.relativeSelfDrag, down->renderer->touchAttributes.relativeParent, {x,y});}
     }
     
-    
+    lastScroll.x = x;
+    lastScroll.y = y;
     // for each view
 //    eachView(ui->rootView, [&](View *view)
 //    {
@@ -143,6 +150,76 @@ void TouchPoint::move(float x, float y)
 }
 
 
+// -- SCROLL ----------------------
+void TouchPoint::scroll(float x, float y)
+{
+    // currently only scroll y
+    //debug("scroll y: " + str(y));
+
+    if (over != NULL)
+    {
+        View *view = focus;//over;
+        bool search = true;
+
+        while (search && (view != NULL))
+        {
+            //debug("check view #" + view->id + "|." + view->class_ + " ");
+            //debug("compare: "+ str((view->renderer->renderAttributes.contendHeight - view->renderer->renderAttributes.height)) +" >= " + str(-( view->renderer->renderAttributes.scrollY + y)) + "  " +
+            //str(((view->renderer->renderAttributes.contendHeight - view->renderer->renderAttributes.height) >=  -( view->renderer->renderAttributes.scrollY + y)) && (-( view->renderer->renderAttributes.scrollY + y) >= 0)));
+            // check is view is scrollable
+            if (view->renderer->renderAttributes.contendHeight > view->renderer->renderAttributes.height)
+            {
+                //debug("view #" + view->id + "|." + view->class_ + " is scrollable");
+                //debug("contendHeight: " + str(view->renderer->renderAttributes.contendHeight) + "  real height: " + str(view->renderer->renderAttributes.height));
+                // if not reach border
+                if (    ((view->renderer->renderAttributes.contendHeight - view->renderer->renderAttributes.height) >=  -( view->renderer->renderAttributes.scrollY + y))
+                     && (-( view->renderer->renderAttributes.scrollY + y) >= 0))
+                {
+                    // scroll this view
+                    //view->renderer->renderAttributes.scrollX += x * 15;
+                    view->renderer->renderAttributes.scrollY += y;
+                    view->renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
+
+                    // done
+                    search = false;
+                    break;
+                }
+                else
+                {
+                    // reach bottom
+                    if (-( view->renderer->renderAttributes.scrollY + y) <= 0)
+                    {
+                        //debug("reach top");
+
+                        view->renderer->renderAttributes.scrollY = 0;
+                        view->renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
+                        //y-= (view->renderer->renderAttributes.scrollY + y);
+                    }
+                    // reach top
+                    if (((view->renderer->renderAttributes.contendHeight - view->renderer->renderAttributes.height) + (view->renderer->renderAttributes.scrollY + y)) <= 0 )
+                    {
+                        //debug("reach bottom");
+
+                        view->renderer->renderAttributes.scrollY = -(view->renderer->renderAttributes.contendHeight - view->renderer->renderAttributes.height);
+                        view->renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
+                        //y-= (view->renderer->renderAttributes.contendHeight - view->renderer->renderAttributes.height) + y;
+                    }
+
+                    // check parent
+                    view = view->parent;
+                    //search = false;
+                }
+            }
+            else
+            {
+                // check parent
+                view = view->parent;
+            }
+        }
+    }
+}
+
+
 
 // -- PRESS -----------------------
 void TouchPoint::press(int button, int type) 
@@ -152,9 +229,10 @@ void TouchPoint::press(int button, int type)
     switch (type)
     {
         case UI_TOUCH_BUTTON_DOWN:
+            focus = over;
+            down = over;
             if (over->onTouchDownFunc)
             {
-                down = over;
                 over->onTouchDownFunc(over, {0,0}, {0,0}, {x,y});                
             }
             break;

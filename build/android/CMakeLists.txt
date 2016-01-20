@@ -42,4 +42,4 @@ setSoOutDir(${ANDROID_SO_OUTDIR})
 checkCompilerCXX()
 
 # link libs
-target_link_libraries(${target} ${LINK_LIBS} )
+target_link_libraries(${target} ${ANDROID_LINK_LIBS} )

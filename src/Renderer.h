@@ -65,6 +65,7 @@ class Renderer : public Log
         GLfloat vertices[12]; 
         GLfloat height, width;                // calculated
         GLfloat contendHeight, contendWidth;  // calculated
+        GLfloat scrollX, scrollY;
         
         ColorAttribute *background_color;
         FloatAttribute *opacity;
@@ -82,6 +83,7 @@ class Renderer : public Log
       struct LayoutAttributes 
       {
         IntAttribute *top, *left, *right, *bottom, *position;
+        IntAttribute *scrollX, *scrollY;
         IntAttribute *paddingTop, *paddingLeft, *paddingRight, *paddingBottom;
         IntAttribute *height, *width;
       } layoutAttributes;

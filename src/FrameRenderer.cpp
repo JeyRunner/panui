@@ -130,6 +130,12 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         //cout << "[ FR ] touch press button:"<< button <<"  type:"<< type << endl;
         Touch::touchPoint->press(button, type);
     });
+
+    // on weel scroll
+    fr->screen->onWeelScroll([&](int x, int y)
+    {
+        Touch::touchPoint->scroll(x*20,y*20);
+    });
     
     
     

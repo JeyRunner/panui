@@ -62,6 +62,9 @@ class StyleRule : public StyleAttribute::OnChangeListener, public Log
       IntAttribute    *right;
       IntAttribute    *bottom;
 
+      IntAttribute    *scrollX;
+      IntAttribute    *scrollY;
+
       IntAttribute    *paddingLeft;
       IntAttribute    *paddingTop;
       IntAttribute    *paddingRight;

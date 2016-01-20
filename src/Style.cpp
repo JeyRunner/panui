@@ -34,6 +34,9 @@ void Style::init()
     rBase->bottom->set(0);
     rBase->position->set(UI_ATTR_POSITION_RELATIVE);
 
+    rBase->scrollX->set(0);
+    rBase->scrollY->set(0);
+
     rBase->paddingTop->set(0);
     rBase->paddingBottom->set(0);
     rBase->paddingLeft->set(0);

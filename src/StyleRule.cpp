@@ -26,8 +26,8 @@ StyleRule::StyleRule(string selector)
 {
     setLogName("RULE");
 
-    // -- create StyleAttribute objectes 
-    //                                                                                   CALC ON SELF                    CALC ON PARRENT
+    // -- create StyleAttribute objects
+    //                                                                                   CALC ON SELF                    CALC ON PARENT
     height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     width            = new IntAttribute(this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     left             = new IntAttribute(this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
@@ -35,6 +35,8 @@ StyleRule::StyleRule(string selector)
     right            = new IntAttribute(this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     bottom           = new IntAttribute(this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     position         = new IntAttribute(this,    StyleAttribute::POSITION,          {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    scrollX          = new IntAttribute(this,    StyleAttribute::SCROLL_X,          {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_NONE                        });
+    scrollY          = new IntAttribute(this,    StyleAttribute::SCROLL_Y,          {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_NONE                        });
 
     paddingLeft      = new IntAttribute(this,    StyleAttribute::PADDING_LEFT,      {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
     paddingRight     = new IntAttribute(this,    StyleAttribute::PADDING_RIGHT,     {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
@@ -107,6 +109,8 @@ StyleAttribute* StyleRule::getAttribute(StyleAttribute::Type type)
         case StyleAttribute::TOP:                return top;       
         case StyleAttribute::RIGHT:              return right;        
         case StyleAttribute::BOTTOM:             return bottom;
+        case StyleAttribute::SCROLL_X:           return scrollX;
+        case StyleAttribute::SCROLL_Y:           return scrollY;
         case StyleAttribute::PADDING_LEFT:       return paddingLeft;
         case StyleAttribute::PADDING_TOP:        return paddingTop;
         case StyleAttribute::PADDING_RIGHT:      return paddingRight;

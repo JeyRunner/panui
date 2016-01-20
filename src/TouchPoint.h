@@ -29,7 +29,10 @@ class TouchPoint : public Log
       
       // position, read only
       float x, y;
-      
+
+      // last drag scroll pos
+      Point lastScroll;
+
       /* state, read only
        * @param STATE_UP or STATE_DOWN */
       bool state;
@@ -40,6 +43,9 @@ class TouchPoint : public Log
       
       // move point
       void move(float x, float y);
+
+      // on scroll
+      void scroll(float x, float y);
       
 //      // views add themselves when isOver
 //      void addOver(View *view);

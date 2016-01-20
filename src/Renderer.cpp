@@ -169,6 +169,14 @@ void Renderer::calcLayoutSize()
     }
 
 
+    // set self scroll
+    if (abs(renderAttributes.contendHeight - renderAttributes.height) < -renderAttributes.scrollY)
+    {
+        renderAttributes.scrollY = -(renderAttributes.contendHeight - renderAttributes.height);
+    }
+    //renderAttributes.scrollX = layoutAttributes.scrollX->floatValue;
+    //renderAttributes.scrollY = layoutAttributes.scrollY->floatValue;
+
     // done
     // cout << "[DONE] calcLayoutSize of '"<< view->id << ", " << view->class_ <<"'" << endl;
     calcTasks[UI_CALCTASK_LAYOUT_SIZE] = false;
@@ -580,6 +588,14 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             layoutAttributes.right = dynamic_cast<IntAttribute*>(attribute);
             break;
 
+        case StyleAttribute::SCROLL_X:
+            layoutAttributes.scrollX = dynamic_cast<IntAttribute*>(attribute);
+            break;
+
+        case StyleAttribute::SCROLL_Y:
+            layoutAttributes.scrollY = dynamic_cast<IntAttribute*>(attribute);
+            break;
+
         case StyleAttribute::PADDING_LEFT:
             layoutAttributes.paddingLeft = dynamic_cast<IntAttribute*>(attribute);
             break;
@@ -714,7 +730,7 @@ View* Renderer::isOver(float x, float y)
          && (y > renderAttributes.positionY - renderAttributes.height/2))  
     {
         // cout << "[ RN ] '"<< view->id <<"' isOver: true" << endl;
-        
+
         // set relative to parent
         if (view->parent) 
         {

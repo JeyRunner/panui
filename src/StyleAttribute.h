@@ -51,6 +51,7 @@ class StyleAttribute : public Log
             _FIRST_TYPE_BEFORE, // used for loops
             HEIGHT, WIDTH,
             LEFT, TOP, RIGHT, BOTTOM,
+            SCROLL_X, SCROLL_Y,
             PADDING_LEFT, PADDING_TOP, PADDING_RIGHT, PADDING_BOTTOM,
             POSITION,
             BACKGROUND_COLOR, OPACITY,
