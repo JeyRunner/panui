@@ -74,6 +74,7 @@ class StyleRule : public StyleAttribute::OnChangeListener, public Log
       
       ColorAttribute  *backgroundColor;
       FloatAttribute  *opacity;
+      IntAttribute    *overflow;
       
       IntAttribute    *textSize;
       ColorAttribute  *textColor;

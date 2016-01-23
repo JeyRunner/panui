@@ -17,7 +17,7 @@
 // -- calculation Task types --------------------------
 const int UI_CALCTASK_NONE                      = 0,
           UI_CALCTASK_LAYOUT_SIZE               = 1,
-          UI_CALCTASK_LAYOUT_CHIDREN_POSITION   = 2,
+          UI_CALCTASK_LAYOUT_CHILDREN_POSITION = 2,
           UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND  = 3,    // calc own height dependent on contend
           UI_CALCTASK_LAYOUT_SIZE_VERTICES      = 4,
           UI_CALCTASK_TEXT_FAMILY               = 5,
@@ -28,11 +28,13 @@ const int UI_CALCTASK_NONE                      = 0,
 
 // -- view ---------------------------------------------
 const int UI_VIEW_SELF                          = 0,
-          UI_VIEW_PARRENT                       = 1;
+          UI_VIEW_PARENT = 1;
 
 // -- style attribute properties -----------------------
 const int UI_ATTR_POSITION_ABSOLUTE = 0,
-          UI_ATTR_POSITION_RELATIVE = 1;
+          UI_ATTR_POSITION_RELATIVE = 1,
+          UI_ATTR_OVERFLOW_VISIBLE  = 0,
+          UI_ATTR_OVERFLOW_HIDDEN   = 1;
 
 // -- style attribute auto -----------------------------
 enum UI_ATTR_AUTO {

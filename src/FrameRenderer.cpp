@@ -109,7 +109,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         //fr->ui->rootView->renderer->calcLayoutSize();
 
         // recalc
-        fr->ui->rootView->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
+        fr->ui->rootView->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHILDREN_POSITION);
     });
     
     fr->screen->onCloseScreen([&](){
@@ -153,6 +153,16 @@ void *FrameRenderer::thread_render(void* frameRenderer)
     
     // enable depth buffer
     // glEnable(GL_DEPTH_TEST);
+
+    // enable stencil buffer
+    glEnable(GL_STENCIL_TEST);
+
+    // stencilBuffer - write if value if func succed
+    glStencilOp(GL_KEEP    /* stencil func fail */,
+                GL_REPLACE /* stencil func ok, but deep fail =>> set to value */,
+                GL_REPLACE /* both ok                        =>> set to value*/);
+
+    fr->debug("------------- v4");
   
     
     // set transform Matix for all shaders to middle of screen
@@ -286,24 +296,27 @@ void FrameRenderer::exe_render()
     // set transform Matix for all shades to middle of screen
     GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
     
-    
-    
+
+
     // set background color of screen -> white
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+
+    // clear stencil with 0
+    glClearStencil(0x00);
     
     // clear Buffer from before
-    glClear(GL_COLOR_BUFFER_BIT /* | GL_DEPTH_BUFFER_BIT */ );
+    glClear(GL_COLOR_BUFFER_BIT | GL_STENCIL_BUFFER_BIT );
     
     // remove cursor -> centor of screen
     //glLoadIdentity();
-       
+
     
     
     // render Root View
     ui->rootView->renderer->render();
     ui->rootView->renderer->resetCursor();
     
-    
+
     // swap Buffers 
     // => display new renderd image
     screen->swapBuffer();

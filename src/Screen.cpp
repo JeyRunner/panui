@@ -141,6 +141,7 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     SDL_GL_SetAttribute(SDL_GL_RED_SIZE, 5);
     SDL_GL_SetAttribute(SDL_GL_GREEN_SIZE, 5);
     SDL_GL_SetAttribute(SDL_GL_BLUE_SIZE, 5);
+    SDL_GL_SetAttribute( SDL_GL_STENCIL_SIZE, 8); // 8bit per pixel stacil buffer
 
 
     // open window - init projection matrix ...
@@ -183,6 +184,10 @@ bool Screen::sdlInitScreen(int width, int height, string title)
     info("Open Gl renderer: '" + str(glGetString(GL_RENDERER)) + "'");
     info("Open Gl extensions: '" + str(glGetString(GL_EXTENSIONS)) + "'");
     info("Open Gl max texture size: '" + str(glGetString(GL_MAX_TEXTURE_SIZE)) + "'");
+
+    GLint stencilBits = 0;
+    glGetIntegerv(GL_STENCIL_BITS, &stencilBits);
+    info("Open Gl stencil bits: '" + str(stencilBits) + "'");
 
     // enable antialiasing with multisampeling
     // glEnable(GL_MULTISAMPLE);

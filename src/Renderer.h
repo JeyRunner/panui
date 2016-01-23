@@ -60,6 +60,8 @@ class Renderer : public Log
       {
         GLfloat positionX;
         GLfloat positionY;
+
+        int stencilIndex;
         
         // 4 vertices -> *(x,y,z) = 12
         GLfloat vertices[12]; 
@@ -69,6 +71,7 @@ class Renderer : public Log
         
         ColorAttribute *background_color;
         FloatAttribute *opacity;
+        IntAttribute   *overflow;
         
         ColorAttribute  *text_color;
         IntAttribute    *text_size;
@@ -122,7 +125,10 @@ class Renderer : public Log
       
       // have to be called after each render()  \n
       // - set Cursor to pos before render()
-      void resetCursor();  
+      void resetCursor();
+
+      // reset stencil buffer to before render
+      void resetStencilBuffer();
       
       
       

@@ -60,7 +60,7 @@ string Text::text(string text)
     renderer->addCalcTask(UI_CALCTASK_LAYOUT_SIZE);
     if (parent && parent != 0 && parent != NULL)
     {
-        parent->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
+        parent->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHILDREN_POSITION);
     }
     //((TextRenderer*)renderer)->addCalcTask(UI_CALCTASK_TEXT_TEXT);
     

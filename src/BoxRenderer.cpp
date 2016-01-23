@@ -98,7 +98,7 @@ void BoxRenderer::calcLayoutChildrenPos()
     
     // done
     // cout << "[DONE] calcLayoutChildrenPos of '"<< view->id << ", " << view->class_ <<"'" << endl;
-    calcTasks[UI_CALCTASK_LAYOUT_CHIDREN_POSITION] = false;
+    calcTasks[UI_CALCTASK_LAYOUT_CHILDREN_POSITION] = false;
 }
 
 
@@ -218,15 +218,15 @@ void BoxRenderer::addCalcTask(int type)
     // check for own possibel task types
     switch (type)
     {
-        case UI_CALCTASK_LAYOUT_CHIDREN_POSITION:
-            calcTasks[UI_CALCTASK_LAYOUT_CHIDREN_POSITION]  = true;
+        case UI_CALCTASK_LAYOUT_CHILDREN_POSITION:
+            calcTasks[UI_CALCTASK_LAYOUT_CHILDREN_POSITION]  = true;
             calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND] = true;
             calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES]     = true;
             break;
 
         case UI_CALCTASK_LAYOUT_SIZE:
             calcTasks[UI_CALCTASK_LAYOUT_SIZE]              = true;
-            calcTasks[UI_CALCTASK_LAYOUT_CHIDREN_POSITION]  = true;
+            calcTasks[UI_CALCTASK_LAYOUT_CHILDREN_POSITION]  = true;
             calcTasks[UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND] = true;
             calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES]     = true;
     }
@@ -275,7 +275,7 @@ int  BoxRenderer::exeCalcTasks()
     
      
     // own calc tasks
-    if (calcTasks[ UI_CALCTASK_LAYOUT_CHIDREN_POSITION]) {
+    if (calcTasks[UI_CALCTASK_LAYOUT_CHILDREN_POSITION]) {
         calcLayoutChildrenPos();
         Touch::needReCheck = true;
     }
@@ -305,7 +305,10 @@ void BoxRenderer::render()
     {
         // render child
         (*iter)->renderer->render();
-        
+
+        // reset stencil buffer to render next
+        (*iter)->renderer->resetStencilBuffer();
+
         // reset cursor to render next
         (*iter)->renderer->resetCursor();
     }

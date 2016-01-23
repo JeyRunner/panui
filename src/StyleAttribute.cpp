@@ -56,7 +56,7 @@ void StyleAttribute::addBoundedView(View *view)
 //    if (view)
 //        view->renderer->addCalcTask(causeCalc[UI_VIEW_SELF]);
 //    if (view->parent)
-//        view->parent->renderer->addCalcTask(causeCalc[UI_VIEW_PARRENT]);
+//        view->parent->renderer->addCalcTask(causeCalc[UI_VIEW_PARENT]);
 }
 
 // -- REMOVE
@@ -82,7 +82,7 @@ void StyleAttribute::removeBoundedView(View *view)
 // -- ON VALUE CHANGE -----------
 void StyleAttribute::onValueChange()
 {    
-    if (causeCalc[UI_VIEW_SELF] != UI_CALCTASK_NONE || causeCalc[UI_VIEW_PARRENT] != UI_CALCTASK_NONE )
+    if (causeCalc[UI_VIEW_SELF] != UI_CALCTASK_NONE || causeCalc[UI_VIEW_PARENT] != UI_CALCTASK_NONE )
     {   
         // for self, parent
         for (int i = 0; i < 2; i++) 
@@ -99,7 +99,7 @@ void StyleAttribute::onValueChange()
                     // add calc task to view self
                     (*it)->renderer->addCalcTask(causeCalc[i]);
                 }
-                else if (i == UI_VIEW_PARRENT)
+                else if (i == UI_VIEW_PARENT)
                 {
                     // add calc task to view parrent
                     View *parent = (View*)(*it)->parent;

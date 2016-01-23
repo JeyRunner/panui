@@ -50,6 +50,8 @@ void Style::init()
     rBase->backgroundColor->setG(1);
     rBase->backgroundColor->setB(1);
     rBase->backgroundColor->setAlpha(0);
+
+    rBase->overflow->set(UI_ATTR_OVERFLOW_HIDDEN);
     
     rBase->textSize->set(25);
     rBase->textColor->set("000000FF");

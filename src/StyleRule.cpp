@@ -28,28 +28,29 @@ StyleRule::StyleRule(string selector)
 
     // -- create StyleAttribute objects
     //                                                                                   CALC ON SELF                    CALC ON PARENT
-    height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    width            = new IntAttribute(this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    left             = new IntAttribute(this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    top              = new IntAttribute(this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    right            = new IntAttribute(this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    bottom           = new IntAttribute(this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    position         = new IntAttribute(this,    StyleAttribute::POSITION,          {UI_CALCTASK_NONE,               UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    scrollX          = new IntAttribute(this,    StyleAttribute::SCROLL_X,          {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_NONE                        });
-    scrollY          = new IntAttribute(this,    StyleAttribute::SCROLL_Y,          {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_NONE                        });
+    height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    width            = new IntAttribute(this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    left             = new IntAttribute(this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    top              = new IntAttribute(this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    right            = new IntAttribute(this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    bottom           = new IntAttribute(this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    position         = new IntAttribute(this,    StyleAttribute::POSITION,          {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    scrollX          = new IntAttribute(this,    StyleAttribute::SCROLL_X,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    });
+    scrollY          = new IntAttribute(this,    StyleAttribute::SCROLL_Y,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    });
 
-    paddingLeft      = new IntAttribute(this,    StyleAttribute::PADDING_LEFT,      {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    paddingRight     = new IntAttribute(this,    StyleAttribute::PADDING_RIGHT,     {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    paddingTop       = new IntAttribute(this,    StyleAttribute::PADDING_TOP,       {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
-    paddingBottom    = new IntAttribute(this,    StyleAttribute::PADDING_BOTTOM,    {UI_CALCTASK_LAYOUT_SIZE,        UI_CALCTASK_LAYOUT_CHIDREN_POSITION     });
+    paddingLeft      = new IntAttribute(this,    StyleAttribute::PADDING_LEFT,      {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    paddingRight     = new IntAttribute(this,    StyleAttribute::PADDING_RIGHT,     {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    paddingTop       = new IntAttribute(this,    StyleAttribute::PADDING_TOP,       {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
+    paddingBottom    = new IntAttribute(this,    StyleAttribute::PADDING_BOTTOM,    {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
 
-    backgroundColor  = new ColorAttribute(this,  StyleAttribute::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
-    opacity          = new FloatAttribute(this,  StyleAttribute::OPACITY,           {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
-    
+    backgroundColor  = new ColorAttribute(this,  StyleAttribute::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
+    opacity          = new FloatAttribute(this,  StyleAttribute::OPACITY,           {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
+    overflow         = new IntAttribute(this,    StyleAttribute::OVERFLOW_CUT,      {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
+
     // text
-    textSize         = new IntAttribute   (this, StyleAttribute::TEXT_SIZE,         {UI_CALCTASK_TEXT_SIZE,          UI_CALCTASK_NONE                        });
-    textColor        = new ColorAttribute (this, StyleAttribute::TEXT_COLOR,        {UI_CALCTASK_NONE,               UI_CALCTASK_NONE                        });
-    textFamily       = new StringAttribute(this, StyleAttribute::TEXT_FAMILY,       {UI_CALCTASK_TEXT_FAMILY,        UI_CALCTASK_NONE                        });
+    textSize         = new IntAttribute   (this, StyleAttribute::TEXT_SIZE,         {UI_CALCTASK_TEXT_SIZE,             UI_CALCTASK_NONE                    });
+    textColor        = new ColorAttribute (this, StyleAttribute::TEXT_COLOR,        {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
+    textFamily       = new StringAttribute(this, StyleAttribute::TEXT_FAMILY,       {UI_CALCTASK_TEXT_FAMILY,           UI_CALCTASK_NONE                    });
     
     
     // -- set var
@@ -94,7 +95,7 @@ void StyleRule::setImportance(SelectorType selectorType)
         case GLOBAL_SELECTOR: importance = 1;   break;
         default:              importance = 0;   break;
     }
-    trace("add rule '" + str(selector) + "' with importance " + str(importance));
+    trace("add rule '" + str(selector) + "', has importance " + str(importance));
 }
 
 
@@ -118,11 +119,12 @@ StyleAttribute* StyleRule::getAttribute(StyleAttribute::Type type)
         case StyleAttribute::POSITION:           return position; 
         case StyleAttribute::BACKGROUND_COLOR:   return backgroundColor;   
         case StyleAttribute::OPACITY:            return opacity;
+        case StyleAttribute::OVERFLOW_CUT:       return overflow;
         case StyleAttribute::TEXT_SIZE:          return textSize;
         case StyleAttribute::TEXT_COLOR:         return textColor;
         case StyleAttribute::TEXT_FAMILY:        return textFamily;
         
-        default:                                 warn("[RULE] getAttribute [type does not fit] ->default"); return NULL;
+        default:                                 warn("getAttribute [type does not fit] ->default"); return NULL;
     }    
 }
 

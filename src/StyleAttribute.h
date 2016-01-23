@@ -54,7 +54,7 @@ class StyleAttribute : public Log
             SCROLL_X, SCROLL_Y,
             PADDING_LEFT, PADDING_TOP, PADDING_RIGHT, PADDING_BOTTOM,
             POSITION,
-            BACKGROUND_COLOR, OPACITY,
+            BACKGROUND_COLOR, OPACITY, OVERFLOW_CUT,
             TEXT_SIZE, TEXT_COLOR, TEXT_FAMILY,
             _LAST_TYPE_AFTER  // used for loops
           } type;

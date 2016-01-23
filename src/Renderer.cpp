@@ -43,6 +43,7 @@ Renderer::Renderer()
     // set pointer var
     //renderAttributesPtr = &renderAttributes;
     //layoutAttributesPtr = &layoutAttributes;
+    renderAttributes.stencilIndex = 0;
     
     // default
     renderAttributes.positionX          = 0;
@@ -71,7 +72,7 @@ Renderer::Renderer(View *view)
 
     // set view
     this->view = view;
-    
+
     // set pointer var
     //renderAttributesPtr = &renderAttributes;
     //layoutAttributesPtr = &layoutAttributes;
@@ -206,7 +207,7 @@ bool Renderer::calcLayoutSizeAutoContend()
         {
             if ((view->parent) != NULL)
             {
-                view->parent->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHIDREN_POSITION);
+                view->parent->renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHILDREN_POSITION);
             }
         }
     }
@@ -285,8 +286,31 @@ int  Renderer::exeCalcTasks()
 
 
 // == RENDER =======================================
-void Renderer::render() 
-{   
+void Renderer::render()
+{
+    int stencilIndexParent = 0;
+
+    // set amount of parents
+    // if root
+    if (view->parent == NULL)
+    {
+        renderAttributes.stencilIndex = 1;
+    }
+    else
+    {
+        if (renderAttributes.overflow->intValue == UI_ATTR_OVERFLOW_HIDDEN) {
+            renderAttributes.stencilIndex = ((view->parent->renderer->renderAttributes.stencilIndex) + 1);
+        }
+        else {
+            renderAttributes.stencilIndex = (view->parent->renderer->renderAttributes.stencilIndex);
+        }
+        stencilIndexParent = (view->parent->renderer->renderAttributes.stencilIndex);
+
+        // stencil buffer size = 8bit =>> only 255 layer
+        if (renderAttributes.stencilIndex > 255)
+            err("stencilIndex is higher than stencil buffers available max value of 255, there will be problems with cut overflow [means view has more than 255 parents, to solve reduce parents amount]");
+    }
+
     // bind view background shader
     glUseProgram(GL::SHADER_VIEW_BACKGROUND);
     
@@ -299,11 +323,11 @@ void Renderer::render()
     // set attributes / uniformes  
     // set transform and projection matix
     // remove cursor -> to own position
-    glm::mat4 transform = glm::translate(glm::vec3( renderAttributes.positionX /* X */,
-                                                    renderAttributes.positionY /* Y */,
-                                                    0.0f                       /* Z */ ))
-                                                    * GL::transfomMatix;
-    glm::mat4 modelMatrix     = GL::projectionMatix * transform;
+    glm::mat4 transform = glm::translate(glm::vec3(renderAttributes.positionX /* X */,
+                                                   renderAttributes.positionY /* Y */,
+                                                   0.0f                       /* Z */ ))
+                          * GL::transfomMatix;
+    glm::mat4 modelMatrix = GL::projectionMatix * transform;
     
     glUniformMatrix4fv(GL::SHADER_VIEW_BACKGROUND_UNIF_TRANSFORM_MATIX,
                        1                /* amount of matrix */,
@@ -322,21 +346,54 @@ void Renderer::render()
     
     // give gl the Vertices via array
     glVertexAttribPointer(
-        GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS      /* pass vertices to vertex Pos attribute of vertexShader */,
-        3                                               /* 3 Aruments: x,y,z */,
-        GL_FLOAT                                        /* Format: float     */,
-        GL_FALSE                                        /* take values as-is */,   
-        0                                               /* Entry lenght ?    */,
-        renderAttributes.vertices                       /* vertices Array    */ );
-    
+            GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS      /* pass vertices to vertex Pos attribute of vertexShader */,
+            3                                               /* 3 Aruments: x,y,z */,
+            GL_FLOAT                                        /* Format: float     */,
+            GL_FALSE                                        /* take values as-is */,
+            0                                               /* Entry lenght ?    */,
+            renderAttributes.vertices                       /* vertices Array    */ );
+
+    if (renderAttributes.overflow->intValue == UI_ATTR_OVERFLOW_HIDDEN)
+    {
+        // -- draw into stencil buffer
+        // stencil set criteria
+        glStencilFunc(GL_EQUAL /* set if there parent allows to paint */,
+                      stencilIndexParent /* set value */,
+                      0xFF      /* both values AND mask 0xFF */);
+
+        // enable writing to stencil buffer, but not to screen
+        glStencilOp(GL_KEEP /* stencil func fail */,
+                    GL_INCR /* stencil func ok, but deep fail =>> set to value */,
+                    GL_INCR /* both ok                        =>> set to value*/);
+        //glStencilMask(0xFF);
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+        // draw onw area in stencil buffer
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+    }
+
+    // -- draw by stencil criteria
+    // disable writing to stencil buffer, but to screen
+    //glStencilMask(0x00);
+    glStencilOp(GL_KEEP /* stencil func fail */,
+                GL_KEEP /* stencil func ok, but deep fail =>> set to value */,
+                GL_KEEP /* both ok                        =>> set to value*/);
+    glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+
+    // stencil set criteria
+    glStencilFunc(GL_LESS  /* set if stencil val less then ref */,
+                  renderAttributes.stencilIndex -1 /* ref */,
+                  0xFF      /* both values AND mask 0xFF */);
+
+
     // draw with the vertices form the given Array
     // make two connected triangle to create a rectangle
     glDrawArrays(
         GL_TRIANGLE_STRIP,
         0 /* Array start pos   */,
         4 /* how much vertices */);
-    
-    
+
+
     // deactivate vertex Array mode
     // => end of operation
     glDisableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
@@ -344,6 +401,7 @@ void Renderer::render()
     // unbind shader
     glUseProgram(0);
 }
+
 
 // -- RENDER IN GL 1 CONTEXT  ----------------------
 void Renderer::renderGl_1() 
@@ -437,6 +495,80 @@ void Renderer::resetCursor()
     */
 }
 
+
+void Renderer::resetStencilBuffer()
+{
+    if (renderAttributes.overflow->intValue == UI_ATTR_OVERFLOW_HIDDEN)
+    {
+        // set amount of parents
+        // if root
+        int stencilIndexParent = 0;
+        if (view->parent != NULL)
+        {
+            stencilIndexParent = (view->parent->renderer->renderAttributes.stencilIndex);
+        }
+
+        // bind view background shader
+        glUseProgram(GL::SHADER_VIEW_BACKGROUND);
+
+        // draw a rectangle ----------------------------------------------
+        // activate for client (to draw, not calculate) vertex Array
+        // => tell gl we want to draw a something with a vertex Array -> to vertexPos attribute of vertexShader
+        // => kind  of glBeginn()
+        glEnableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
+
+
+        glm::mat4 modelMatrix = GL::projectionMatix * GL::transfomMatix;
+        glUniformMatrix4fv(GL::SHADER_VIEW_BACKGROUND_UNIF_TRANSFORM_MATIX,
+                           1                /* amount of matrix */,
+                           GL_FALSE         /* convert format -> NO */,
+                           &modelMatrix[0][0]);
+
+
+
+        // set shader color
+        glUniform4f(GL::SHADER_VIEW_BACKGROUND_UNIF_COLOR,
+                    1,
+                    1,
+                    1,
+                    1);
+
+        // give gl the Vertices via array
+        glVertexAttribPointer(
+                GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS      /* pass vertices to vertex Pos attribute of vertexShader */,
+                3                                               /* 3 Aruments: x,y,z */,
+                GL_FLOAT                                        /* Format: float     */,
+                GL_FALSE                                        /* take values as-is */,
+                0                                               /* Entry lenght ?    */,
+                renderAttributes.vertices                       /* vertices Array    */ );
+
+
+        // -- draw into stencil buffer
+        // stencil set criteria
+        glStencilFunc(GL_EQUAL /* set in every case */,
+                      renderAttributes.stencilIndex /* set value */,
+                      0xFF      /* both values AND mask 0xFF */);
+
+        // enable writing to stencil buffer, but not to screen
+        glStencilOp(GL_KEEP /* stencil func fail */,
+                    GL_DECR /* stencil func ok, but deep fail =>> set to value */,
+                    GL_DECR /* both ok                        =>> set to value*/);
+
+        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
+
+        // draw onw area in stencil buffer
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
+
+
+        // deactivate vertex Array mode
+        // => end of operation
+        glDisableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
+
+        // unbind shader
+        glUseProgram(0);
+        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+    }
+}
 
 
 
@@ -623,8 +755,12 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             
         case StyleAttribute::OPACITY: 
             renderAttributes.opacity = dynamic_cast<FloatAttribute*>(attribute);
-            break; 
-                
+            break;
+
+        case StyleAttribute::OVERFLOW_CUT:
+            renderAttributes.overflow = dynamic_cast<IntAttribute*>(attribute);
+            break;
+
         case StyleAttribute::TEXT_SIZE:
             renderAttributes.text_size = dynamic_cast<IntAttribute*>(attribute);
             break;     
@@ -638,7 +774,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             renderAttributes.text_family = dynamic_cast<StringAttribute*>(attribute);
             break; 
             
-        default: out("of '" + view->id + "' bindAttribute", false, "attribute->type '" + str(attribute->type) + "' does not fit");
+        default: warn("of '" + view->id + "' bindAttribute: attribute->type '" + str(attribute->type) + "' does not fit");
     }
     attribute->addBoundedView(view);
     
