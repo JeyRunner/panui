@@ -66,9 +66,8 @@ Renderer::Renderer()
     }
 }
 
-Renderer::Renderer(View *view) 
+Renderer::Renderer(View *view) : Renderer::Renderer()
 {
-    setLogName("");
 
     // set view
     this->view = view;
@@ -221,6 +220,18 @@ bool Renderer::calcLayoutSizeAutoContend()
 // -- CALC LAYOUT VERTICES WITH HEIGHT AND WIDTH VALUES
 void Renderer::calcLayoutSizeVertices()
 {
+    // if vertex buffer not generated
+    if (renderAttributes.vertexBuffer <= 0)
+    {
+        // create vertex buffer
+        glGenBuffers(1, &(renderAttributes.vertexBuffer));
+        glBindBuffer(GL_ARRAY_BUFFER,renderAttributes.vertexBuffer);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat)*3*4, NULL, GL_DYNAMIC_DRAW /* often changed and used for rendering */ );
+    }
+    else
+        glBindBuffer(GL_ARRAY_BUFFER,renderAttributes.vertexBuffer);
+
+
     float heightHalf = renderAttributes.height / 2;
     float widthHalf  = renderAttributes.width  / 2;
 
@@ -231,11 +242,18 @@ void Renderer::calcLayoutSizeVertices()
             widthHalf, -heightHalf, 0.0f, /* right Bottom */
             widthHalf,  heightHalf, 0.0f  /* right Top */};
 
+    // put data in vertex buffer
+
+    // insert data
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), &vertices);
+    //debug("buffer "+str(sizeof(vertices))+"  bytes");
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     // -- copy into vertices
-    memcpy(renderAttributes.vertices, vertices, sizeof(vertices));
+    // memcpy(renderAttributes.vertices, vertices, sizeof(vertices));
 
     // done
-    // cout << "[DONE] calcLayoutSizeVertices of '"<< view->id << ", " << view->class_ <<"'" << endl;
     calcTasks[UI_CALCTASK_LAYOUT_SIZE_VERTICES] = false;
 }
 
@@ -311,15 +329,19 @@ void Renderer::render()
             err("stencilIndex is higher than stencil buffers available max value of 255, there will be problems with cut overflow [means view has more than 255 parents, to solve reduce parents amount]");
     }
 
+
     // bind view background shader
     glUseProgram(GL::SHADER_VIEW_BACKGROUND);
-    
+
+    // give gl the Vertices via buffer
+    glBindBuffer(GL_ARRAY_BUFFER, renderAttributes.vertexBuffer);
+
     // draw a rectangle ----------------------------------------------
     // activate for client (to draw, not calculate) vertex Array
-    // => tell gl we want to draw a something with a vertex Array -> to vertexPos attribute of vertexShader
+    // set varable for vertex to vertexPos attribute of vertexShader
     // => kind  of glBeginn()
     glEnableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
-    
+
     // set attributes / uniformes  
     // set transform and projection matix
     // remove cursor -> to own position
@@ -343,15 +365,18 @@ void Renderer::render()
                 renderAttributes.background_color->g,
                 renderAttributes.background_color->b,
                 renderAttributes.background_color->alpha);
-    
-    // give gl the Vertices via array
+
+    // give gl the Vertices format
     glVertexAttribPointer(
             GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS      /* pass vertices to vertex Pos attribute of vertexShader */,
             3                                               /* 3 Aruments: x,y,z */,
             GL_FLOAT                                        /* Format: float     */,
             GL_FALSE                                        /* take values as-is */,
             0                                               /* Entry lenght ?    */,
-            renderAttributes.vertices                       /* vertices Array    */ );
+            NULL                                            /* offset / vertices Array    */ );
+
+
+
 
     if (renderAttributes.overflow->intValue == UI_ATTR_OVERFLOW_HIDDEN)
     {
@@ -397,9 +422,14 @@ void Renderer::render()
     // deactivate vertex Array mode
     // => end of operation
     glDisableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
-    
+
+    // unbind vertex buffer
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
     // unbind shader
     glUseProgram(0);
+
+
 }
 
 
@@ -426,7 +456,8 @@ void Renderer::renderGl_1()
     cout << "                                        color: r=" << renderAttributes.background_color->r << " g:" << renderAttributes.background_color->g 
                                                                 << " b:" << renderAttributes.background_color->b << " alpha:" << renderAttributes.background_color->alpha << endl;
     */ 
-#ifndef pl_andr
+//#ifndef pl_andr
+#ifdef unused
     // remove cursor -> to own position
     glTranslatef(
             renderAttributes.positionX /* x */,
@@ -511,9 +542,11 @@ void Renderer::resetStencilBuffer()
         // bind view background shader
         glUseProgram(GL::SHADER_VIEW_BACKGROUND);
 
+        // give gl the Vertices via buffer
+        glBindBuffer(GL_ARRAY_BUFFER, renderAttributes.vertexBuffer);
+
         // draw a rectangle ----------------------------------------------
-        // activate for client (to draw, not calculate) vertex Array
-        // => tell gl we want to draw a something with a vertex Array -> to vertexPos attribute of vertexShader
+        // => vertexPos attribute of vertexShader
         // => kind  of glBeginn()
         glEnableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
 
@@ -534,13 +567,15 @@ void Renderer::resetStencilBuffer()
                     1);
 
         // give gl the Vertices via array
+        // give gl the Vertices via buffer
+        // glBindBuffer(GL_ARRAY_BUFFER, renderAttributes.vertexBuffer);
         glVertexAttribPointer(
                 GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS      /* pass vertices to vertex Pos attribute of vertexShader */,
                 3                                               /* 3 Aruments: x,y,z */,
                 GL_FLOAT                                        /* Format: float     */,
                 GL_FALSE                                        /* take values as-is */,
                 0                                               /* Entry lenght ?    */,
-                renderAttributes.vertices                       /* vertices Array    */ );
+                NULL                                            /* vertices Array    */ );
 
 
         // -- draw into stencil buffer
@@ -563,6 +598,9 @@ void Renderer::resetStencilBuffer()
         // deactivate vertex Array mode
         // => end of operation
         glDisableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
+
+        // unbind buffer
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         // unbind shader
         glUseProgram(0);
@@ -921,6 +959,9 @@ View* Renderer::isOver(float x, float y)
 
 // ###########################################
 // -- DESTROY OBJEKT -----------
-Renderer::~Renderer() {
+Renderer::~Renderer()
+{
+    // delete vertex buffer
+    glDeleteBuffers(1, &renderAttributes.vertexBuffer);
 }
 

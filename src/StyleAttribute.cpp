@@ -23,6 +23,7 @@
 // -- CREATE OBJEKT --------------
 StyleAttribute::StyleAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc)
 {
+    setLogName("ATTR");
     // create value object , set onChangeListener
 //    value = new ValueType();
 //    ((Value*)value)->onChange(this);
@@ -83,7 +84,7 @@ void StyleAttribute::removeBoundedView(View *view)
 void StyleAttribute::onValueChange()
 {    
     if (causeCalc[UI_VIEW_SELF] != UI_CALCTASK_NONE || causeCalc[UI_VIEW_PARENT] != UI_CALCTASK_NONE )
-    {   
+    {
         // for self, parent
         for (int i = 0; i < 2; i++) 
         {

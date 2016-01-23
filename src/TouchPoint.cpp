@@ -44,7 +44,11 @@ TouchPoint::TouchPoint(Ui* ui)
 
 // -- MOVE -----------------------
 void TouchPoint::move(float x, float y) 
-{   
+{
+    // if not moved
+    if ((this->x == x) && (this->y == y))
+        return;
+
     // new over
     View *newOver;
     

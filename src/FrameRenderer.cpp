@@ -17,6 +17,7 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> // gl Math matix transform
 #include <stdlib.h>
+#include <unistd.h>
 //#include <bits/sigthread.h>
 #include "TouchPoint.h"
 #include "FrameRenderer.h"

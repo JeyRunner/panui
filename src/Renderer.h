@@ -64,7 +64,10 @@ class Renderer : public Log
         int stencilIndex;
         
         // 4 vertices -> *(x,y,z) = 12
-        GLfloat vertices[12]; 
+        // GLfloat vertices[12];
+        GLuint  vertexBuffer;
+
+
         GLfloat height, width;                // calculated
         GLfloat contendHeight, contendWidth;  // calculated
         GLfloat scrollX, scrollY;

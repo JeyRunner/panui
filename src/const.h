@@ -17,7 +17,7 @@
 // -- calculation Task types --------------------------
 const int UI_CALCTASK_NONE                      = 0,
           UI_CALCTASK_LAYOUT_SIZE               = 1,
-          UI_CALCTASK_LAYOUT_CHILDREN_POSITION = 2,
+          UI_CALCTASK_LAYOUT_CHILDREN_POSITION  = 2,
           UI_CALCTASK_LAYOUT_SIZE_AUTO_CONTEND  = 3,    // calc own height dependent on contend
           UI_CALCTASK_LAYOUT_SIZE_VERTICES      = 4,
           UI_CALCTASK_TEXT_FAMILY               = 5,
