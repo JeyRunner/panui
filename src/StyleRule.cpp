@@ -190,7 +190,7 @@ void StyleRule::onAktiveStateChange(StyleAttribute *styleAttribute)
         // bind new fitting Attribute
        (*it)->renderer->bindAttribute(calculatedAttribute);
        
-       trace("[RULE] reset Attribute (type '" + str(styleAttribute->type) + "') (in progress...)");
+       trace("reset Attribute type '" + str(styleAttribute->type) + "'  ...");
     }
 }
 

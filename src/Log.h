@@ -29,8 +29,12 @@ namespace ui
 class Log
 {
     public:
-        static void setLogLevel(UI_LOG_LEVEL log_level);
-        void setLogName(string name); // set log name example: class name
+        static void setLogLevel(char log_level_mask);
+        static void setUseLongLogNames(bool use);
+        static void setUseColor(bool use);
+
+        void setLogName(string nameShort); // set log name example: class name
+        void setLogName(string nameShort, string nameLong); // set log name example: class name
 
         void err(string text);  // error message
         void warn(string text); // warning message
@@ -40,12 +44,15 @@ class Log
         void trace(string text);// trace info message
 
         void out(string text, bool error, string errorText); // ok/err - also print error if ok=false
+        void out(string text, bool error);                   // ok/err - also print error if ok=false
 
     private:
-        string logName;
-        static UI_LOG_LEVEL logLevel;
+        string logNameShort, logNameLong;
+        static char logLevelMask;
+        static bool useLongLogNames, useColors;
+        static int  maxNameLongLen;
 
-        void print(string text);
+        void print(string tag, string text, char tagMask);
 };
 
 
@@ -65,7 +72,6 @@ std::string str(T value)
     os << value ;
     return os.str() ;
 }
-
 
 };     /* END NAMESPACE */
 #endif /* PANUI_LOG_H */

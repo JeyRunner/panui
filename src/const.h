@@ -62,16 +62,14 @@ struct Point
 { float x, y; };
 
 // -- LOG LEVEL ----------------------------------------
-enum UI_LOG_LEVEL {
-    UI_LOG_LEVEL_NOTHING,
-    UI_LOG_LEVEL_ERROR,
-    UI_LOG_LEVEL_WARNING,
-    UI_LOG_LEVEL_OK,
-    UI_LOG_LEVEL_DEBUG,
-    UI_LOG_LEVEL_INFORMATION,
-    UI_LOG_LEVEL_TRACE,
-    UI_LOG_LEVEL_ALL
-};
+const char  UI_LOG_LEVEL_NOTHING       = 0b00000000,
+            UI_LOG_LEVEL_ERROR         = 0b00000001,
+            UI_LOG_LEVEL_WARNING       = 0b00000010,
+            UI_LOG_LEVEL_OK            = 0b00000100,
+            UI_LOG_LEVEL_DEBUG         = 0b00001000,
+            UI_LOG_LEVEL_INFORMATION   = 0b00010000,
+            UI_LOG_LEVEL_TRACE         = 0b00100000,
+            UI_LOG_LEVEL_ALL           = 0b11111111;
 
 
 };     /* END NAMESPACE */
