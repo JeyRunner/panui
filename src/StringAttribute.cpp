@@ -13,6 +13,7 @@
 
 #include "StringAttribute.h"
 using namespace std;
+using namespace ui;
 
 
 // ############################################

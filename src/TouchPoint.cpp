@@ -18,6 +18,7 @@
 #include "View.h"
 #include "BoxRenderer.h"
 #include "Touch.h"
+using namespace ui;
 
 
 bool TouchPoint::STATE_DOWN = true;

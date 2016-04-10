@@ -12,6 +12,9 @@
 
 #ifndef CONST_H
 #define	CONST_H
+namespace ui
+{
+
 
 // -- CONST
 // -- calculation Task types --------------------------
@@ -70,5 +73,7 @@ enum UI_LOG_LEVEL {
     UI_LOG_LEVEL_ALL
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* CONST_H */
 

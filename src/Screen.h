@@ -5,24 +5,23 @@
  * 
  * ---------------------------------------
  * SCREEN CLASS --------------------------
- * initialisition of screen
+ * initialisation of screen
  * -> with egl
  * -> create display, surface object
  * 
- * swap buffer fuction
- * -> prints ogl renderd on screen
+ * swap buffer function
+ * -> prints ogl rendered on screen
  * ---------------------------------------
  */
 
 #ifndef SCREEN_H
 #define	SCREEN_H
 
+// include
 #include <stdio.h>
 #include <string>
 #include <functional>
 #include "Log.h"
-using namespace std;
-
 #ifdef pl_pi
 #include <bcm_host.h>
 #include <GLES/gl.h>
@@ -33,7 +32,12 @@ using namespace std;
 #include "GL.h"
 #endif
 
+using namespace std;
+namespace ui
+{
 
+/* Screen Class
+ */
 class Screen : public Log
 {
     public:
@@ -131,11 +135,7 @@ class Screen : public Log
         
 };
 
-/*
-// static 
-uint32_t Screen::display_width;
-uint32_t Screen::display_height;
- */
 
+};     /* END NAMESPACE */
 #endif	/* SCREEN_H */
 

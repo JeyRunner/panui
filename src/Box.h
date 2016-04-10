@@ -15,22 +15,21 @@
 #ifndef BOX_H
 #define	BOX_H
 
-//class View;
+// include
 #include "View.h"
-
-//#include "GLES/gl.h"
 #include "GL.h"
-
-class BoxRenderer;
-//class BoxRenderer;
-
 #include <string>
 #include <list>
 #include <iostream>
+namespace ui
+{
+class BoxRenderer;
+
 using namespace std;
 
 
-
+/* Box Class
+ */
 class Box : public View
 {
     public:
@@ -58,5 +57,7 @@ class Box : public View
 
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* BOXVIEW_H */
 

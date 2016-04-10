@@ -13,6 +13,7 @@
 //#include <GLES/gl.h>
 #include "GL.h"
 #include <sstream>
+using namespace ui;
 
 // static
 GLint GL::SHADER_VIEW_BACKGROUND,
@@ -27,8 +28,8 @@ GLint GL::SHADER_TEXT_CHARACTER,
       GL::SHADER_TEXT_CHARACTER_UNIF_COLOR,
       GL::SHADER_TEXT_CHARACTER_UNIF_TEXTURE;
 
-glm::mat4  GL::transfomMatix,
-           GL::projectionMatix;
+glm::mat4  GL::transformMatrix,
+           GL::projectionMatrix;
 
 FT_Library GL::ftLib;
 Log        GL::log;

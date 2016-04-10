@@ -13,6 +13,7 @@
 
 #include "IntAttribute.h"
 using namespace std;
+using namespace ui;
 
 
 // ############################################

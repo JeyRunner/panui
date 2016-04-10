@@ -19,14 +19,10 @@
 #ifndef RENDERER_H
 #define	RENDERER_H
 
+// include
 #include <stdlib.h>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-
-
-//#include "View.h" // -> in StyleAttribute
-class View; // => problems with circular including
-
 #include "GL.h"
 #include "const.h"
 #include "ColorAttribute.h"
@@ -34,10 +30,15 @@ class View; // => problems with circular including
 #include "FloatAttribute.h"
 #include "StyleAttribute.h"
 #include "StyleRule.h"
+namespace ui
+{
+class View; // => problems with circular including
 
 using namespace std;
 
 
+/* Renderer Class
+ */
 class Renderer : public Log
 {
     public:
@@ -46,9 +47,6 @@ class Renderer : public Log
       virtual ~Renderer ();
       
       // -- var -----------------------------
-      
-      // projection * translate Matix
-      // glm::mat4 modelMatrix;
         
       // calc Tasks
       bool calcTasks[UI_CALCTASK__SIZE];
@@ -186,5 +184,7 @@ class Renderer : public Log
       
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* RENDERER_H */
 

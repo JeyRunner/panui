@@ -22,6 +22,8 @@
 #include "GL.h"
 #include "Ui.h"
 using namespace std;
+using namespace ui;
+
 
 // -- VAR ------
 //TextRenderer::CharacterInfo charInfo[128];
@@ -186,8 +188,8 @@ void TextRenderer::Font::calcTextTexAtlas()
 
         // set charInfo -------------------------------
         charInfo[i].texPosX    = xCursor;
-        charInfo[i].texHight   = ftGlyph->bitmap.rows;
-        charInfo[i].texWidht   = ftGlyph->bitmap.width;
+        charInfo[i].texHeight = ftGlyph->bitmap.rows;
+        charInfo[i].texWidth = ftGlyph->bitmap.width;
         charInfo[i].marginLeft = ftGlyph->bitmap_left;
         charInfo[i].marginTop  = ftGlyph->bitmap_top;
         charInfo[i].advanceX   = ftGlyph->advance.x >> 6;
@@ -204,7 +206,7 @@ void TextRenderer::Font::calcTextTexAtlas()
 
     // set row hight to max hight of font
     fontRowHeight = textureHight;
-    fontRowWidht = textureWidht;
+    fontRowWidth = textureWidht;
 }
 
 // -- CALC TEXT SIZE -------
@@ -264,16 +266,16 @@ void TextRenderer::calcText()
 
         float x2 = x +  font->charInfo[*p].marginLeft; //ftGlyph->bitmap_left
         float y2 = -y - font->charInfo[*p].marginTop;  //ftGlyph->bitmap_top
-        float w =       font->charInfo[*p].texWidht;   //ftGlyph->bitmap.width
-        float h =       font->charInfo[*p].texHight;   //ftGlyph->bitmap.rows
+        float w =       font->charInfo[*p].texWidth;   //ftGlyph->bitmap.width
+        float h =       font->charInfo[*p].texHeight;   //ftGlyph->bitmap.rows
 
 
-        coords[numVertices++] = (Vertex){x2,       -y2    ,    font->charInfo[*p].texPosX /font->fontRowWidht,                                     0};
-        coords[numVertices++] = (Vertex){x2 + w,   -y2    ,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht) / font->fontRowWidht,    0};
-        coords[numVertices++] = (Vertex){x2,       -y2 - h,    font->charInfo[*p].texPosX / font->fontRowWidht,                                    font->charInfo[*p].texHight / font->fontRowHeight}; //each glyph occupies a different amount of vertical space
-        coords[numVertices++] = (Vertex){x2 + w,   -y2    ,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht) / font->fontRowWidht,    0};
-        coords[numVertices++] = (Vertex){x2,       -y2 - h,    font->charInfo[*p].texPosX / font->fontRowWidht,                                    font->charInfo[*p].texHight / font->fontRowHeight};
-        coords[numVertices++] = (Vertex){x2 + w,   -y2 - h,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht) / font->fontRowWidht,    font->charInfo[*p].texHight / font->fontRowHeight};
+        coords[numVertices++] = (Vertex){x2,       -y2    ,    font->charInfo[*p].texPosX /font->fontRowWidth,                                     0};
+        coords[numVertices++] = (Vertex){x2 + w,   -y2    ,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidth) / font->fontRowWidth,    0};
+        coords[numVertices++] = (Vertex){x2,       -y2 - h,    font->charInfo[*p].texPosX / font->fontRowWidth,                                    font->charInfo[*p].texHeight / font->fontRowHeight}; //each glyph occupies a different amount of vertical space
+        coords[numVertices++] = (Vertex){x2 + w,   -y2    ,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidth) / font->fontRowWidth,    0};
+        coords[numVertices++] = (Vertex){x2,       -y2 - h,    font->charInfo[*p].texPosX / font->fontRowWidth,                                    font->charInfo[*p].texHeight / font->fontRowHeight};
+        coords[numVertices++] = (Vertex){x2 + w,   -y2 - h,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidth) / font->fontRowWidth,    font->charInfo[*p].texHeight / font->fontRowHeight};
 
 
         x += font->charInfo[*p].advanceX;
@@ -460,110 +462,6 @@ void TextRenderer::calcTextSize()
     calcTasks[UI_CALCTASK_TEXT_SIZE] = false;
 }
 
-/*
-// -- CALC TEXT - TEXTURE ATLAS -> CONTAINS CHARACTER BITMAPS
-void TextRenderer::calcTextTexAtlas() 
-{
-    bool error = false;
-    int  textureHight = 0,
-         textureWidht = 0;
-    
-    // fill characterInfo width 0
-    for (int i=0; i<128; i++)
-    { charInfo[i] = {0, 0, 0, 0, 0}; }
-    
-    
-    // get length of all characters together
-    // get highest hight of characters
-    // -> texture_atlas dimensions
-    for (int i=32 /* not visible, control characters 0-32 *-/; i<128; i++)
-    {
-        // load character        
-        if (FT_Load_Char(ftFace, i /* character number (ascii) *-/, FT_LOAD_RENDER)) {
-            error = true;
-            err("calcTextTexAtlas FT_Load_Char " + str(i));
-            continue; 
-        }
-        
-        // textureHight, widht
-        textureWidht += ftGlyph->bitmap.width;
-        textureHight  = max(textureHight, (int)ftGlyph->bitmap.rows);
-    }
-//    cout << "[TEXT] calcTextTexAtlas  hight: " << textureHight << ", widht: " << textureWidht << endl;
-    
-    
-    // delate old texture
-    glDeleteTextures(1, &HANDEL_TEXTURE_ATLAS);
-    
-    // create texture --------------
-    glActiveTexture(GL_TEXTURE0);
-    glGenTextures(1, &HANDEL_TEXTURE_ATLAS);
-    glBindTexture(GL_TEXTURE_2D, HANDEL_TEXTURE_ATLAS);
-    
-    glUniform1i(GL::SHADER_TEXT_CHARACTER_UNIF_TEXTURE, 0);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);    
-    
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_ALPHA, textureWidht, textureHight, 0, GL_ALPHA, GL_UNSIGNED_BYTE, 0);
-    
-    
-    
-    // paste all characters site by site into texture --------
-    int xCursor = 0;
-    
-    for (int i=32 /* not visible, control characters -*-/; i<128; i++)
-    {
-        // load character
-        if (FT_Load_Char(ftFace, i /* character number (asci) *-/, FT_LOAD_RENDER)) {
-            error = true;
-            err("calcTextTexAtlas FT_Load_Char");
-            continue;
-        }
-        
-        
-        // load bitmap into texture -------------------
-        glTexSubImage2D(GL_TEXTURE_2D, 0, 
-                        xCursor               /* x-offset *-/,   0                       /* y-offset *-/,
-                        ftGlyph->bitmap.width /* width *-/,      ftGlyph->bitmap.rows    /* hight *-/,
-                        GL_ALPHA,                               GL_UNSIGNED_BYTE,       /* format *-/
-                        ftGlyph->bitmap.buffer /* pixels *-/);
-        
-        
-        // set charInfo -------------------------------
-        charInfo[i].texPosX    = xCursor;
-        charInfo[i].texHight   = ftGlyph->bitmap.rows;
-        charInfo[i].texWidht   = ftGlyph->bitmap.width;        
-        charInfo[i].marginLeft = ftGlyph->bitmap_left;
-        charInfo[i].marginTop  = ftGlyph->bitmap_top;
-        charInfo[i].advanceX   = ftGlyph->advance.x >> 6;
-        charInfo[i].advanceY   = ftGlyph->advance.y >> 6;
-        
-        
-        // move cursor to next position
-        xCursor += ftGlyph->bitmap.width;
-    }
-    
-    
-//    // print error
-//    if (error)
-//        cout << "[TEXT] calcTextTexAtlas [ERR] " << error << endl;
-//    else
-//        cout << "[TEXT] calcTextTexAtlas [OK]" << error << endl;
-    
-    
-    // set row hight to max hight of font
-    fontRowHeight = textureHight;
-    fontRowWidht = textureWidht;
-
-    // done
-    calcTasks[UI_CALCTASK_TEXT_ATLAS] = false;
-}
-*/
 
 // -- ADD CALC TASK
 void TextRenderer::addCalcTask(int type) 
@@ -649,16 +547,16 @@ void TextRenderer::render()
     glm::mat4 transform =  glm::translate(glm::vec3( -(renderAttributes.width  /2 ) /* X */,
                                                      +(renderAttributes.height /2)  /* Y */,
                                                      +0.0f                                      /* Z */ ))
-                                            *GL::transfomMatix;
+                                            *GL::transformMatrix;
     
-    glm::mat4 model     = GL::projectionMatix * transform;
+    glm::mat4 model     = GL::projectionMatrix * transform;
     
     glUniformMatrix4fv(GL::SHADER_TEXT_CHARACTER_UNIF_TRANSFORM_MATIX,
                        1                /* amount of matrix */,
                        GL_FALSE         /* convert format -> NO */,
                        &model[0][0]);
     
-    //GL::transfomMatix = transform;
+    //GL::transformMatrix = transform;
     
     
     // set shader color

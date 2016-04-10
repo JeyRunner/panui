@@ -14,14 +14,19 @@
 #ifndef INTATTRIBUTE_H
 #define	INTATTRIBUTE_H
 
+// include
 #include <sstream>
 #include "Value.h"
 #include "StyleAttribute.h"
 #include <string>
 #include <stdlib.h>
+
 using namespace std;
+namespace ui
+{
 
-
+/* IntAttribute Class
+ */
 class IntAttribute : public StyleAttribute
 {
     public:
@@ -50,5 +55,7 @@ class IntAttribute : public StyleAttribute
     private:
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* INTVALUE_H */
 

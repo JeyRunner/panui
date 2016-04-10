@@ -15,7 +15,7 @@
 #include "Box.h"
 #include "View.h"
 #include "BoxRenderer.h"
-
+using namespace ui;
 using namespace std;
 
 

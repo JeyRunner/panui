@@ -17,6 +17,7 @@
 #include "const.h"
 #include "Renderer.h"
 #include "Box.h"
+using namespace ui;
 
 
 // ############################################

@@ -5,7 +5,7 @@
  *
  * ---------------------------------------
  * STYLERULE CLASS
- * owns multible STYLEATTRIBUTES
+ * owns multiple STYLEATTRIBUTES
  * 
  * ---------------------------------------
  */
@@ -14,20 +14,23 @@
 #ifndef STYLERULE_H
 #define	STYLERULE_H
 
-
+// include
 #include "StyleAttribute.h"
 #include "IntAttribute.h"
 #include "ColorAttribute.h"
 #include "FloatAttribute.h"
 #include "StringAttribute.h"
-
 #include <stdlib.h>
 #include <list>
 #include <string>
 #include <iostream>
+
 using namespace std;
+namespace ui
+{
 
-
+/* StyleRule Class
+ */
 class StyleRule : public StyleAttribute::OnChangeListener, public Log
 {
     public:
@@ -108,5 +111,7 @@ class StyleRule : public StyleAttribute::OnChangeListener, public Log
       list<View*> boundedViews;
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* STYLERULE_H */
 

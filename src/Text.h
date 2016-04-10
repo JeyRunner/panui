@@ -14,18 +14,21 @@
 #ifndef TEXT_H
 #define	TEXT_H
 
+// include
 #include "View.h"
-//#include "GLES/gl.h"
 #include "GL.h"
-class TextRenderer;
-
 #include <string>
 #include <list>
 #include <iostream>
+namespace ui
+{
+class TextRenderer;
+
 using namespace std;
 
 
-
+/* Text Class
+ */
 class Text : public View
 {
     public:
@@ -41,5 +44,7 @@ class Text : public View
     private:
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* TEXT_H */
 

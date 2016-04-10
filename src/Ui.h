@@ -15,6 +15,7 @@
 #ifndef UI_H
 #define	UI_H
 
+// include
 #ifdef pl_pi
 #include "GLES/gl.h"
 #endif
@@ -22,10 +23,15 @@
 #include "FrameRenderer.h"
 #include "Log.h"
 #include "Screen.h"
-//#include "View.h"
+namespace ui
+{
 class View;
 class FrameRenderer;
 
+
+
+/* Ui Class
+ */
 class Ui : public Log
 {
     public:
@@ -48,6 +54,6 @@ class Ui : public Log
 };
 
 
-
+};     /* END NAMESPACE */
 #endif	/* UI_H */
 

@@ -14,14 +14,19 @@
 #ifndef FLOATATTRIBUTE_H
 #define	FLOATATTRIBUTE_H
 
+// include
 #include <sstream>
 #include "Value.h"
 #include "StyleAttribute.h"
 #include <string>
 #include <stdlib.h>
+
 using namespace std;
+namespace ui
+{
 
-
+/* FloatAttribute Class
+ */
 class FloatAttribute : public StyleAttribute
 {
     public:
@@ -50,5 +55,7 @@ class FloatAttribute : public StyleAttribute
     private:
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* FLOATVALUE_H */
 

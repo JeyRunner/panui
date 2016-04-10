@@ -13,26 +13,25 @@
 #ifndef VIEW_H
 #define	VIEW_H
 
-//#include "StyleRule.h"
-//class StyleRule;
+// include
 #include "Log.h"
-//#include "Renderer.h"
-//#include "BoxView.h" // => problems with circular including
-class Renderer;
-class Box;
-class StyleRule;
-
 #include <string>
 #include <stdlib.h>
 #include <iostream>
 #include <list>
 #include <functional>
-
 #include "const.h"
+namespace ui
+{
+class Renderer;
+class Box;
+class StyleRule;
 
 using namespace std;
 
 
+/* View Class
+ */
 class View : public Log
 {
     public:
@@ -89,5 +88,7 @@ class View : public Log
         function<void (View *v, Point relativeSelf, Point relativeParent, Point absolute)> onTouchDropFunc; 
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* VIEW_H */
 

@@ -15,6 +15,7 @@
 #include "Renderer.h"
 #include "Style.h"
 using namespace std;
+using namespace ui;
 
 
 // -- CREATE OBJEKT --------------

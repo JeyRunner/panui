@@ -14,7 +14,7 @@
 
 #include "Style.h"
 #include "Box.h"
-//#include "StyleRule.h"
+using namespace ui;
 
 // -- init static var
 /*const*/ list<StyleRule*> Style::rules;

@@ -37,7 +37,7 @@
 #include "Box.h"
 #include "View.h"
 #include "Touch.h"
-
+using namespace ui;
 
 
 // ###########################################

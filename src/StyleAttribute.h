@@ -14,31 +14,22 @@
 #ifndef STYLEATTRIBUTE_H
 #define	STYLEATTRIBUTE_H
 
-
-//#include "View.h" // => problems with circular including
-class View;
-
+// include
 #include "const.h"
 #include "Log.h"
 #include <list>
 #include <string>
 #include <iostream>
 #include <stdlib.h>
+namespace ui
+{
+class View;
+
 using namespace std;
 
 
-// Base of styleAttribute -> down casting
-//class StyleAttributeBase 
-//{
-//    public:  
-
-//     
-//      
-//};
-// -- static var
-// enum StyleAttributeBase::Type;
-
-
+/* StyleAttribute Class
+ */
 class StyleAttribute : public Log
 {
     public:
@@ -116,40 +107,5 @@ class StyleAttribute : public Log
 };
 
 
-
-
+};     /* END NAMESPACE */
 #endif	/* STYLEATTRIBUTE_H */
-
-
-
-
-
-// ############# OLD ########################################
-      /*
-      // different types
-      enum Type 
-      {
-        left, right, top, bottom,
-        height, widht,
-        background_color, alpha,         
-      };
-      
-      // information struct for each type
-      class TypeDataItem 
-      {
-      public:
-        Type    type;
-        string  typeName;
-        Value::Type   valueType;
-        
-        TypeDataItem();
-        TypeDataItem(Type type, string typeName, Value::Type valueType);
-      };
-      
-      // Additional information for each type
-      static TypeDataItem *typeData[8];
-      
-      // seach for type
-      TypeDataItem* getTypeDataItem(string type);
-      TypeDataItem* getTypeDataItem(Type type);
-      */

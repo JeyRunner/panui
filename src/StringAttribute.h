@@ -14,14 +14,19 @@
 #ifndef STRINGATTRIBUTE_H
 #define	STRINGATTRIBUTE_H
 
+// include
 #include <sstream>
 #include "Value.h"
 #include "StyleAttribute.h"
 #include <string>
 #include <stdlib.h>
+
 using namespace std;
+namespace ui
+{
 
-
+/* StringAttribute Class
+ */
 class StringAttribute : public StyleAttribute
 {
     public:
@@ -40,5 +45,7 @@ class StringAttribute : public StyleAttribute
       string stringValue;
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* STRINGVALUE_H */
 

@@ -15,9 +15,14 @@
 #ifndef TOUCH_H
 #define	TOUCH_H
 
+// include
 #include "TouchPoint.h"
 
+namespace ui
+{
 
+/* Touch Class
+ */
 class Touch : public Log {
     public:
       // init
@@ -37,9 +42,7 @@ class Touch : public Log {
       static int isOverCount;
 };
 
-//TouchPoint *Touch::touchPoint;
-// void Touch::exe_reCheck();
 
-
+};     /* END NAMESPACE */
 #endif	/* TOUCH_H */
 

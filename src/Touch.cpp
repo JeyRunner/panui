@@ -6,6 +6,7 @@
  */
 
 #include "Touch.h"
+using namespace ui;
 
 // const
 TouchPoint *Touch::touchPoint;

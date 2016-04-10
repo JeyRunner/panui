@@ -21,7 +21,8 @@
 #include "const.h"
 
 using namespace std;
-
+namespace ui
+{
 
 /* Log class
  */
@@ -66,4 +67,5 @@ std::string str(T value)
 }
 
 
+};     /* END NAMESPACE */
 #endif /* PANUI_LOG_H */

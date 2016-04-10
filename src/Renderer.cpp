@@ -31,7 +31,7 @@
 #include "Ui.h"
 #include "GL.h"
 #include "Touch.h"
-
+using namespace ui;
 
 
 // ###########################################
@@ -348,15 +348,15 @@ void Renderer::render()
     glm::mat4 transform = glm::translate(glm::vec3(renderAttributes.positionX /* X */,
                                                    renderAttributes.positionY /* Y */,
                                                    0.0f                       /* Z */ ))
-                          * GL::transfomMatix;
-    glm::mat4 modelMatrix = GL::projectionMatix * transform;
+                          * GL::transformMatrix;
+    glm::mat4 modelMatrix = GL::projectionMatrix * transform;
     
     glUniformMatrix4fv(GL::SHADER_VIEW_BACKGROUND_UNIF_TRANSFORM_MATIX,
                        1                /* amount of matrix */,
                        GL_FALSE         /* convert format -> NO */,
                        &modelMatrix[0][0]);
     
-    GL::transfomMatix = transform;
+    GL::transformMatrix = transform;
     
     
     // set shader color
@@ -508,15 +508,15 @@ void Renderer::resetCursor()
     glm::mat4 transform = glm::translate(glm::vec3( -renderAttributes.positionX /* X */,
                                                      -renderAttributes.positionY /* Y */,
                                                      -0.0f                       /* Z */ ))
-                                                     * GL::transfomMatix;
-    glm::mat4 model     = GL::projectionMatix * transform;
+                                                     * GL::transformMatrix;
+    glm::mat4 model     = GL::projectionMatrix * transform;
     
     glUniformMatrix4fv(GL::SHADER_VIEW_BACKGROUND_UNIF_TRANSFORM_MATIX,
                        1                /* amount of matrix */,
                        GL_FALSE         /* convert format -> NO */,
                        &model[0][0]);
     
-    GL::transfomMatix = transform;
+    GL::transformMatrix = transform;
     
     /* OLD: OpenGl ES 1.x
     glTranslatef(
@@ -551,7 +551,7 @@ void Renderer::resetStencilBuffer()
         glEnableVertexAttribArray(GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS);
 
 
-        glm::mat4 modelMatrix = GL::projectionMatix * GL::transfomMatix;
+        glm::mat4 modelMatrix = GL::projectionMatrix * GL::transformMatrix;
         glUniformMatrix4fv(GL::SHADER_VIEW_BACKGROUND_UNIF_TRANSFORM_MATIX,
                            1                /* amount of matrix */,
                            GL_FALSE         /* convert format -> NO */,

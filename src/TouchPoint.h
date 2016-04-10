@@ -14,13 +14,18 @@
 #ifndef TOUCHPOINT_H
 #define	TOUCHPOINT_H
 
+// include
 #include <stdlib.h>
 #include <functional>
 #include "View.h"
 #include "Ui.h"
+
 using namespace std;
+namespace ui
+{
 
-
+/* TouchPoint Class
+ */
 class TouchPoint : public Log
 {
     public:
@@ -47,11 +52,11 @@ class TouchPoint : public Log
       // on scroll
       void scroll(float x, float y);
       
-//      // views add themselves when isOver
-//      void addOver(View *view);
-//      
-//      // views remove themselves when not isOver
-//      void removeOver(View *view);
+      // views add themselves when isOver
+      //void addOver(View *view);
+
+      // views remove themselves when not isOver
+      //void removeOver(View *view);
       
       // state values
       static bool STATE_DOWN;
@@ -71,11 +76,14 @@ class TouchPoint : public Log
       View *focus;
       
       // actual views point is over
-//      list<View*> overList;
-      
+      //list<View*> overList;
+
+
     private:
         void eachView(View *container,function<void (View *view)> func);
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* TOUCHPOINT_H */
 

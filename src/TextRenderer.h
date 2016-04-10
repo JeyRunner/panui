@@ -13,23 +13,23 @@
 #ifndef TEXTRENDERER_H
 #define	TEXTRENDERER_H
 
+// include
 #include <stdlib.h>
-
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-
-//#include "GLES2/gl2.h"
-
-//#include "GL.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
 #include <list>
 #include "Renderer.h"
+namespace ui
+{
 class Text;
+
 using namespace std;
 
 
-
+/* TextRenderer Class
+ */
 class TextRenderer : public Renderer
 {
     public:
@@ -40,7 +40,6 @@ class TextRenderer : public Renderer
         void calcText();
         void calcTextFamily();
         void calcTextSize();
-        //void calcTextTexAtlas(); // call when change text-family or size \n -> recalculate texture atlas that contains all character bitmaps
         
         virtual void addCalcTask (int type);
         virtual int  exeCalcTasks();
@@ -48,11 +47,11 @@ class TextRenderer : public Renderer
         // render
         virtual void render ();
          
-        // charakter position information
+        // character position information
         struct CharacterInfo 
         {
           float texPosX;                // offset in textureAtlas
-          float texHight, texWidht;     // hight, widht
+          float texHeight, texWidth;     // height, width
           float marginTop,marginLeft;   // to position character
           float advanceX, advanceY;
         };
@@ -71,7 +70,7 @@ class TextRenderer : public Renderer
             FT_GlyphSlot ftGlyph;
             FT_Face      ftFace;
             float        fontRowHeight,
-                         fontRowWidht;
+                         fontRowWidth;
 
             Font(string name, float size);
             void calcTextTexAtlas(); // call when change text-family or size \n -> recalculate texture atlas that contains all character bitmaps
@@ -85,24 +84,15 @@ class TextRenderer : public Renderer
         // own font
         Font *font;
         int   numVertices;
-      
-    private:
-      
-      // create vertexBuffer
-//      void createBuffer();
-//      bool bufferCreated;
 
-      // freetype - text
-      /*
-      FT_GlyphSlot ftGlyph;
-      FT_Face      ftFace;
-      float        fontRowHeight,
-                   fontRowWidht; */
-      GLuint        VERTEX_BUFFER_TEXT;
-      GLuint       HANDEL_TEXTURE,
-      //             HANDEL_TEXTURE_ATLAS,
-                   HANDEL_VERTEX_BUFFER;
+
+    private:
+          GLuint  VERTEX_BUFFER_TEXT;
+          GLuint  HANDEL_TEXTURE,
+                  HANDEL_VERTEX_BUFFER;
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* TEXTRENDERER_H */
 

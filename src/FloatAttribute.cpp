@@ -13,6 +13,7 @@
 
 #include "FloatAttribute.h"
 using namespace std;
+using namespace ui;
 
 
 // ############################################

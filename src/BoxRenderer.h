@@ -34,14 +34,19 @@
 #ifndef BOXRENDERER_H
 #define	BOXRENDERER_H
 
+// include
 #include <stdlib.h>
 #include "GL.h"
 #include "Renderer.h"
+namespace ui
+{
 class Box;
+
 using namespace std;
 
 
-
+/* BoxRenderer Class
+ */
 class BoxRenderer : public Renderer
 {
     public:
@@ -87,5 +92,7 @@ class BoxRenderer : public Renderer
       } chCur;
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* BOXRENDERER_H */
 

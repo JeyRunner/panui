@@ -18,6 +18,7 @@
 #include "View.h"
 #include "Renderer.h"
 #include "Style.h"
+using namespace ui;
 
 
 // ############################################

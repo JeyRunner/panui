@@ -14,6 +14,7 @@
 #ifndef COLORATTRIBUTE_H
 #define	COLORATTRIBUTE_H
 
+// include
 #include "Value.h"
 #include "StyleAttribute.h"
 #include <string>
@@ -21,9 +22,13 @@
 #include <sstream>
 #include <stdio.h>
 #include <stdlib.h>
+
 using namespace std;
+namespace ui
+{
 
-
+/* ColorAttribute Class
+ */
 class ColorAttribute : public StyleAttribute
 {
     public:
@@ -55,5 +60,7 @@ class ColorAttribute : public StyleAttribute
       // string    stringValue;
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* COLORVALUE_H */
 

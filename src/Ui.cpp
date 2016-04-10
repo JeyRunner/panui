@@ -18,6 +18,7 @@
 #include "Style.h"
 #include "GL.h"
 using namespace std;
+using namespace ui;
 
 
 // ############################################

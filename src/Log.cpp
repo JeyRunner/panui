@@ -13,6 +13,7 @@
 #ifndef pl_pi
 #include <SDL.h>
 #endif
+using namespace ui;
 
 // static
 UI_LOG_LEVEL Log::logLevel;

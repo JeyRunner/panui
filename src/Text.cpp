@@ -17,7 +17,7 @@
 #include "TextRenderer.h"
 
 using namespace std;
-
+using namespace ui;
 
 
 // ###########################################

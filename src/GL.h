@@ -13,6 +13,7 @@
 #ifndef GL_H
 #define	GL_H 
 
+// include
 #if defined pl_pi || defined pl_andr
 #include <GLES2/gl2.h>
 #else
@@ -31,15 +32,20 @@
 #include "Log.h"
 #include <ft2build.h>
 #include FT_FREETYPE_H
-using namespace std;
 
+using namespace std;
+namespace ui
+{
+
+/* GL Class
+ */
 class GL : public Log
 {
     public:
       GL ();
       
       // var ------------------------------------------
-      // handels
+      // handel
       // -- SHADER_VIEW_BACKGROUND
       static GLint SHADER_VIEW_BACKGROUND,
                    SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS,
@@ -53,9 +59,9 @@ class GL : public Log
                    SHADER_TEXT_CHARACTER_UNIF_COLOR,
                    SHADER_TEXT_CHARACTER_UNIF_TEXTURE;
       
-      // Transfom Matix
-      static glm::mat4 transfomMatix,
-                       projectionMatix;
+      // Transform Matrix
+      static glm::mat4 transformMatrix,
+              projectionMatrix;
       
       // Freetype
       static FT_Library ftLib;
@@ -83,16 +89,7 @@ class GL : public Log
       static Log log;
 };
 
-/*
-// static
-GLint GL::SHADER_VIEW_BACKGROUND,
-      GL::SHADER_VIEW_BACKGROUND_ATTR_VERTEX_POS,
-      GL::SHADER_VIEW_BACKGROUND_UNIF_PROJECTION_MATIX,
-      GL::SHADRE_VIEW_BACKGROUND_UNIF_TRANSFORM_MATIX,
-      GL::SHADER_VIEW_BACKGROUND_UNIF_COLOR;
 
-glm::mat4 GL::transfomMatix;
-*/
-
+};     /* END NAMESPACE */
 #endif	/* GL_H */
 

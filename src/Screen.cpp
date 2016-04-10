@@ -32,6 +32,7 @@
 #include "Screen.h"
 #include "const.h"
 using namespace std;
+using namespace ui;
 
 // static
 uint32_t Screen::display_width;

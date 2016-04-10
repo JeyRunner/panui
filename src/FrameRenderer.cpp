@@ -29,6 +29,7 @@
 #include "Touch.h"
 
 using namespace std;
+using namespace ui;
 
 
 // ############################################
@@ -92,7 +93,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         glViewport(0, 0, width, height);
          
         // calculate + set projection Matix
-        GL::projectionMatix = glm::ortho(-(float)width/2  /* left */,
+        GL::projectionMatrix = glm::ortho(-(float)width/2  /* left */,
                                              (float)width/2  /* right */,
                                             -(float)height/2 /* bottom */,
                                              (float)height/2 /* top */,
@@ -166,7 +167,7 @@ void *FrameRenderer::thread_render(void* frameRenderer)
   
     
     // set transform Matix for all shaders to middle of screen
-    GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
+    GL::transformMatrix = glm::translate(glm::vec3(0, 0, 0));
     
     int   frame_counter = 0;
     float timeStart     = 0;
@@ -294,7 +295,7 @@ void FrameRenderer::exe_render()
     // reset projection matrix
     // @TODO bug: add view at runtime -> transform matrix is shifted 
     // set transform Matix for all shades to middle of screen
-    GL::transfomMatix = glm::translate(glm::vec3(0, 0, 0));
+    GL::transformMatrix = glm::translate(glm::vec3(0, 0, 0));
     
 
 

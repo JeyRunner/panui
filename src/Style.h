@@ -14,13 +14,17 @@
 #ifndef STYLE_H
 #define	STYLE_H
 
-//class StyleRule;
+// include
 #include "StyleRule.h"
 #include <list>
 #include <stdlib.h>
+
 using namespace std;
+namespace ui
+{
 
-
+/* Style Class
+ */
 class Style : public Log
 {
     public:
@@ -44,10 +48,7 @@ class Style : public Log
 
 };
 
-// -- init static var
-// /*const*/ list<StyleRule*> Style::rules;
-// /*const*/ list<StyleRule*>::iterator Style::rulesIter;
 
-
+};     /* END NAMESPACE */
 #endif	/* STYLE_H */
 

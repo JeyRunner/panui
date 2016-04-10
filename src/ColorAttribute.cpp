@@ -7,6 +7,7 @@
 
 #include "ColorAttribute.h"
 using namespace std;
+using namespace ui;
 
 
 // ############################################

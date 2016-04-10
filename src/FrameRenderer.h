@@ -17,22 +17,25 @@
 #ifndef FRAMERENDERER_H
 #define	FRAMERENDERER_H
 
-//#include "Ui.h
+// include
 #include "Screen.h"
 #include <pthread.h>
-// #include <chrono>     // system time 
 #include <stdio.h>
 #include <functional>
 #include <deque>
 #include <glm/glm.hpp>
 #include <glm/gtx/transform.hpp>
-
-using namespace std;
-
+namespace ui
+{
 class Ui;
 class View;
 class TouchPoint;
 
+using namespace std;
+
+
+/* FrameRenderer Class
+ */
 class FrameRenderer : public Log
 {
     public:
@@ -78,5 +81,7 @@ class FrameRenderer : public Log
         
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* FRAMERENDERER_H */
 

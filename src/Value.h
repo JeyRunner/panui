@@ -14,12 +14,17 @@
 #ifndef VALUE_H
 #define	VALUE_H
 
+// include
 #include <string>
 #include <stdlib.h>
 #include "Log.h"
+
 using namespace std;
+namespace ui
+{
 
-
+/* Ui Class
+ */
 class Value : public Log
 {
     public:
@@ -57,4 +62,6 @@ class Value : public Log
 
 };
 
+
+};     /* END NAMESPACE */
 #endif	/* VALUE_H */
