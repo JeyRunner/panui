@@ -106,7 +106,7 @@ void GL::init()
                  "                                         \n"
                  "void main() {                            \n"
                  "                                         \n" 
-                 "   gl_FragColor = gl_FragColor = vec4(1, 1, 1, texture2D(tex, texcoord).a) * color; \n" // override alpha from tex with color    gl_FragColor = vec4(1, 1, 1, texture2D(tex, texcoord).a) * color;
+                 "   gl_FragColor = vec4(1, 1, 1, texture2D(tex, texcoord).a) * color; \n" // override alpha from tex with color    gl_FragColor = vec4(1, 1, 1, texture2D(tex, texcoord).a) * color;
                  "}                                        \n",
             
                  &SHADER_TEXT_CHARACTER, 

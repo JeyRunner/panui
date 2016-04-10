@@ -163,7 +163,6 @@ void *FrameRenderer::thread_render(void* frameRenderer)
                 GL_REPLACE /* stencil func ok, but deep fail =>> set to value */,
                 GL_REPLACE /* both ok                        =>> set to value*/);
 
-    fr->debug("------------- v4");
   
     
     // set transform Matix for all shaders to middle of screen

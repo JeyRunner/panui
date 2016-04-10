@@ -35,7 +35,7 @@ class TextRenderer : public Renderer
     public:
         TextRenderer (Text *view);
         ~TextRenderer ();
-        
+
         // calculate Text
         void calcText();
         void calcTextFamily();
@@ -84,6 +84,7 @@ class TextRenderer : public Renderer
 
         // own font
         Font *font;
+        int   numVertices;
       
     private:
       
@@ -97,7 +98,7 @@ class TextRenderer : public Renderer
       FT_Face      ftFace;
       float        fontRowHeight,
                    fontRowWidht; */
-      
+      GLuint        VERTEX_BUFFER_TEXT;
       GLuint       HANDEL_TEXTURE,
       //             HANDEL_TEXTURE_ATLAS,
                    HANDEL_VERTEX_BUFFER;

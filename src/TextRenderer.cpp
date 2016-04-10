@@ -36,6 +36,7 @@ TextRenderer::TextRenderer(Text *view) : Renderer(view)
 {
     setLogName("TEXT");
     this->font = NULL;
+    VERTEX_BUFFER_TEXT = 0;
 }
 
 
@@ -233,7 +234,9 @@ void TextRenderer::calcText()
     float contendHeight = 0;
     int x = layoutAttributes.paddingLeft->floatValue;
     int y = -font->fontRowHeight - layoutAttributes.paddingTop->floatValue;
-    
+    int oldNumVertices = numVertices;
+
+
     // Vertex
     struct Vertex
     {
@@ -242,12 +245,7 @@ void TextRenderer::calcText()
     }coords[6 * strlen(text)];
     
     charAmount = strlen(text);
-
-    
-    // delete old buffer
-    // glDeleteBuffers(1, &HANDEL_VERTEX_BUFFER);
-
-    int n = 0;
+    numVertices = 0;
     
     // calc lines -> for each character
     for(p = text; *p; p++) {
@@ -270,42 +268,17 @@ void TextRenderer::calcText()
         float h =       font->charInfo[*p].texHight;   //ftGlyph->bitmap.rows
 
 
-        coords[n++] = (Vertex) {x2, -y2, font->charInfo[*p].texPosX, 0};
-        coords[n++] = (Vertex) {x2 + w, -y2, font->charInfo[*p].texPosX + font->charInfo[*p].texWidht / font->fontRowWidht, 0};
-        coords[n++] = (Vertex) {x2, -y2 - h, font->charInfo[*p].texPosX, font->charInfo[*p].texHight /
-                                                                                        font->fontRowHeight}; //remember: each glyph occupies a different amount of vertical space
-        coords[n++] = (Vertex) {x2 + w, -y2, font->charInfo[*p].texPosX + font->charInfo[*p].texWidht / font->fontRowWidht, 0};
-        coords[n++] = (Vertex) {x2, -y2 - h, font->charInfo[*p].texPosX, font->charInfo[*p].texHight / font->fontRowHeight};
-        coords[n++] = (Vertex) {x2 + w, -y2 - h, font->charInfo[*p].texPosX + font->charInfo[*p].texWidht / font->fontRowWidht,
-                                font->charInfo[*p].texHight / font->fontRowHeight};
+        coords[numVertices++] = (Vertex){x2,       -y2    ,    font->charInfo[*p].texPosX /font->fontRowWidht,                                     0};
+        coords[numVertices++] = (Vertex){x2 + w,   -y2    ,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht) / font->fontRowWidht,    0};
+        coords[numVertices++] = (Vertex){x2,       -y2 - h,    font->charInfo[*p].texPosX / font->fontRowWidht,                                    font->charInfo[*p].texHight / font->fontRowHeight}; //each glyph occupies a different amount of vertical space
+        coords[numVertices++] = (Vertex){x2 + w,   -y2    ,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht) / font->fontRowWidht,    0};
+        coords[numVertices++] = (Vertex){x2,       -y2 - h,    font->charInfo[*p].texPosX / font->fontRowWidht,                                    font->charInfo[*p].texHight / font->fontRowHeight};
+        coords[numVertices++] = (Vertex){x2 + w,   -y2 - h,    (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht) / font->fontRowWidht,    font->charInfo[*p].texHight / font->fontRowHeight};
 
-//      GLfloat box[4][4] = {
-//          {x2,     -y2    ,  charInfo[*p].texPosX                               / fontRowWidht, 0},
-//          {x2 + w, -y2    ,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, 0},
-//          {x2,     -y2 - h,  charInfo[*p].texPosX                               / fontRowWidht, charInfo[*p].texHight / fontRowHight},
-//          {x2 + w, -y2 - h,  (charInfo[*p].texPosX + charInfo[*p].texWidht)     / fontRowWidht, charInfo[*p].texHight / fontRowHight},
-//      };
-
-//      // give gl the Vertices via array
-//        glVertexAttribPointer(
-//            GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS       /* pass vertices to vertex Pos attribute of vertexShader */,
-//            4                                               /* 3 Aruments: x,y,z */,
-//            GL_FLOAT                                        /* Format: float     */,
-//            GL_FALSE                                        /* take values as-is */,
-//            0                                               /* Entry lenght ?    */,
-//            box                                             /* vertices Array    */ );
-//
-//        // draw with the vertices form the given Array
-//        // make two connected triangle to create a rectangle
-//        glDrawArrays(
-//            GL_TRIANGLE_STRIP,
-//            0 /* Array start pos   */,
-//            4 /* how much vertices */);
 
         x += font->charInfo[*p].advanceX;
         y += font->charInfo[*p].advanceY;
     }
-    n = 0;
 
     // add last line to contend height
     contendHeight += font->fontRowHeight;
@@ -313,29 +286,30 @@ void TextRenderer::calcText()
     // add padding to contend height
     contendHeight = contendHeight + layoutAttributes.paddingTop->floatValue + layoutAttributes.paddingBottom->floatValue;
 
-//    coords[n++] = (Vertex){ 0,0, 0,0 };
-//    coords[n++] = (Vertex){ 0,10, 0,0 };
-//    coords[n++] = (Vertex){ 10,10, 0,0 };
-//    
-//    coords[n++] = (Vertex){ 0,0, 0,0 };
-//    coords[n++] = (Vertex){ 10,10, 0,0 };
-//    coords[n++] = (Vertex){ 0,10, 0,0 };
-    
-    // recrate buffer
-//    glGenBuffers(1, &HANDEL_VERTEX_BUFFER);  
-//    
-//    glBindBuffer(GL_ARRAY_BUFFER, HANDEL_VERTEX_BUFFER);
-//    glBufferData(GL_ARRAY_BUFFER,                                                       // type
-//                 sizeof(coords),                                                        // size: num Characters * 6 Vertices per character * 4 Vaues per vertex * sizeof value
-//                 coords,                                                                // data
-//                 GL_DYNAMIC_DRAW);
-//    
-//    glVertexAttribPointer(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS, 4, GL_FLOAT, GL_FALSE, 0, 0);
-//    glEnableVertexAttribArray(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
-//    
-//    
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //cout << "[TEXT] calc Text [OK]" << endl; 
+
+    // -- into buffer --------------------------------
+    // if vertex buffer not generated or size changed
+    if ((VERTEX_BUFFER_TEXT <= 0) || (oldNumVertices != numVertices))
+    {
+        // delete old
+        glDeleteBuffers(1, &VERTEX_BUFFER_TEXT);
+        // debug("create new vertices buffer with size " + str(sizeof(coords)) + "bytes");
+
+        // create vertex buffer
+        glGenBuffers(1, &VERTEX_BUFFER_TEXT);
+        glBindBuffer(GL_ARRAY_BUFFER,VERTEX_BUFFER_TEXT);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(coords), NULL, GL_DYNAMIC_DRAW /* often changed and used for rendering */ );
+        // @TODO: dynamic vertex buffer size for text
+    }
+    else
+        glBindBuffer(GL_ARRAY_BUFFER,VERTEX_BUFFER_TEXT);
+
+    // insert data
+    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(coords), &coords);
+    //debug("buffer "+str(sizeof(coords))+"  bytes");
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
 
     // done
     // cout << "[DONE] calcText of '"<< view->id << ", " << view->class_ <<"'" << endl;
@@ -644,20 +618,6 @@ int  TextRenderer::exeCalcTasks()
 
 
 
-//// -- CREATE VETEX BUFFER ----------------------------------
-//void TextRenderer::createBuffer() 
-//{
-//    glGenBuffers(1, HANDEL_VERTEX_BUFFER);
-//    glBindBuffer(GL_ARRAY_BUFFER, HANDEL_VERTEX_BUFFER);
-//    glBufferData(GL_ARRAY_BUFFER, sizeof(((Text*)view)->text_str.c_str() * 6 * sizeof(GLfloat)), NULL, GL_DYNAMIC_DRAW);
-//    
-//    cout << "[TEXT] create buffer [OK]" << endl;
-//    bufferCreated = true;
-//}
-
-
-
-bool init=true;
 // -- RENDER -----------------------------------------
 void TextRenderer::render()
 {
@@ -674,7 +634,9 @@ void TextRenderer::render()
     
     // bind view background shader
     glUseProgram(GL::SHADER_TEXT_CHARACTER);
-    
+
+    glBindBuffer(GL_ARRAY_BUFFER, VERTEX_BUFFER_TEXT);
+
     // draw a rectangle ----------------------------------------------
     // activate for client (to draw, not calculate) vertex Array
     // => tell gl we want to draw a something with a vertex Array -> to vertexPos attribute of vertexShader
@@ -706,212 +668,36 @@ void TextRenderer::render()
                 renderAttributes.text_color->b,
                 renderAttributes.text_color->alpha);
     
-    
-    
-    // -- Test -------------------------------------------------------
-    glBindTexture(GL_TEXTURE_2D, font->HANDEL_TEXTURE_ATLAS);
-   
-//    FT_Load_Char(ftFace, 'Z', FT_LOAD_RENDER);
-//    
-//    
-//    glTexSubImage2D(
-//        GL_TEXTURE_2D,
-//        0,
-//        0, 0,
-//        ftGlyph->bitmap.width,
-//        ftGlyph->bitmap.rows,
-//        GL_ALPHA,
-//        GL_UNSIGNED_BYTE,
-//        ftGlyph->bitmap.buffer
-//      );
-//    
-//     glTexSubImage2D(
-//        GL_TEXTURE_2D,
-//        0,
-//        ftGlyph->bitmap.width, 0,
-//        ftGlyph->bitmap.width,
-//        ftGlyph->bitmap.rows,
-//        GL_ALPHA,
-//        GL_UNSIGNED_BYTE,
-//        ftGlyph->bitmap.buffer
-//      );
-//    glTexImage2D(
-//        GL_TEXTURE_2D,
-//        0,
-//        GL_ALPHA,
-//        ftGlyph->bitmap.width,
-//        ftGlyph->bitmap.rows,
-//        0,
-//        GL_ALPHA,
-//        GL_UNSIGNED_BYTE,
-//        ftGlyph->bitmap.buffer
-//      );
-    
-//      float x2 = 0;
-//      float y2 = fontRowHight*2;
-//      float h = fontRowHight;
-//      float w = fontRowWidht;
-//
-//      GLfloat box[4][4] = {
-//          {x2,     -y2    , 0, 0},
-//          {x2 + w, -y2    , 1, 0},
-//          {x2,     -y2 - h, 0, 1},
-//          {x2 + w, -y2 - h, 1, 1},
-//      };
-//
-//      // give gl the Vertices via array
-//        glVertexAttribPointer(
-//            GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS       /* pass vertices to vertex Pos attribute of vertexShader */,
-//            4                                               /* 3 Aruments: x,y,z */,
-//            GL_FLOAT                                        /* Format: float     */,
-//            GL_FALSE                                        /* take values as-is */,   
-//            0                                               /* Entry lenght ?    */,
-//            box                                             /* vertices Array    */ );
-//
-//        // draw with the vertices form the given Array
-//        // make two connected triangle to create a rectangle
-//        glDrawArrays(
-//            GL_TRIANGLE_STRIP,
-//            0 /* Array start pos   */,
-//            4 /* how much vertices */);
-    // -- Test ------------------------------------------------- END -
-    
-    //glBindTexture(GL_TEXTURE_2D, HANDEL_TEXTURE_ATLAS);
-    // ---------------------------------------------------------------
-    // -- draw characters ----------------------------cv----------------
-    
-//    glBindBuffer(GL_ARRAY_BUFFER, HANDEL_VERTEX_BUFFER);
-//    glDrawArrays(GL_TRIANGLES, 0, charAmount);
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
-//    if (init)
-//    {
-//    
-//        glGenBuffers(1, &HANDEL_VERTEX_BUFFER);
-////        glEnableVertexAttribArray(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
-////        glBindBuffer(GL_ARRAY_BUFFER, GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
-////        glVertexAttribPointer(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS, 4, GL_FLOAT, GL_FALSE, 0, 0);
-//        init = false;
-//        cout << "[TEXT] gen Buffer [OK]" << endl;
-//    }
-//    glBindBuffer(GL_ARRAY_BUFFER, GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
-//    glVertexAttribPointer(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS, 4, GL_FLOAT, GL_FALSE, 0, 0);
-//    glEnableVertexAttribArray(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
-    
-    float contendHeight = 0;
-    int x = layoutAttributes.paddingLeft->floatValue;
-    int y = -font->fontRowHeight - layoutAttributes.paddingTop->floatValue;
-    const char *p; 
- 
-    // render lines -> for each character
-    for(p = ((Text*)view)->text_str.c_str(); *p; p++) {
-        
-      // check for new line
-      if (*p == '\n' || ((x + font->charInfo[*p].advanceX) > (renderAttributes.width - layoutAttributes.paddingRight->floatValue - layoutAttributes.paddingLeft->floatValue)))
-      {
-          // new line 
-          x = layoutAttributes.paddingLeft->floatValue; // to row start
-          y-= font->fontRowHeight;     // one line deeper
-          
-          // add line to contend height
-          contendHeight += font->fontRowHeight;
-      }  
-        
 
-      float x2 = x +  font->charInfo[*p].marginLeft; //ftGlyph->bitmap_left
-      float y2 = -y - font->charInfo[*p].marginTop;  //ftGlyph->bitmap_top
-      float w =       font->charInfo[*p].texWidht;   //ftGlyph->bitmap.width
-      float h =       font->charInfo[*p].texHight;   //ftGlyph->bitmap.rows
-
-      GLfloat box[4][4] = {
-          {x2,     -y2    ,  font->charInfo[*p].texPosX                               / font->fontRowWidht, 0},
-          {x2 + w, -y2    ,  (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht)     / font->fontRowWidht, 0},
-          {x2,     -y2 - h,  font->charInfo[*p].texPosX                               / font->fontRowWidht, font->charInfo[*p].texHight / font->fontRowHeight},
-          {x2 + w, -y2 - h,  (font->charInfo[*p].texPosX + font->charInfo[*p].texWidht)     / font->fontRowWidht, font->charInfo[*p].texHight / font->fontRowHeight},
-      };
-
-      
-//      glBufferData(GL_ARRAY_BUFFER, sizeof box, box, GL_DYNAMIC_DRAW);
-//      glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
-      // give gl the Vertices via array
-        glVertexAttribPointer(
+    // give gl the Vertices via buffer
+    glVertexAttribPointer(
             GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS       /* pass vertices to vertex Pos attribute of vertexShader */,
             4                                               /* 3 Arguments: x,y,z */,
             GL_FLOAT                                        /* Format: float     */,
-            GL_FALSE                                        /* take values as-is */,   
+            GL_FALSE                                        /* take values as-is */,
             0                                               /* Entry length ?    */,
-            box                                             /* vertices Array    */ );
+            NULL                                            /* vertices Array    */ );
 
-        // draw with the vertices form the given Array
-        // make two connected triangle to create a rectangle
-        glDrawArrays(
-            GL_TRIANGLE_STRIP,
-            0 /* Array start pos   */,
-            4 /* how much vertices */);
+    glBindTexture(GL_TEXTURE_2D, font->HANDEL_TEXTURE_ATLAS);
 
-      x += font->charInfo[*p].advanceX;
-      y += font->charInfo[*p].advanceY;
-    }
-    
-    // add last line to contend height
-    contendHeight += font->fontRowHeight;
-
-    // add padding to contend height
-    contendHeight = contendHeight + layoutAttributes.paddingTop->floatValue + layoutAttributes.paddingBottom->floatValue;
-    
-
-//    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    // ---------------------------------------------------------------
-    // ---------------------------------------------------------------
-    
-    
-    // deactivate vertex Array mode
-    // => end of operation
-    glDisableVertexAttribArray(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
-    
-    // unbind shader
-    glUseProgram(0);
-    
-    
-
-    
-    
-    /*
-    // draw a rectangle ----------------------------------------------
-    // activate for client (to draw, not calculate) vertex Array
-    // => tell gl we want to draw a something with a vertex Array -> to vertexPos attribute of vertexShader
-    // => kind  of glBeginn()
-    glEnableVertexAttribArray(HANDEL_ATTRIBUTE_VERTEXPOS);
-    
-    // give gl the Vertices via array
-    glVertexAttribPointer(
-        HANDEL_ATTRIBUTE_VERTEXPOS   /* pass vertices to vertex Pos attribute of vertexShader *-/,
-        3                            /* 3 Aruments: x,y,z *-/,
-        GL_FLOAT                     /* Format: float     *-/,
-        GL_FALSE                     /* take values as-is *-/,   
-        0                            /* Entry lenght ?    *-/,
-        renderAttributes.vertices    /* vertices Array    *-/ );
-    
-    /* set the color of vertices
-    glColor4f(
-        0.5f     /* Red   *-/,
-        0.5f     /* Green *-/,
-        0.0f    /* Blue  *-/,
-        1.0f /* Alpha *-/); *-/ 
-    
     // draw with the vertices form the given Array
     // make two connected triangle to create a rectangle
     glDrawArrays(
-        GL_TRIANGLE_STRIP,
-        0 /* Array start pos   *-/,
-        4 /* how much vertices *-/);
-    
+            GL_TRIANGLES,
+            0 /* Array start pos   */,
+            numVertices /* how much vertices */);
+
+
+    glBindTexture(GL_TEXTURE_2D, 0);
+
     // deactivate vertex Array mode
     // => end of operation
-    glDisableVertexAttribArray(HANDEL_ATTRIBUTE_VERTEXPOS);
-    */
-   
-    // set contend width
-    // renderAttributes.contendHeight = contendHeight;
+    glDisableVertexAttribArray(GL::SHADER_TEXT_CHARACTER_ATTR_VERTEX_POS);
+
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+    // unbind shader
+    glUseProgram(0);
 }
 
 
