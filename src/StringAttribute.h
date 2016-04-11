@@ -30,7 +30,7 @@ namespace ui
 class StringAttribute : public StyleAttribute
 {
     public:
-      StringAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      StringAttribute(OnChangeListener *listener, Type type);
       ~StringAttribute();
       
       // set value

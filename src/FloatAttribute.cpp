@@ -18,8 +18,8 @@ using namespace ui;
 
 // ############################################
 // -- CREATE OBJEKT --------------
-FloatAttribute::FloatAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc) 
- : StyleAttribute(listener, type, causeCalc)
+FloatAttribute::FloatAttribute(OnChangeListener *listener, Type type)
+ : StyleAttribute(listener, type)
 {
     // default
     floatValue = 0.0f;

@@ -30,7 +30,7 @@ namespace ui
 class IntAttribute : public StyleAttribute
 {
     public:
-      IntAttribute (OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      IntAttribute (OnChangeListener *listener, Type type);
       ~IntAttribute ();
       
        // set value

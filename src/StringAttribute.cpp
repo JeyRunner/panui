@@ -18,8 +18,8 @@ using namespace ui;
 
 // ############################################
 // -- CREATE OBJEKT --------------
-StringAttribute::StringAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc) 
- : StyleAttribute(listener, type, causeCalc)
+StringAttribute::StringAttribute(OnChangeListener *listener, Type type)
+ : StyleAttribute(listener, type)
 {
     // default
     stringValue = "";

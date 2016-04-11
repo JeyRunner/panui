@@ -25,30 +25,30 @@ using namespace ui;
 // -- CREATE OBJEKT --------------
 StyleRule::StyleRule(string selector) :
 // -- create StyleAttribute objects
-//                                                               CALC ON SELF                       CALC ON PARENT
-height             (this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-width              (this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-left               (this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-top                (this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-right              (this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-bottom             (this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-position           (this,    StyleAttribute::POSITION,          {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-scrollX            (this,    StyleAttribute::SCROLL_X,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    }),
-scrollY            (this,    StyleAttribute::SCROLL_Y,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    }),
+height             (this,   StyleAttribute::HEIGHT),
+width              (this,   StyleAttribute::WIDTH),
+left               (this,   StyleAttribute::LEFT),
+top                (this,   StyleAttribute::TOP),
+right              (this,   StyleAttribute::RIGHT),
+bottom             (this,   StyleAttribute::BOTTOM),
+position           (this,   StyleAttribute::POSITION),
+scrollX            (this,   StyleAttribute::SCROLL_X),
+scrollY            (this,   StyleAttribute::SCROLL_Y),
 
-paddingLeft        (this,    StyleAttribute::PADDING_LEFT,      {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-paddingRight       (this,    StyleAttribute::PADDING_RIGHT,     {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-paddingTop         (this,    StyleAttribute::PADDING_TOP,       {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
-paddingBottom      (this,    StyleAttribute::PADDING_BOTTOM,    {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+paddingLeft        (this,   StyleAttribute::PADDING_LEFT),
+paddingRight       (this,   StyleAttribute::PADDING_RIGHT),
+paddingTop         (this,   StyleAttribute::PADDING_TOP),
+paddingBottom      (this,   StyleAttribute::PADDING_BOTTOM),
 
-backgroundColor    (this,  StyleAttribute::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
-opacity            (this,  StyleAttribute::OPACITY,           {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
-overflow           (this,    StyleAttribute::OVERFLOW_CUT,      {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
+backgroundColor    (this,   StyleAttribute::BACKGROUND_COLOR),
+opacity            (this,   StyleAttribute::OPACITY),
+overflow           (this,   StyleAttribute::OVERFLOW_CUT),
 
-// text
-textSize           (this, StyleAttribute::TEXT_SIZE,         {UI_CALCTASK_TEXT_SIZE,             UI_CALCTASK_NONE                    }),
-textColor          (this, StyleAttribute::TEXT_COLOR,        {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
-textFamily         (this, StyleAttribute::TEXT_FAMILY,       {UI_CALCTASK_TEXT_FAMILY,           UI_CALCTASK_NONE                    })
+textSize           (this,   StyleAttribute::TEXT_SIZE),
+textColor          (this,   StyleAttribute::TEXT_COLOR),
+textFamily         (this,   StyleAttribute::TEXT_FAMILY)
+
+
 {
     setLogName("RULE");
     

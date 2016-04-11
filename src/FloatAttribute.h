@@ -30,7 +30,7 @@ namespace ui
 class FloatAttribute : public StyleAttribute
 {
     public:
-      FloatAttribute (OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      FloatAttribute (OnChangeListener *listener, Type type);
       ~FloatAttribute ();
       
        // set value

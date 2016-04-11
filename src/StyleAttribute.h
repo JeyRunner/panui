@@ -54,16 +54,21 @@ class StyleAttribute : public Log
       class OnChangeListener 
       { public: virtual void onAktiveStateChange(StyleAttribute *styleAttribute) = 0; };
       
-      StyleAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc);   
+      StyleAttribute(OnChangeListener *listener, Type type);
       
       
       // cause calc on bounded views
-      int causeCalc[2]; // 1[] -> self, parrent 
-      
-      // value
-      //ValueType *value;
-      
-      
+      struct CauseCalcElement {
+        CauseCalcElement(Type _type, int _calc_self, int _calc_parent)
+        {type = _type; causeCalc[0] = _calc_self;  causeCalc[1] = _calc_parent;}
+        Type type;
+        int causeCalc[2];
+      };
+      CauseCalcElement *getCauseCalcForType(Type type);
+      static CauseCalcElement *causeCalcList[_LAST_TYPE_AFTER];
+      CauseCalcElement *causeCalc; // 1[] -> self, parent
+
+
       // bounded Views -> call calcLayout at change of value
       void addBoundedView(View *view);
       void removeBoundedView(View *view);

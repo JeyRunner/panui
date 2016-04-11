@@ -12,8 +12,8 @@ using namespace ui;
 
 // ############################################
 // -- CREATE OBJEKT --------------
-ColorAttribute::ColorAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc) 
- : StyleAttribute(listener, type, causeCalc)
+ColorAttribute::ColorAttribute(OnChangeListener *listener, Type type)
+ : StyleAttribute(listener, type)
 {
     // default
     r = 1.0f;

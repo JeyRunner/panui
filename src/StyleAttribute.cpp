@@ -19,15 +19,40 @@
 #include "Box.h"
 using namespace ui;
 
+// cause calc list
+StyleAttribute::CauseCalcElement* StyleAttribute::causeCalcList[_LAST_TYPE_AFTER] = {
+//                                                               CALC ON SELF                       CALC ON PARENT
+        new CauseCalcElement(StyleAttribute::HEIGHT,            UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::WIDTH,             UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::LEFT,              UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::TOP,               UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::RIGHT,             UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::BOTTOM,            UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::POSITION,          UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::SCROLL_X,          UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    ),
+        new CauseCalcElement(StyleAttribute::SCROLL_Y,          UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    ),
+
+        new CauseCalcElement(StyleAttribute::PADDING_LEFT,      UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::PADDING_RIGHT,     UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::PADDING_TOP,       UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+        new CauseCalcElement(StyleAttribute::PADDING_BOTTOM,    UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION),
+
+        new CauseCalcElement(StyleAttribute::BACKGROUND_COLOR,  UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    ),
+        new CauseCalcElement(StyleAttribute::OPACITY,           UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    ),
+        new CauseCalcElement(StyleAttribute::OVERFLOW_CUT,      UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    ),
+
+        new CauseCalcElement(StyleAttribute::TEXT_SIZE,         UI_CALCTASK_TEXT_SIZE,             UI_CALCTASK_NONE                    ),
+        new CauseCalcElement(StyleAttribute::TEXT_COLOR,        UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    ),
+        new CauseCalcElement(StyleAttribute::TEXT_FAMILY,       UI_CALCTASK_TEXT_FAMILY,           UI_CALCTASK_NONE                    )
+};
+
 
 // ############################################
 // -- CREATE OBJEKT --------------
-StyleAttribute::StyleAttribute(OnChangeListener *listener, Type type, initializer_list<int> causeCalc)
+StyleAttribute::StyleAttribute(OnChangeListener *listener, Type type)
 {
     setLogName("ATTR");
-    // create value object , set onChangeListener
-//    value = new ValueType();
-//    ((Value*)value)->onChange(this);
+
     // default
     autoMode = UI_ATTR_AUTO_AUTO;
     
@@ -36,16 +61,25 @@ StyleAttribute::StyleAttribute(OnChangeListener *listener, Type type, initialize
     
     // set onChangeListener
     onChange(listener);
-    
+
     // set causeLayout
-    copy(causeCalc.begin(), causeCalc.end(), this->causeCalc);
-    
+    causeCalc = getCauseCalcForType(type);
+
     // deaktivate self
     isAktive = NON_AKTIVE;
 }
 
 
-
+StyleAttribute::CauseCalcElement *StyleAttribute::getCauseCalcForType(Type type)
+{
+    for (auto el : causeCalcList)
+    {
+        if (el->type == type)
+            return el;
+    }
+    err("cause calc settings for type " + to_string(type) + " not fonund");
+    return nullptr;
+}
 
 // -- BOUNDED VIEWS -------------------------------------------------------------------
 // -- ADD
@@ -56,9 +90,9 @@ void StyleAttribute::addBoundedView(View *view)
     
     // add calc tasks
 //    if (view)
-//        view->renderer->addCalcTask(causeCalc[UI_VIEW_SELF]);
+//        view->renderer->addCalcTask(causeCalcList[UI_VIEW_SELF]);
 //    if (view->parent)
-//        view->parent->renderer->addCalcTask(causeCalc[UI_VIEW_PARENT]);
+//        view->parent->renderer->addCalcTask(causeCalcList[UI_VIEW_PARENT]);
 }
 
 // -- REMOVE
@@ -84,7 +118,7 @@ void StyleAttribute::removeBoundedView(View *view)
 // -- ON VALUE CHANGE -----------
 void StyleAttribute::onValueChange()
 {    
-    if (causeCalc[UI_VIEW_SELF] != UI_CALCTASK_NONE || causeCalc[UI_VIEW_PARENT] != UI_CALCTASK_NONE )
+    if (causeCalc->causeCalc[UI_VIEW_SELF] != UI_CALCTASK_NONE || causeCalc->causeCalc[UI_VIEW_PARENT] != UI_CALCTASK_NONE )
     {
         // for self, parent
         for (int i = 0; i < 2; i++) 
@@ -99,7 +133,7 @@ void StyleAttribute::onValueChange()
                 if (i == UI_VIEW_SELF)
                 {
                     // add calc task to view self
-                    (*it)->renderer->addCalcTask(causeCalc[i]);
+                    (*it)->renderer->addCalcTask(causeCalc->causeCalc[i]);
                 }
                 else if (i == UI_VIEW_PARENT)
                 {
@@ -107,7 +141,7 @@ void StyleAttribute::onValueChange()
                     View *parent = (View*)(*it)->parent;
                     if (parent != NULL)
                     {
-                        parent->renderer->addCalcTask(causeCalc[i]);
+                        parent->renderer->addCalcTask(causeCalc->causeCalc[i]);
                     }
                 }
 
@@ -169,92 +203,3 @@ bool StyleAttribute::aktive()
 {
     return this->isAktive;
 }
-
-
-
-
-// -- for compiler --------------------------------
-//template class StyleAttribute<Value>;
-//template class StyleAttribute<IntValue>;
-//template class StyleAttribute<FloatValue>;
-//template class StyleAttribute<ColorValue>;
-//template class StyleAttribute<StringValue>;
-
-
-
-
-
-
-
-// ########### OLD  ########################################
-/*
-StyleAttribute::StyleAttribute(Type type) 
-{
-    // inset into typeData
-    typeData[0] = new TypeDataItem(top,                 "top",          Value::Int);
-    typeData[1] = new TypeDataItem(left,                "left",         Value::Int);
-    typeData[2] = new TypeDataItem(right,               "right",        Value::Int);
-    typeData[3] = new TypeDataItem(bottom,              "bottom",       Value::Int);
-    typeData[4] = new TypeDataItem(height,              "height",       Value::Int);
-    typeData[5] = new TypeDataItem(widht,               "widht",        Value::Int);
-    typeData[6] = new TypeDataItem(background_color, "background-color",Value::Color);
-    typeData[7] = new TypeDataItem(alpha,               "alpha",        Value::Float);
-    
-    // set own type
-    getTypeDataItem(type)->;
-    
-}
-
-
-// ## TypeDataItem ###############################
-StyleAttribute::TypeDataItem::TypeDataItem() {}
-StyleAttribute::TypeDataItem::TypeDataItem(Type type, string typeName, Value::Type valueType)
-{
-    this->type      = type;
-    this->typeName  = typeName;
-    this->valueType = valueType;
-}
-
-// -- GET TYPE DATA ITEM --
-StyleAttribute::TypeDataItem* StyleAttribute::getTypeDataItem(string type)
-{
-    // seach loop
-    TypeDataItem* (*pointer) = &typeData[0];
-    
-    while(true) {
-        if (pointer >= &typeData[sizeof(typeData)-1] )
-        {
-            break;
-        } 
-        else if((&pointer)->typeName == type)
-        {
-            return &pointer;
-            break;
-        }
-        
-        pointer++;
-    }
-    return NULL;
-}
-
-StyleAttribute::TypeDataItem* StyleAttribute::getTypeDataItem(Type type)
-{
-    // seach loop
-    TypeDataItem* (*pointer) = &typeData[0];
-    
-    while(true) {
-        if (pointer >= &typeData[sizeof(typeData)-1] )
-        {
-            break;
-        } 
-        else if((&pointer)->type == type)
-        {
-            return &pointer;
-            break;
-        }
-        
-        pointer++;
-    }
-    return NULL;
-}
-*/

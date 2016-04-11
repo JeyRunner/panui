@@ -32,7 +32,7 @@ namespace ui
 class ColorAttribute : public StyleAttribute
 {
     public:
-      ColorAttribute (OnChangeListener *listener, Type type, initializer_list<int> causeCalc);
+      ColorAttribute (OnChangeListener *listener, Type type);
       ~ColorAttribute ();
       
       
