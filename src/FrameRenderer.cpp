@@ -102,8 +102,8 @@ void *FrameRenderer::thread_render(void* frameRenderer)
                                             -1.0f                     /* zFar */);
         
         // update rootView size
-        fr->ui->rootView->style->width->set(width);
-        fr->ui->rootView->style->height->set(height);
+        fr->ui->rootView->style->width.set(width);
+        fr->ui->rootView->style->height.set(height);
            
         // replace missing parent
         fr->ui->rootView->renderer->renderAttributes.width  = width;

@@ -23,36 +23,34 @@ using namespace ui;
 
 // ############################################
 // -- CREATE OBJEKT --------------
-StyleRule::StyleRule(string selector) 
+StyleRule::StyleRule(string selector) :
+// -- create StyleAttribute objects
+//                                                               CALC ON SELF                       CALC ON PARENT
+height             (this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+width              (this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+left               (this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+top                (this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+right              (this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+bottom             (this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+position           (this,    StyleAttribute::POSITION,          {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+scrollX            (this,    StyleAttribute::SCROLL_X,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    }),
+scrollY            (this,    StyleAttribute::SCROLL_Y,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    }),
+
+paddingLeft        (this,    StyleAttribute::PADDING_LEFT,      {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+paddingRight       (this,    StyleAttribute::PADDING_RIGHT,     {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+paddingTop         (this,    StyleAttribute::PADDING_TOP,       {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+paddingBottom      (this,    StyleAttribute::PADDING_BOTTOM,    {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION}),
+
+backgroundColor    (this,  StyleAttribute::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
+opacity            (this,  StyleAttribute::OPACITY,           {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
+overflow           (this,    StyleAttribute::OVERFLOW_CUT,      {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
+
+// text
+textSize           (this, StyleAttribute::TEXT_SIZE,         {UI_CALCTASK_TEXT_SIZE,             UI_CALCTASK_NONE                    }),
+textColor          (this, StyleAttribute::TEXT_COLOR,        {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    }),
+textFamily         (this, StyleAttribute::TEXT_FAMILY,       {UI_CALCTASK_TEXT_FAMILY,           UI_CALCTASK_NONE                    })
 {
     setLogName("RULE");
-
-    // -- create StyleAttribute objects
-    //                                                                                   CALC ON SELF                    CALC ON PARENT
-    height           = new IntAttribute(this,    StyleAttribute::HEIGHT,            {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    width            = new IntAttribute(this,    StyleAttribute::WIDTH,             {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    left             = new IntAttribute(this,    StyleAttribute::LEFT,              {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    top              = new IntAttribute(this,    StyleAttribute::TOP,               {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    right            = new IntAttribute(this,    StyleAttribute::RIGHT,             {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    bottom           = new IntAttribute(this,    StyleAttribute::BOTTOM,            {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    position         = new IntAttribute(this,    StyleAttribute::POSITION,          {UI_CALCTASK_NONE,                  UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    scrollX          = new IntAttribute(this,    StyleAttribute::SCROLL_X,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    });
-    scrollY          = new IntAttribute(this,    StyleAttribute::SCROLL_Y,          {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_NONE                    });
-
-    paddingLeft      = new IntAttribute(this,    StyleAttribute::PADDING_LEFT,      {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    paddingRight     = new IntAttribute(this,    StyleAttribute::PADDING_RIGHT,     {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    paddingTop       = new IntAttribute(this,    StyleAttribute::PADDING_TOP,       {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-    paddingBottom    = new IntAttribute(this,    StyleAttribute::PADDING_BOTTOM,    {UI_CALCTASK_LAYOUT_SIZE,           UI_CALCTASK_LAYOUT_CHILDREN_POSITION});
-
-    backgroundColor  = new ColorAttribute(this,  StyleAttribute::BACKGROUND_COLOR,  {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
-    opacity          = new FloatAttribute(this,  StyleAttribute::OPACITY,           {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
-    overflow         = new IntAttribute(this,    StyleAttribute::OVERFLOW_CUT,      {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
-
-    // text
-    textSize         = new IntAttribute   (this, StyleAttribute::TEXT_SIZE,         {UI_CALCTASK_TEXT_SIZE,             UI_CALCTASK_NONE                    });
-    textColor        = new ColorAttribute (this, StyleAttribute::TEXT_COLOR,        {UI_CALCTASK_NONE,                  UI_CALCTASK_NONE                    });
-    textFamily       = new StringAttribute(this, StyleAttribute::TEXT_FAMILY,       {UI_CALCTASK_TEXT_FAMILY,           UI_CALCTASK_NONE                    });
-    
     
     // -- set var
     this->selector = selector;
@@ -105,25 +103,25 @@ StyleAttribute* StyleRule::getAttribute(StyleAttribute::Type type)
 {
     switch (type)
     {
-        case StyleAttribute::HEIGHT:             return height;
-        case StyleAttribute::WIDTH:              return width;       
-        case StyleAttribute::LEFT:               return left;   
-        case StyleAttribute::TOP:                return top;       
-        case StyleAttribute::RIGHT:              return right;        
-        case StyleAttribute::BOTTOM:             return bottom;
-        case StyleAttribute::SCROLL_X:           return scrollX;
-        case StyleAttribute::SCROLL_Y:           return scrollY;
-        case StyleAttribute::PADDING_LEFT:       return paddingLeft;
-        case StyleAttribute::PADDING_TOP:        return paddingTop;
-        case StyleAttribute::PADDING_RIGHT:      return paddingRight;
-        case StyleAttribute::PADDING_BOTTOM:     return paddingBottom;
-        case StyleAttribute::POSITION:           return position; 
-        case StyleAttribute::BACKGROUND_COLOR:   return backgroundColor;   
-        case StyleAttribute::OPACITY:            return opacity;
-        case StyleAttribute::OVERFLOW_CUT:       return overflow;
-        case StyleAttribute::TEXT_SIZE:          return textSize;
-        case StyleAttribute::TEXT_COLOR:         return textColor;
-        case StyleAttribute::TEXT_FAMILY:        return textFamily;
+        case StyleAttribute::HEIGHT:             return &height;
+        case StyleAttribute::WIDTH:              return &width;
+        case StyleAttribute::LEFT:               return &left;
+        case StyleAttribute::TOP:                return &top;
+        case StyleAttribute::RIGHT:              return &right;
+        case StyleAttribute::BOTTOM:             return &bottom;
+        case StyleAttribute::SCROLL_X:           return &scrollX;
+        case StyleAttribute::SCROLL_Y:           return &scrollY;
+        case StyleAttribute::PADDING_LEFT:       return &paddingLeft;
+        case StyleAttribute::PADDING_TOP:        return &paddingTop;
+        case StyleAttribute::PADDING_RIGHT:      return &paddingRight;
+        case StyleAttribute::PADDING_BOTTOM:     return &paddingBottom;
+        case StyleAttribute::POSITION:           return &position;
+        case StyleAttribute::BACKGROUND_COLOR:   return &backgroundColor;
+        case StyleAttribute::OPACITY:            return &opacity;
+        case StyleAttribute::OVERFLOW_CUT:       return &overflow;
+        case StyleAttribute::TEXT_SIZE:          return &textSize;
+        case StyleAttribute::TEXT_COLOR:         return &textColor;
+        case StyleAttribute::TEXT_FAMILY:        return &textFamily;
         
         default:                                 warn("getAttribute [type does not fit] ->default"); return NULL;
     }    

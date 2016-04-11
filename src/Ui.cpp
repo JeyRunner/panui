@@ -32,6 +32,7 @@ FrameRenderer *(Ui::frameRenderer);
 Ui::Ui()
 {
     setLogName(" UI ");
+    err("v2");
 
     // create frameRenderer object
     // -> init screen

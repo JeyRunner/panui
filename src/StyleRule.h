@@ -57,31 +57,31 @@ class StyleRule : public StyleAttribute::OnChangeListener, public Log
       
       
       // -- Style Attributes ----------------------
-      IntAttribute    *height;
-      IntAttribute    *width;
+      IntAttribute    height;
+      IntAttribute    width;
       
-      IntAttribute    *left;
-      IntAttribute    *top;
-      IntAttribute    *right;
-      IntAttribute    *bottom;
+      IntAttribute    left;
+      IntAttribute    top;
+      IntAttribute    right;
+      IntAttribute    bottom;
 
-      IntAttribute    *scrollX;
-      IntAttribute    *scrollY;
+      IntAttribute    scrollX;
+      IntAttribute    scrollY;
 
-      IntAttribute    *paddingLeft;
-      IntAttribute    *paddingTop;
-      IntAttribute    *paddingRight;
-      IntAttribute    *paddingBottom;
+      IntAttribute    paddingLeft;
+      IntAttribute    paddingTop;
+      IntAttribute    paddingRight;
+      IntAttribute    paddingBottom;
       
-      IntAttribute    *position;
-      
-      ColorAttribute  *backgroundColor;
-      FloatAttribute  *opacity;
-      IntAttribute    *overflow;
-      
-      IntAttribute    *textSize;
-      ColorAttribute  *textColor;
-      StringAttribute *textFamily;
+      IntAttribute    position;
+
+      ColorAttribute  backgroundColor;
+      FloatAttribute  opacity;
+      IntAttribute    overflow;
+
+      IntAttribute    textSize;
+      ColorAttribute  textColor;
+      StringAttribute textFamily;
       
 
       // get Attribute by StyleAttributeType
