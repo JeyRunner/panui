@@ -73,11 +73,11 @@ void BoxRenderer::calcLayoutChildrenPos()
          iter++)
     { 
         // get position, width, height attributes
-        IntAttribute *posAttr    = (*iter)->renderer->layoutAttributes.position;      
+        SelectAttribute<UI_ATTR_POSITION_ > *posAttr    = (*iter)->renderer->layoutAttributes.position;
       
 
         // check for position type
-        switch (posAttr->intValue)
+        switch (posAttr->value)
         {
             case UI_ATTR_POSITION_ABSOLUTE:
                 calcLayoutChildAbsolute(*iter);

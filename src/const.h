@@ -34,10 +34,14 @@ const int UI_VIEW_SELF                          = 0,
           UI_VIEW_PARENT = 1;
 
 // -- style attribute properties -----------------------
-const int UI_ATTR_POSITION_ABSOLUTE = 0,
-          UI_ATTR_POSITION_RELATIVE = 1,
-          UI_ATTR_OVERFLOW_VISIBLE  = 0,
-          UI_ATTR_OVERFLOW_HIDDEN   = 1;
+enum UI_ATTR_POSITION_ {
+    UI_ATTR_POSITION_ABSOLUTE,
+    UI_ATTR_POSITION_RELATIVE
+};
+enum UI_ATTR_OVERFLOW_ {
+    UI_ATTR_OVERFLOW_VISIBLE,
+    UI_ATTR_OVERFLOW_HIDDEN
+};
 
 // -- style attribute auto -----------------------------
 enum UI_ATTR_AUTO {

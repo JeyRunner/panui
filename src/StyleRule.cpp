@@ -51,7 +51,7 @@ textFamily         (this,   StyleAttribute::TEXT_FAMILY)
 
 {
     setLogName("RULE");
-    
+
     // -- set var
     this->selector = selector;
     

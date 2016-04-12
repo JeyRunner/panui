@@ -316,7 +316,7 @@ void Renderer::render()
     }
     else
     {
-        if (renderAttributes.overflow->intValue == UI_ATTR_OVERFLOW_HIDDEN) {
+        if (renderAttributes.overflow->value == UI_ATTR_OVERFLOW_HIDDEN) {
             renderAttributes.stencilIndex = ((view->parent->renderer->renderAttributes.stencilIndex) + 1);
         }
         else {
@@ -378,7 +378,7 @@ void Renderer::render()
 
 
 
-    if (renderAttributes.overflow->intValue == UI_ATTR_OVERFLOW_HIDDEN)
+    if (renderAttributes.overflow->value == UI_ATTR_OVERFLOW_HIDDEN)
     {
         // -- draw into stencil buffer
         // stencil set criteria
@@ -529,7 +529,7 @@ void Renderer::resetCursor()
 
 void Renderer::resetStencilBuffer()
 {
-    if (renderAttributes.overflow->intValue == UI_ATTR_OVERFLOW_HIDDEN)
+    if (renderAttributes.overflow->value == UI_ATTR_OVERFLOW_HIDDEN)
     {
         // set amount of parents
         // if root
@@ -783,7 +783,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             break;
 
         case StyleAttribute::POSITION: 
-            layoutAttributes.position = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.position = dynamic_cast<SelectAttribute<UI_ATTR_POSITION_>*>(attribute);
             break;
             
             
@@ -796,7 +796,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             break;
 
         case StyleAttribute::OVERFLOW_CUT:
-            renderAttributes.overflow = dynamic_cast<IntAttribute*>(attribute);
+            renderAttributes.overflow = dynamic_cast<SelectAttribute<UI_ATTR_OVERFLOW_>*>(attribute);
             break;
 
         case StyleAttribute::TEXT_SIZE:

@@ -72,7 +72,7 @@ class Renderer : public Log
         
         ColorAttribute *background_color;
         FloatAttribute *opacity;
-        IntAttribute   *overflow;
+        SelectAttribute<UI_ATTR_OVERFLOW_> *overflow;
         
         ColorAttribute  *text_color;
         IntAttribute    *text_size;
@@ -86,7 +86,8 @@ class Renderer : public Log
       // - -> then into render attributes
       struct LayoutAttributes 
       {
-        IntAttribute *top, *left, *right, *bottom, *position;
+        IntAttribute *top, *left, *right, *bottom;
+        SelectAttribute<UI_ATTR_POSITION_> *position;
         IntAttribute *scrollX, *scrollY;
         IntAttribute *paddingTop, *paddingLeft, *paddingRight, *paddingBottom;
         IntAttribute *height, *width;

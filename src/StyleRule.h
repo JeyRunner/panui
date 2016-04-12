@@ -20,6 +20,7 @@
 #include "ColorAttribute.h"
 #include "FloatAttribute.h"
 #include "StringAttribute.h"
+#include "SelectAttribute.h"
 #include <stdlib.h>
 #include <list>
 #include <string>
@@ -54,7 +55,7 @@ class StyleRule : public StyleAttribute::OnChangeListener, public Log
        */
       int  importance;        
       
-      
+
       
       // -- Style Attributes ----------------------
       IntAttribute    height;
@@ -73,11 +74,11 @@ class StyleRule : public StyleAttribute::OnChangeListener, public Log
       IntAttribute    paddingRight;
       IntAttribute    paddingBottom;
       
-      IntAttribute    position;
+      SelectAttribute<UI_ATTR_POSITION_> position;
 
       ColorAttribute  backgroundColor;
       FloatAttribute  opacity;
-      IntAttribute    overflow;
+      SelectAttribute<UI_ATTR_OVERFLOW_> overflow;
 
       IntAttribute    textSize;
       ColorAttribute  textColor;
