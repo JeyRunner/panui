@@ -83,6 +83,18 @@ void IntAttribute::setAuto(UI_ATTR_AUTO autoMode)
     mode = UI_ATTR__MODE_VALUE;
 }
 
+StyleRule &IntAttribute::operator()(string value)
+{
+    set(value);
+    return getRule();
+}
+
+StyleRule &IntAttribute::operator()(int value)
+{
+    set(value);
+    return getRule();
+}
+
 
 // -- GET
 string IntAttribute::get()

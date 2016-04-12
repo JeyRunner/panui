@@ -21,6 +21,8 @@
 #include <list>
 #include <functional>
 #include "const.h"
+#include "StyleRule.h"
+
 namespace ui
 {
 class Renderer;
@@ -49,7 +51,7 @@ class View : public Log
         Box *parent;
         
         // own Style
-        StyleRule *style;
+        StyleRule style;
         
         
         // set events

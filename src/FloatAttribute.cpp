@@ -81,8 +81,20 @@ void FloatAttribute::setAuto(UI_ATTR_AUTO autoMode)
 }
 
 
-// -- GET
+StyleRule &FloatAttribute::operator()(string value)
+{
+    set(value);
+    return getRule();
+}
 
+StyleRule &FloatAttribute::operator()(float value)
+{
+    set(value);
+    return getRule();
+}
+
+
+// -- GET
 string FloatAttribute::get()
 {
     ostringstream stream;

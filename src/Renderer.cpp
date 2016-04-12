@@ -686,7 +686,7 @@ void Renderer::bindRuleAutomatic()
     }
     
     // bind own style rule
-    bindRule(view->style);
+    bindRule(&view->style);
      
      // if do not have id rule
 //     if (hasIdRule == false)

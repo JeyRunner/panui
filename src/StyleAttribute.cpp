@@ -171,7 +171,14 @@ void StyleAttribute::set(string value)
     
 }
 
-void StyleAttribute::setAuto(UI_ATTR_AUTO autoMode) 
+
+StyleRule &StyleAttribute::operator()(string value)
+{
+    return getRule();
+}
+
+
+void StyleAttribute::setAuto(UI_ATTR_AUTO autoMode)
 {
     this->autoMode = autoMode;
     onValueChange();
@@ -184,6 +191,8 @@ string StyleAttribute::get()
     
 }
 
+StyleRule &StyleAttribute::getRule()
+{ return *dynamic_cast<StyleRule*>(onChangeListener); }
 
 
 

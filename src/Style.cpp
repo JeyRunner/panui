@@ -56,8 +56,6 @@ void Style::init()
     rBase->textSize.set(25);
     rBase->textColor.set("000000FF");
     rBase->textFamily.set("/usr/share/fonts/truetype/freefont/FreeSans.ttf");
-    
-    addRule(rBase);
 }
 
 

@@ -66,6 +66,30 @@ void ColorAttribute::setG(float green)      { g = green;            onValueChang
 void ColorAttribute::setB(float blue)       { b = blue;             onValueChange(); }
 void ColorAttribute::setAlpha(float alpha)  { this->alpha = alpha; onValueChange(); }
 
+StyleRule &ColorAttribute::operator()(string value)
+{
+    set(value);
+    return getRule();
+}
+
+StyleRule &ColorAttribute::operator()(float red, float green, float blue, float alpha)
+{
+    r = red;
+    g = green;
+    b = blue;
+    this->alpha = alpha;
+    onValueChange();
+    return getRule();
+}
+
+StyleRule &ColorAttribute::operator()(float red, float green, float blue)
+{
+    r = red;
+    g = green;
+    b = blue;
+    onValueChange();
+    return getRule();
+}
 
 // -- GET
 string ColorAttribute::get()

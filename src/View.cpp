@@ -19,26 +19,24 @@ using namespace ui;
 
 
 // -- CREATE OBJEKT --------------
-View::View(bool DoNothing) 
+View::View(bool DoNothing)
+: style("~")
 {
     setLogName("VIEW");
 
     // default
     parent = NULL;
-    
-    // create own style rule
-    style = new StyleRule("~");
+
     
     trace("do nothing");
 }
 
-View::View() 
+View::View()
+: style("~")
 {
     // default
     parent = NULL;
-    
-    // create own style rule
-    style = new StyleRule("~");
+
     
     // create own renderer
     renderer = new Renderer(this);
@@ -46,7 +44,8 @@ View::View()
     // -- bind rules and attributes
     getStyle();
 }
-View::View(string id, string class_) 
+View::View(string id, string class_)
+: style("~")
 {
     // default
     parent = NULL;
@@ -55,9 +54,7 @@ View::View(string id, string class_)
     this->id = id;
     this->class_ = class_;
     //strcpy(this->c_id , id.c_str());
-    
-    // create own style rule
-    style = new StyleRule("~");
+
     
     // create own renderer
     renderer = new Renderer(this);

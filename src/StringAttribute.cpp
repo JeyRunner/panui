@@ -39,6 +39,11 @@ void StringAttribute::set(string value)
     onValueChange();
 }
 
+StyleRule &StringAttribute::operator()(string value)
+{
+    set(value);
+    return getRule();
+}
 
 
 // -- GET

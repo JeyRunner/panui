@@ -24,6 +24,7 @@
 namespace ui
 {
 class View;
+class StyleRule;
 
 using namespace std;
 
@@ -82,10 +83,12 @@ class StyleAttribute : public Log
       // set on Change Listener
       void onChange(OnChangeListener *listener);
       
-      
-      
+      // get style rule
+      StyleRule& getRule();
+
       // set value
       virtual void set(string value);// = 0;
+      virtual StyleRule& operator()(string value);
       
       // set value mode: auto, noneAuto
       virtual void setAuto(UI_ATTR_AUTO autoMode);

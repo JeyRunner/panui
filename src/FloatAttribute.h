@@ -38,7 +38,9 @@ class FloatAttribute : public StyleAttribute
       void set(float value);
       void setPercent(float value);
       virtual void setAuto(UI_ATTR_AUTO autoMode);
-      
+      StyleRule& operator()(string value);
+      StyleRule& operator()(float value);
+
       // get value
       string get();
       string getPercent();

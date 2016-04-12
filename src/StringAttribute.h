@@ -35,6 +35,7 @@ class StringAttribute : public StyleAttribute
       
       // set value
       void set(string value);
+      StyleRule& operator()(string value);
       
       // get value
       string get();
