@@ -47,20 +47,17 @@ class ColorAttribute : public StyleAttribute
 
       // get value
       string get();             // get as hex: R G B Alpha
-      string getR();             // get red
-      string getG();             // get green
-      string getB();             // get blue
-      string getAlpha();         // get alpha
+      float  getR();            // get red
+      float  getG();            // get green
+      float  getB();            // get blue
+      float  getAlpha();        // get alpha
+
       
-      
+    private:
       float r;          // ! READ ONLY !
       float g;          // ! READ ONLY !
       float b;          // ! READ ONLY !
       float alpha;      // ! READ ONLY !
-      
-      
-    private:
-      // string    stringValue;
 };
 
 

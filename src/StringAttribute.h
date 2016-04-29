@@ -39,9 +39,9 @@ class StringAttribute : public StyleAttribute
       
       // get value
       string get();
-      // float  getFloat();
-      
-      
+
+
+    protected:
       // ! READ ONLY !
       string stringValue;
 };

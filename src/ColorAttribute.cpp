@@ -104,10 +104,10 @@ string ColorAttribute::get()
     return stream.str();
 }
 
-string ColorAttribute::getR()        {ostringstream stream; stream << r; return stream.str();}
-string ColorAttribute::getG()        {ostringstream stream; stream << g; return stream.str();}
-string ColorAttribute::getB()        {ostringstream stream; stream << b; return stream.str();}
-string ColorAttribute::getAlpha()    {ostringstream stream; stream << alpha; return stream.str();}
+float ColorAttribute::getR()        { return r; }
+float ColorAttribute::getG()        { return g; }
+float ColorAttribute::getB()        { return b; }
+float ColorAttribute::getAlpha()    { return alpha; }
 
 
 // ###########################################

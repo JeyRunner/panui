@@ -16,9 +16,8 @@
 
 // include
 #include "StyleAttribute.h"
-#include "IntAttribute.h"
 #include "ColorAttribute.h"
-#include "FloatAttribute.h"
+#include "NumericAttribute.h"
 #include "StringAttribute.h"
 #include "SelectAttribute.h"
 #include <stdlib.h>
@@ -58,31 +57,31 @@ class StyleRule : public StyleAttribute::OnChangeListener, public Log
 
       
       // -- Style Attributes ----------------------
-      IntAttribute    height;
-      IntAttribute    width;
-      
-      IntAttribute    left;
-      IntAttribute    top;
-      IntAttribute    right;
-      IntAttribute    bottom;
+      NumericAttribute    height;
+      NumericAttribute    width;
 
-      IntAttribute    scrollX;
-      IntAttribute    scrollY;
+      NumericAttribute    left;
+      NumericAttribute    top;
+      NumericAttribute    right;
+      NumericAttribute    bottom;
 
-      IntAttribute    paddingLeft;
-      IntAttribute    paddingTop;
-      IntAttribute    paddingRight;
-      IntAttribute    paddingBottom;
+      NumericAttribute    scrollX;
+      NumericAttribute    scrollY;
+
+      NumericAttribute    paddingLeft;
+      NumericAttribute    paddingTop;
+      NumericAttribute    paddingRight;
+      NumericAttribute    paddingBottom;
       
       SelectAttribute<UI_ATTR_POSITION_> position;
 
-      ColorAttribute  backgroundColor;
-      FloatAttribute  opacity;
+      ColorAttribute      backgroundColor;
+      NumericAttribute    opacity;
       SelectAttribute<UI_ATTR_OVERFLOW_> overflow;
 
-      IntAttribute    textSize;
-      ColorAttribute  textColor;
-      StringAttribute textFamily;
+      NumericAttribute    textSize;
+      ColorAttribute      textColor;
+      StringAttribute     textFamily;
       
 
       // get Attribute by StyleAttributeType

@@ -96,17 +96,17 @@ void Renderer::calcLayoutSize()
 
 
     // get var
-    IntAttribute *widthAttr     = view->renderer->layoutAttributes.width;
-    IntAttribute *heightAttr    = view->renderer->layoutAttributes.height;
-    IntAttribute *topAttr       = view->renderer->layoutAttributes.top;
-    IntAttribute *bottomAttr    = view->renderer->layoutAttributes.bottom;
-    IntAttribute *leftAttr      = view->renderer->layoutAttributes.left;
-    IntAttribute *rightAttr     = view->renderer->layoutAttributes.right;
+    NumericAttribute *widthAttr     = view->renderer->layoutAttributes.width;
+    NumericAttribute *heightAttr    = view->renderer->layoutAttributes.height;
+    NumericAttribute *topAttr       = view->renderer->layoutAttributes.top;
+    NumericAttribute *bottomAttr    = view->renderer->layoutAttributes.bottom;
+    NumericAttribute *leftAttr      = view->renderer->layoutAttributes.left;
+    NumericAttribute *rightAttr     = view->renderer->layoutAttributes.right;
 
-    IntAttribute *parentPadLeft     = view->parent->renderer->layoutAttributes.paddingLeft;
-    IntAttribute *parentPadRight    = view->parent->renderer->layoutAttributes.paddingRight;
-    IntAttribute *parentPadTop      = view->parent->renderer->layoutAttributes.paddingTop;
-    IntAttribute *parentPadBotton   = view->parent->renderer->layoutAttributes.paddingBottom;
+    NumericAttribute *parentPadLeft     = view->parent->renderer->layoutAttributes.paddingLeft;
+    NumericAttribute *parentPadRight    = view->parent->renderer->layoutAttributes.paddingRight;
+    NumericAttribute *parentPadTop      = view->parent->renderer->layoutAttributes.paddingTop;
+    NumericAttribute *parentPadBotton   = view->parent->renderer->layoutAttributes.paddingBottom;
     GLfloat      *parentWidth       = &(view->parent->renderer->renderAttributes.width);
     GLfloat      *parentHeight      = &(view->parent->renderer->renderAttributes.height);
 
@@ -116,54 +116,51 @@ void Renderer::calcLayoutSize()
 
     // set width
     // if not in auto mode
-    if (widthAttr->autoMode == UI_ATTR_AUTO_NONE)
+    if (widthAttr->getAuto() == UI_ATTR_AUTO_NONE)
     {
-        switch (widthAttr->mode)
+        switch (widthAttr->getMode())
         {
             // absolute
             case UI_ATTR__MODE_VALUE:
-                *widthFinal = widthAttr->floatValue;
+                *widthFinal = widthAttr->getFloat();
                 break;
 
                 // percentage
             case UI_ATTR__MODE_PERCENT:
-            {
-
-                *widthFinal = widthAttr->percentValue * (*parentWidth / 100.0f) - leftAttr->floatValue - rightAttr->floatValue - parentPadLeft->floatValue - parentPadRight->floatValue;
-            }
+                *widthFinal = widthAttr->getPercentFloat() * (*parentWidth / 100.0f) - leftAttr->getFloat() - rightAttr->getFloat() - parentPadLeft->getFloat() - parentPadRight->getFloat();
                 break;
         }
     }
         // in auto mode
-    else if (widthAttr->autoMode == UI_ATTR_AUTO_AUTO)
+    else if (widthAttr->getAuto() == UI_ATTR_AUTO_AUTO)
     {
-        *widthFinal = *parentWidth - leftAttr->floatValue - rightAttr->floatValue - parentPadLeft->floatValue - parentPadRight->floatValue;
+        *widthFinal = *parentWidth - leftAttr->getFloat() - rightAttr->getFloat() - parentPadLeft->getFloat() - parentPadRight->getFloat();
     }
 
 
     // set height
     // if not in auto mode
-    if (heightAttr->autoMode == UI_ATTR_AUTO_NONE)
+    if (heightAttr->getAuto() == UI_ATTR_AUTO_NONE)
     {
-        switch (heightAttr->mode)
+        switch (heightAttr->getMode())
         {
             // absolute
             case UI_ATTR__MODE_VALUE:
-                *heightFinal = heightAttr->floatValue;
+                *heightFinal = heightAttr->getFloat();
                 break;
 
                 // percentage
             case UI_ATTR__MODE_PERCENT:
                 // only set height if parent heigt depends not on contend
-                if (view->parent->renderer->layoutAttributes.height->autoMode != UI_ATTR_AUTO_AUTO)
-                    *heightFinal = heightAttr->percentValue * (*parentHeight / 100.0f) - topAttr->floatValue - bottomAttr->floatValue - parentPadTop->floatValue - parentPadBotton->floatValue;
+                if (view->parent->renderer->layoutAttributes.height->getAuto() != UI_ATTR_AUTO_AUTO)
+                    *heightFinal = heightAttr->getPercentFloat() * (*parentHeight / 100.0f) - topAttr->getFloat() - bottomAttr->getFloat() - parentPadTop->getFloat() - parentPadBotton->getFloat();
                 else
                     *heightFinal = 0.0;
                 break;
         }
     }
         // in auto mode
-    else if (heightAttr->autoMode == UI_ATTR_AUTO_AUTO)
+    else if (heightAttr->getAuto() == UI_ATTR_AUTO_AUTO)
     {
         // calculated later in calcLayoutSizeAutoContend()
     }
@@ -188,13 +185,13 @@ void Renderer::calcLayoutSize()
 bool Renderer::calcLayoutSizeAutoContend()
 {
     // get var
-    IntAttribute *heightAttr    = view->renderer->layoutAttributes.height;
-    GLfloat      *heightFinal   = &(view->renderer->renderAttributes.height);
-    GLfloat       heightOld     = (view->renderer->renderAttributes.height);
+    NumericAttribute *heightAttr    = view->renderer->layoutAttributes.height;
+    GLfloat          *heightFinal   = &(view->renderer->renderAttributes.height);
+    GLfloat           heightOld     = (view->renderer->renderAttributes.height);
 
     // set height
     // in auto mode
-    bool Auto = (heightAttr->autoMode == UI_ATTR_AUTO_AUTO);
+    bool Auto = (heightAttr->getAuto() == UI_ATTR_AUTO_AUTO);
     if (Auto)
     {
         // set new height
@@ -361,10 +358,10 @@ void Renderer::render()
     
     // set shader color
     glUniform4f(GL::SHADER_VIEW_BACKGROUND_UNIF_COLOR,
-                renderAttributes.background_color->r,
-                renderAttributes.background_color->g,
-                renderAttributes.background_color->b,
-                renderAttributes.background_color->alpha);
+                renderAttributes.background_color->getR(),
+                renderAttributes.background_color->getG(),
+                renderAttributes.background_color->getB(),
+                renderAttributes.background_color->getAlpha());
 
     // give gl the Vertices format
     glVertexAttribPointer(
@@ -734,52 +731,52 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
     switch(attribute->type)
     {
         case StyleAttribute::HEIGHT: 
-            layoutAttributes.height = (dynamic_cast<IntAttribute*>(attribute));
+            layoutAttributes.height = (dynamic_cast<NumericAttribute*>(attribute));
             break;
             
         case StyleAttribute::WIDTH: 
-            layoutAttributes.width = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.width = dynamic_cast<NumericAttribute*>(attribute);
             break;
             
             
         case StyleAttribute::TOP: 
-            layoutAttributes.top = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.top = dynamic_cast<NumericAttribute*>(attribute);
             break;
             
         case StyleAttribute::BOTTOM: 
-            layoutAttributes.bottom = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.bottom = dynamic_cast<NumericAttribute*>(attribute);
             break;
             
         case StyleAttribute::LEFT: 
-            layoutAttributes.left = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.left = dynamic_cast<NumericAttribute*>(attribute);
             break;
             
         case StyleAttribute::RIGHT: 
-            layoutAttributes.right = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.right = dynamic_cast<NumericAttribute*>(attribute);
             break;
 
         case StyleAttribute::SCROLL_X:
-            layoutAttributes.scrollX = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.scrollX = dynamic_cast<NumericAttribute*>(attribute);
             break;
 
         case StyleAttribute::SCROLL_Y:
-            layoutAttributes.scrollY = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.scrollY = dynamic_cast<NumericAttribute*>(attribute);
             break;
 
         case StyleAttribute::PADDING_LEFT:
-            layoutAttributes.paddingLeft = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.paddingLeft = dynamic_cast<NumericAttribute*>(attribute);
             break;
 
         case StyleAttribute::PADDING_RIGHT:
-            layoutAttributes.paddingRight = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.paddingRight = dynamic_cast<NumericAttribute*>(attribute);
             break;
 
         case StyleAttribute::PADDING_TOP:
-            layoutAttributes.paddingTop = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.paddingTop = dynamic_cast<NumericAttribute*>(attribute);
             break;
 
         case StyleAttribute::PADDING_BOTTOM:
-            layoutAttributes.paddingBottom = dynamic_cast<IntAttribute*>(attribute);
+            layoutAttributes.paddingBottom = dynamic_cast<NumericAttribute*>(attribute);
             break;
 
         case StyleAttribute::POSITION: 
@@ -792,7 +789,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             break;
             
         case StyleAttribute::OPACITY: 
-            renderAttributes.opacity = dynamic_cast<FloatAttribute*>(attribute);
+            renderAttributes.opacity = dynamic_cast<NumericAttribute *>(attribute);
             break;
 
         case StyleAttribute::OVERFLOW_CUT:
@@ -800,7 +797,7 @@ void Renderer::bindAttribute(StyleAttribute *attribute)
             break;
 
         case StyleAttribute::TEXT_SIZE:
-            renderAttributes.text_size = dynamic_cast<IntAttribute*>(attribute);
+            renderAttributes.text_size = dynamic_cast<NumericAttribute*>(attribute);
             break;     
             
         case StyleAttribute::TEXT_COLOR: 

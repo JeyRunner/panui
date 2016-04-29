@@ -26,8 +26,7 @@
 #include "GL.h"
 #include "const.h"
 #include "ColorAttribute.h"
-#include "IntAttribute.h"
-#include "FloatAttribute.h"
+#include "NumericAttribute.h"
 #include "StyleAttribute.h"
 #include "StyleRule.h"
 namespace ui
@@ -71,11 +70,11 @@ class Renderer : public Log
         GLfloat scrollX, scrollY;
         
         ColorAttribute *background_color;
-        FloatAttribute *opacity;
+        NumericAttribute *opacity;
         SelectAttribute<UI_ATTR_OVERFLOW_> *overflow;
         
         ColorAttribute  *text_color;
-        IntAttribute    *text_size;
+        NumericAttribute    *text_size;
         StringAttribute *text_family;
       } renderAttributes;
       //RenderAttributes *renderAttributesPtr;
@@ -86,11 +85,11 @@ class Renderer : public Log
       // - -> then into render attributes
       struct LayoutAttributes 
       {
-        IntAttribute *top, *left, *right, *bottom;
+        NumericAttribute *top, *left, *right, *bottom;
         SelectAttribute<UI_ATTR_POSITION_> *position;
-        IntAttribute *scrollX, *scrollY;
-        IntAttribute *paddingTop, *paddingLeft, *paddingRight, *paddingBottom;
-        IntAttribute *height, *width;
+        NumericAttribute *scrollX, *scrollY;
+        NumericAttribute *paddingTop, *paddingLeft, *paddingRight, *paddingBottom;
+        NumericAttribute *height, *width;
       } layoutAttributes;
       //LayoutAttributes *layoutAttributesPtr;
       

@@ -234,8 +234,8 @@ void TextRenderer::calcText()
     const char *text = ((Text*)view)->text_str.c_str(); 
     const char *p;
     float contendHeight = 0;
-    int x = layoutAttributes.paddingLeft->floatValue;
-    int y = -font->fontRowHeight - layoutAttributes.paddingTop->floatValue;
+    int x = layoutAttributes.paddingLeft->getFloat();
+    int y = -font->fontRowHeight - layoutAttributes.paddingTop->getFloat();
     int oldNumVertices = numVertices;
 
 
@@ -253,10 +253,10 @@ void TextRenderer::calcText()
     for(p = text; *p; p++) {
 
         // check for new line
-        if (*p == '\n' || ((x + font->charInfo[*p].advanceX) > (renderAttributes.width - layoutAttributes.paddingRight->floatValue - layoutAttributes.paddingLeft->floatValue)))
+        if (*p == '\n' || ((x + font->charInfo[*p].advanceX) > (renderAttributes.width - layoutAttributes.paddingRight->getFloat() - layoutAttributes.paddingLeft->getFloat())))
         {
             // new line
-            x = layoutAttributes.paddingLeft->floatValue; // to row start
+            x = layoutAttributes.paddingLeft->getFloat(); // to row start
             y-= font->fontRowHeight;     // one line deeper
 
             // add line to contend height
@@ -286,7 +286,7 @@ void TextRenderer::calcText()
     contendHeight += font->fontRowHeight;
 
     // add padding to contend height
-    contendHeight = contendHeight + layoutAttributes.paddingTop->floatValue + layoutAttributes.paddingBottom->floatValue;
+    contendHeight = contendHeight + layoutAttributes.paddingTop->getFloat() + layoutAttributes.paddingBottom->getFloat();
 
 
     // -- into buffer --------------------------------
@@ -329,7 +329,7 @@ void TextRenderer::calcTextFamily()
     // find font
     for (Font *font : fonts)
     {
-        if ((font->name.compare(renderAttributes.text_family->stringValue) == 0) && (font->size == renderAttributes.text_size->floatValue))
+        if ((font->name.compare(renderAttributes.text_family->get()) == 0) && (font->size == renderAttributes.text_size->getFloat()))
         {
             this->font = font;
             //ok("found font!");
@@ -343,7 +343,7 @@ void TextRenderer::calcTextFamily()
     if (!found)
     {
         // not found -> create
-        this->font = new Font(renderAttributes.text_family->stringValue, renderAttributes.text_size->floatValue);
+        this->font = new Font(renderAttributes.text_family->get(), renderAttributes.text_size->getFloat());
         fonts.push_back(this->font);
     }
 
@@ -426,7 +426,7 @@ void TextRenderer::calcTextSize()
     // find font
     for (Font *font : fonts)
     {
-        if ((font->name.compare(renderAttributes.text_family->stringValue) == 0) && (font->size == renderAttributes.text_size->floatValue))
+        if ((font->name.compare(renderAttributes.text_family->get()) == 0) && (font->size == renderAttributes.text_size->getFloat()))
         {
             this->font = font;
             //ok("found font!");
@@ -440,7 +440,7 @@ void TextRenderer::calcTextSize()
     if (!found)
     {
         // not found -> create
-        this->font = new Font(renderAttributes.text_family->stringValue, renderAttributes.text_size->floatValue);
+        this->font = new Font(renderAttributes.text_family->get(), renderAttributes.text_size->getFloat());
         fonts.push_back(this->font);
     }
 
@@ -561,10 +561,10 @@ void TextRenderer::render()
     
     // set shader color
     glUniform4f(GL::SHADER_TEXT_CHARACTER_UNIF_COLOR,
-                renderAttributes.text_color->r,
-                renderAttributes.text_color->g,
-                renderAttributes.text_color->b,
-                renderAttributes.text_color->alpha);
+                renderAttributes.text_color->getR(),
+                renderAttributes.text_color->getG(),
+                renderAttributes.text_color->getB(),
+                renderAttributes.text_color->getAlpha());
     
 
     // give gl the Vertices via buffer

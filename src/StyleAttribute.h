@@ -78,8 +78,7 @@ class StyleAttribute : public Log
       bool aktive(bool aktive);
       bool aktive();
       
-      
-      
+
       // set on Change Listener
       void onChange(OnChangeListener *listener);
       
@@ -92,7 +91,7 @@ class StyleAttribute : public Log
       
       // set value mode: auto, noneAuto
       virtual void setAuto(UI_ATTR_AUTO autoMode);
-      //virtual string operator =(string value);
+      UI_ATTR_AUTO getAuto();
       
       // get value
       virtual string get();
@@ -100,18 +99,21 @@ class StyleAttribute : public Log
       // -- OnChangeListener of value -----------------
       void onValueChange ();  // if value changes -> bouded views->needLayout
       
-      /* auto mode \n
-       * READ ONLY */
-      UI_ATTR_AUTO autoMode;
-      
+
     private:
       // -- own on change listener
       OnChangeListener *onChangeListener;
-      
+
       bool isAktive;
       
       // bounded Views 
       list<View*> boundedViews;
+
+
+    protected:
+      /* auto mode \n
+         * READ ONLY */
+      UI_ATTR_AUTO autoMode;
 };
 
 

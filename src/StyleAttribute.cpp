@@ -184,7 +184,10 @@ void StyleAttribute::setAuto(UI_ATTR_AUTO autoMode)
     onValueChange();
 }
 
-
+UI_ATTR_AUTO StyleAttribute::getAuto()
+{
+    return autoMode;
+}
 
 string StyleAttribute::get()
 {
