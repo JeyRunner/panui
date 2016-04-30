@@ -19,7 +19,6 @@
 #include <iostream>
 #include <string>
 #include <stdlib.h>
-#include "Value.h"
 #include "StyleAttribute.h"
 using namespace std;
 namespace ui

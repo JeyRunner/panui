@@ -15,7 +15,6 @@
 #define	COLORATTRIBUTE_H
 
 // include
-#include "Value.h"
 #include "StyleAttribute.h"
 #include <string>
 #include <iostream>
