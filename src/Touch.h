@@ -23,7 +23,7 @@ namespace ui
 
 /* Touch Class
  */
-class Touch : public Log {
+class Touch : protected Log {
     public:
       // init
       static void init(Ui *ui);

@@ -38,7 +38,7 @@ using namespace std;
 
 /* Renderer Class
  */
-class Renderer : public Log
+class Renderer : protected Log
 {
     public:
       Renderer (View *view);

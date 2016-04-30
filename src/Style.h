@@ -25,7 +25,7 @@ namespace ui
 
 /* Style Class
  */
-class Style : public Log
+class Style : protected Log
 {
     public:
       /* init 

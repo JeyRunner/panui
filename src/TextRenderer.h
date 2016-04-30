@@ -59,7 +59,7 @@ class TextRenderer : public Renderer
         int charAmount;
 
         // Font
-        class Font : public Log
+        class Font : protected Log
         {
             public:
             string name;

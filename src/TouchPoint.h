@@ -26,7 +26,7 @@ namespace ui
 
 /* TouchPoint Class
  */
-class TouchPoint : public Log
+class TouchPoint : protected Log
 {
     public:
       TouchPoint(Ui *ui);

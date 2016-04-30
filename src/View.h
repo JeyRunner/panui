@@ -34,7 +34,7 @@ using namespace std;
 
 /* View Class
  */
-class View : public Log
+class View : protected Log
 {
     public:
         View();

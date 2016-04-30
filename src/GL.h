@@ -39,7 +39,7 @@ namespace ui
 
 /* GL Class
  */
-class GL : public Log
+class GL : protected Log
 {
     public:
       GL ();

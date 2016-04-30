@@ -31,7 +31,7 @@ namespace ui
 
 /* StyleRule Class
  */
-class StyleRule : public StyleAttribute::OnChangeListener, public Log
+class StyleRule : public StyleAttribute::OnChangeListener, protected Log
 {
     public:
       StyleRule (string selector);

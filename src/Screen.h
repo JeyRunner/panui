@@ -38,7 +38,7 @@ namespace ui
 
 /* Screen Class
  */
-class Screen : public Log
+class Screen : protected Log
 {
     public:
         // create , destroy

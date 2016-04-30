@@ -32,7 +32,7 @@ class FrameRenderer;
 
 /* Ui Class
  */
-class Ui : public Log
+class Ui : protected Log
 {
     public:
         Ui();

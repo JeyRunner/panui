@@ -25,7 +25,7 @@ namespace ui
 
 /* Ui Class
  */
-class Value : public Log
+class Value : protected Log
 {
     public:
       Value ();

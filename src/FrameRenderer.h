@@ -36,7 +36,7 @@ using namespace std;
 
 /* FrameRenderer Class
  */
-class FrameRenderer : public Log
+class FrameRenderer : protected Log
 {
     public:
         FrameRenderer(Ui *ui);
