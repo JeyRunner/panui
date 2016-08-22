@@ -48,8 +48,11 @@ Renderer::Renderer()
     // default
     renderAttributes.positionX          = 0;
     renderAttributes.positionY          = 0;
+    renderAttributes.height             = 0;
+    renderAttributes.width              = 0;
     renderAttributes.contendHeight      = 0;
     renderAttributes.contendWidth       = 0;
+    renderAttributes.vertexBuffer       = 0;
     touchAttributes.isOver              = false;
     touchAttributes.drag                = false;
     touchAttributes.childNeedIsOver     = false;

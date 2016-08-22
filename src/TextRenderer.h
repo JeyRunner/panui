@@ -56,7 +56,7 @@ class TextRenderer : public Renderer
           float advanceX, advanceY;
         };
         //CharacterInfo charInfo[128];
-        int charAmount;
+        unsigned long charAmount;
 
         // Font
         class Font : protected Log
@@ -83,7 +83,7 @@ class TextRenderer : public Renderer
 
         // own font
         Font *font;
-        int   numVertices;
+        unsigned long numVertices;
 
 
     private:

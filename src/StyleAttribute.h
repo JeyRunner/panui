@@ -31,7 +31,7 @@ using namespace std;
 
 /* StyleAttribute Class
  */
-class StyleAttribute : public Log
+class StyleAttribute : protected Log
 {
     public:
         // -- CONSTAND
@@ -57,7 +57,7 @@ class StyleAttribute : public Log
       
       StyleAttribute(OnChangeListener *listener, Type type);
       
-      
+
       // cause calc on bounded views
       struct CauseCalcElement {
         CauseCalcElement(Type _type, int _calc_self, int _calc_parent)

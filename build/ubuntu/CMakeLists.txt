@@ -11,7 +11,7 @@ set (LINK_LIBS  pthread rt freetype GLEW GL SDL)
 include_directories ( /opt/vc/include )
 include_directories ( /opt/vc/include/interface/vcos/pthreads )
 include_directories ( /opt/vc/include/interface/vmcs_host/linux )
-include_directories ( /usr/local/include/freetype2 )
+include_directories ( /usr/include/freetype2 )
 include_directories ( /usr/include/SDL )
 
 # link libs

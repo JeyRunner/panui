@@ -18,7 +18,7 @@ set (RASPBERRY_GCC_NAME             arm-linux-gnueabihf-g++)
 
 
 # android
-set (ANDROID_TOOLCHAIN 		        /home/joshua/Dokumente/android/android-toolchain )
+set (ANDROID_TOOLCHAIN 		        /home/joshua/Dokumente/android/android-toolchain-v23 )
 set (ANDROID_LIB_FREETYPE_STATIC	/home/joshua/Dokumente/android/android_libs/freetype2/objs/.libs/)
 set (ANDROID_NDK_CPU		        armeabi-v7a)
 set (ANDROID_GCC_NAME 			    arm-linux-androideabi-gcc)
@@ -75,6 +75,6 @@ endfunction()
 
 
 # sub
-add_subDirectory (build/android)
+#add_subDirectory (build/android)
 add_subDirectory (build/ubuntu)
-add_subDirectory (build/raspberry)
+#add_subDirectory (build/raspberry)

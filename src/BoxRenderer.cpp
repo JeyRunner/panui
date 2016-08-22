@@ -240,7 +240,7 @@ int  BoxRenderer::exeCalcTasks()
     bool needCalcSize = calcTasks[UI_CALCTASK_LAYOUT_SIZE];
 
     /* calc width, (height if not depends on contend)
-     * [!] do befor children calc size (may depend on parent width or height)
+     * [!] do before children calc size (may depend on parent width or height)
      */
     if(calcTasks[UI_CALCTASK_LAYOUT_SIZE])
         calcLayoutSize();

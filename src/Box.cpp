@@ -100,7 +100,10 @@ void Box::removeChild(string id)
         {
             // remove child
             children.erase(childrenIterator);
-            
+
+            // recalc children
+            renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHILDREN_POSITION);
+
             // stop loop
             return;
         }
@@ -119,7 +122,10 @@ void Box::removeChild(View* child)
         {
             // remove child
             children.erase(childrenIterator);
-            
+
+            // recalc children
+            renderer->addCalcTask(UI_CALCTASK_LAYOUT_CHILDREN_POSITION);
+
             // stop loop
             return;
         }

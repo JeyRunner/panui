@@ -226,14 +226,14 @@ void *FrameRenderer::thread_render(void* frameRenderer)
         
 //        if ((fpsNew < fps-5) || (fpsNew > fps+5))
 //            fps = fpsNew;
-        fpsCalc = timeMiddle - timeStart   + fpsCalc;
-        fpsRen  = timeStopp  - timeMiddle  + fpsRen;
+        fpsCalc = timeMiddle - timeStart;  //  + fpsCalc;
+        fpsRen  = timeStopp  - timeMiddle; //  + fpsRen;
         
         // change fps event
-        if (fr->onFpsChangeFunc && frame_counter >= 5)
+        if (fr->onFpsChangeFunc )// && frame_counter >= 5)
         {
             #ifndef pl_pi
-            fr->onFpsChangeFunc(fpsCalc / 5, fpsRen / 5);
+            fr->onFpsChangeFunc(fpsCalc /*/ 5*/, fpsRen /*/ 5*/);
             fpsCalc = 0;
             fpsRen  = 0;
             frame_counter = 0;
@@ -319,7 +319,7 @@ void FrameRenderer::exe_render()
     
 
     // swap Buffers 
-    // => display new renderd image
+    // => display new rendered image
     screen->swapBuffer();
 }
 

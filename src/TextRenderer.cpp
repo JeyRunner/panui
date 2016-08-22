@@ -236,17 +236,18 @@ void TextRenderer::calcText()
     float contendHeight = 0;
     int x = layoutAttributes.paddingLeft->getFloat();
     int y = -font->fontRowHeight - layoutAttributes.paddingTop->getFloat();
-    int oldNumVertices = numVertices;
+    unsigned long oldNumVertices = numVertices;
 
+    charAmount = strlen(text);
 
     // Vertex
     struct Vertex
     {
         GLfloat x, y,
                 u, v;
-    }coords[6 * strlen(text)];
+    }coords[6 * charAmount];
     
-    charAmount = strlen(text);
+
     numVertices = 0;
     
     // calc lines -> for each character
@@ -291,23 +292,26 @@ void TextRenderer::calcText()
 
     // -- into buffer --------------------------------
     // if vertex buffer not generated or size changed
-    if ((VERTEX_BUFFER_TEXT <= 0) || (oldNumVertices != numVertices))
+    if ((VERTEX_BUFFER_TEXT <= 0)) //|| (oldNumVertices != numVertices))
     {
         // delete old
-        glDeleteBuffers(1, &VERTEX_BUFFER_TEXT);
+        //glDeleteBuffers(1, &VERTEX_BUFFER_TEXT);
         // debug("create new vertices buffer with size " + str(sizeof(coords)) + "bytes");
 
         // create vertex buffer
         glGenBuffers(1, &VERTEX_BUFFER_TEXT);
+        /*
         glBindBuffer(GL_ARRAY_BUFFER,VERTEX_BUFFER_TEXT);
-        glBufferData(GL_ARRAY_BUFFER, sizeof(coords), NULL, GL_DYNAMIC_DRAW /* often changed and used for rendering */ );
+        glBufferData(GL_ARRAY_BUFFER, sizeof(coords), NULL, GL_DYNAMIC_DRAW /* often changed and used for rendering *-/ ); */
         // @TODO: dynamic vertex buffer size for text
     }
-    else
-        glBindBuffer(GL_ARRAY_BUFFER,VERTEX_BUFFER_TEXT);
+    //else
+    glBindBuffer(GL_ARRAY_BUFFER,VERTEX_BUFFER_TEXT);
 
     // insert data
-    glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(coords), &coords);
+    // refill every time the complete buffer => size fits to amount of vertices
+    glBufferData(GL_ARRAY_BUFFER, sizeof(coords), &coords, GL_DYNAMIC_DRAW /* often changed and used for rendering */ );
+    //glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(coords), &coords);
     //debug("buffer "+str(sizeof(coords))+"  bytes");
 
     glBindBuffer(GL_ARRAY_BUFFER, 0);

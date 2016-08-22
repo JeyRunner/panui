@@ -117,7 +117,7 @@ void StyleAttribute::removeBoundedView(View *view)
 
 // -- ON VALUE CHANGE -----------
 void StyleAttribute::onValueChange()
-{    
+{
     if (causeCalc->causeCalc[UI_VIEW_SELF] != UI_CALCTASK_NONE || causeCalc->causeCalc[UI_VIEW_PARENT] != UI_CALCTASK_NONE )
     {
         // for self, parent
