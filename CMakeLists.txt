@@ -1,80 +1,139 @@
-# CMake config
-# panui cross-platform gui lib 
+cmake_minimum_required(VERSION 3.0)
 
-# min version
-cmake_minimum_required(VERSION 2.8)
-
-# project name
-set    (  PROJECT panui)
-project(${PROJECT} )
+# Include cmake modules
+include(cmake/buildHelper.cmake)
+include(cmake/android.apk.cmake)
+set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "cmake")
 
 
-############################################
-## importend variables #####################
-# raspberry
-set (RASPBERRY_CROSS_COMPILE        ON )
-set (RASPBERRY_TOOLCHAIN            /home/joshua/Dokumente/raspberrypi)
-set (RASPBERRY_GCC_NAME             arm-linux-gnueabihf-g++)
+# ------------------------------------
+# -- Project infos
+
+# Meta information about the project
+setMetaProject(
+        "panui"  "PANUI"                        # name, name in headerfile,
+        "cross platform gui library"            # descrition
+        "Joshua Johannson"                      # author
+)
 
 
-# android
-set (ANDROID_TOOLCHAIN 		        /home/joshua/Dokumente/android/android-toolchain-v23 )
-set (ANDROID_LIB_FREETYPE_STATIC	/home/joshua/Dokumente/android/android_libs/freetype2/objs/.libs/)
-set (ANDROID_NDK_CPU		        armeabi-v7a)
-set (ANDROID_GCC_NAME 			    arm-linux-androideabi-gcc)
-set (ANDROID_SDL_PATH		        ${CMAKE_CURRENT_SOURCE_DIR}/SDL2/src/main/android)
+# set project name and output dir
+project(${META_PROJECT_NAME})
 
 
-# out
-set (ANDROID_SO_OUTDIR              ${CMAKE_CURRENT_SOURCE_DIR}/build/android/${ANDROID_NDK_CPU})
-set (RASPERRY_SO_OUTDIR             ${CMAKE_CURRENT_SOURCE_DIR}/build/raspberry/raspberry)
-set (UBUNTU_SO_OUTDIR               ${CMAKE_CURRENT_SOURCE_DIR}/build/ubuntu/ubuntu)
-############################################
+# ------------------------------------
+# -- Project options
+option(OPTION_BUILD_TESTS "Build tests." OFF)
+option(OPTION_BUILD_EXAMPLES "Build examples." ON)
 
 
-# source files
-set (       SRC_DIR   ${CMAKE_CURRENT_SOURCE_DIR}/src/)
-file( GLOB  SRC_FILES ${SRC_DIR}*.cpp ${SRC_DIR}*.h )
-
-# glm
-add_definitions (-DGLM_FORCE_RADIANS)
-
-# include
-include_directories( ${CMAKE_CURRENT_SOURCE_DIR}/include )
-
-
-## fuctions ################################
-# c++ 11
-function(checkCompilerCXX)
-    include(CheckCXXCompilerFlag)
-    CHECK_CXX_COMPILER_FLAG("-std=c++11" COMPILER_SUPPORTS_CXX11)
-    CHECK_CXX_COMPILER_FLAG("-std=c++0x" COMPILER_SUPPORTS_CXX0X)
-
-    if(COMPILER_SUPPORTS_CXX11)
-        message(STATUS "compiler supports c++11 flag")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11" PARENT_SCOPE)
-
-    elseif(COMPILER_SUPPORTS_CXX0X)
-        message(STATUS "compiler supports c++0x flag")
-        set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x" PARENT_SCOPE)
-
-    else()
-            message(STATUS "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
-    endif()
-endfunction()
-
-# set so outdir
-function(setSoOutDir path)
-    set(                  CMAKE_LIBRARY_OUTPUT_DIRECTORY                        ${path})
-    set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY         ${path})
-    set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_RELEASE ${path})
-    set_target_properties(${target} PROPERTIES LIBRARY_OUTPUT_DIRECTORY_DEBUG   ${path})
-endfunction()
-
-###########################################
+# -----------------------------
+# -- set BUILD out dirs
+if (ANDROID)
+    setOutDir(
+            build                               # general
+            build/bin                           # bin
+            build/lib/${ANDROID_NDK_ABI_NAME}   # lib
+            build/include                       # include
+            build/lib/${ANDROID_NDK_ABI_NAME}   # archiv
+            build/pack                          # package / installer / app
+    )
+else ()
+    setOutDir(
+            build                               # general
+            build/bin                           # bin
+            build/lib/native                    # lib
+            build/include                       # include
+            build/lib                           # archiv
+            build/pack                          # package / installer / app
+    )
+endif ()
 
 
-# sub
-#add_subDirectory (build/android)
-add_subDirectory (build/ubuntu)
-#add_subDirectory (build/raspberry)
+# -----------------------------
+# -- set INSTALL out dirs
+set(INSTALL_BIN bin)
+set(INSTALL_LIB lib)
+set(INSTALL_INCLUDE include)
+set(INSTALL_COMPONENTS applications libraries headers)
+
+
+# ----------------------------------
+# -- cross compile
+
+# -- ANDROID -------------------------------------------------
+# platform dependet wrappers
+set(WRAPPER_ANDROID platform/android)
+set(WRAPPER_ANDROID_DIR ${CMAKE_SOURCE_DIR}/${WRAPPER_ANDROID})
+
+set(ANDROID_APK_API_LEVEL "25" CACHE STRING "Android APK API level")
+set(ANDROID_APK_INSTALL "1" CACHE BOOL "Install created apk file on the device automatically?")
+set(ANDROID_APK_RUN "1" CACHE BOOL "Run created apk file on the device automatically?")
+set(ANDROID_APK_SIGNER_KEYSTORE "~/my-release-key.keystore" CACHE STRING "Keystore for signing the apk file")
+set(ANDROID_APK_SIGNER_ALIAS "myalias" CACHE STRING "Alias for signing the apk file")
+
+if (ANDROID)
+    add_definitions(-DGL_GLEXT_PROTOTYPES)
+    add_definitions( -DGLES2=1 )
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11")
+    set(CMAKE_C_STANDARD_LIBRARIES "-landroid -llog -lGLESv1_CM -lc -lstdc++ -lGLESv2") #-lgnustl_shared
+    set(CMAKE_CXX_STANDARD_LIBRARIES "${CMAKE_C_STANDARD_LIBRARIES}")
+endif ()
+
+
+link_directories(
+        ${OUTPUT_LIB}
+        ${DEPENDENCIES_OpenGL_DIR}
+        ${DEPENDENCIES_FREETYPE_DIR})
+
+# ------------------------------------
+# -- Dependences
+add_subdirectory(dependencies)
+
+
+# default headers, libs
+set(DEFAULT_INCLUDE_DIRECTORIES
+        ${DEPENDENCIES_SDL2_INCLUDE}
+        ${DEPENDENCIES_GLEW_INCLUDE}
+        ${DEPENDENCIES_OpenGL_INCLUDE}
+        ${DEPENDENCIES_GLM_INCLUDE}
+        ${DEPENDENCIES_FREETYPE_INCLUDE}
+        ${DEPENDENCIES_TERMCOLOR_INCLUDE}
+        ${DEPENDENCIES_INCLUDE}
+        ${OUTPUT_INCLUDE})
+
+set(DEFAULT_LIBRARIES
+        ${DEPENDENCIES_SDL2_LIB}
+        ${DEPENDENCIES_GLEW_LIB}
+        ${DEPENDENCIES_OpenGL_LIB}
+        ${DEPENDENCIES_FREETYPE_LIB}
+        )
+
+
+# source dir
+add_subdirectory(source)
+#if (OPTION_BUILD_EXAMPLES)
+    add_subdirectory(example)
+#endif ()
+
+
+
+# ----------------------------------
+# -- create installer
+if (UNIX)
+    SET(CPACK_GENERATOR "DEB")
+    SET(CPACK_DEBIAN_PACKAGE_MAINTAINER ${META_PROJECT_AUTHOR})
+endif ()
+
+SET(CPACK_OUTPUT_FILE_PREFIX ${OUTPUT_PACKAGE})
+set(CPACK_COMPONENTS_ALL ${INSTALL_COMPONENTS})
+set(CPACK_PACKAGE_NAME ${META_PROJECT_NAME})
+set(CPACK_PACKAGE_VENDOR "")
+set(CPACK_PACKAGE_DESCRIPTION_SUMMARY ${META_PROJECT_DESCRIPTION})
+set(CPACK_PACKAGE_VERSION ${META_VERSION})
+set(CPACK_PACKAGE_VERSION_MAJOR ${META_VERSION_MAJOR})
+set(CPACK_PACKAGE_VERSION_MINOR ${META_VERSION_MINOR})
+set(CPACK_PACKAGE_VERSION_PATCH ${META_VERSION_PATCH})
+set(CPACK_PACKAGE_INSTALL_DIRECTORY ${META_PROJECT_NAME})
+
+include(CPack)
