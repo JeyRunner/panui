@@ -27,21 +27,24 @@ int main(int argc, char *argv[])
                     .top(20);
   root->addChild(welcomeText);
 
-  // set root element and start
-  window->setRootView(root);
-  window->frameRenderer->start();
-
   // progress box
   View *box = new View();
   root->addChild(box);
   box->style.height(300)
-            .backgroundColor("#00ffaaaa")
-            .top(20);
+      .width(100)
+      .backgroundColor("#00ffaaaa")
+      .top(20);
+
+  // set root element and start
+  window->setRootView(root);
+  window->frameRenderer->start();
+
+
 
 
   // animate box
   for(float i=0; ;i+= 0.01) {
-    box->style.width(sin(i)*(root->style.width.getFloat()/2) + (root->style.width.getFloat()/2));
+    //box->style.width(sin(i)*(root->style.width.getFloat()/2) + (root->style.width.getFloat()/2));
     usleep(10000);
   }
 }

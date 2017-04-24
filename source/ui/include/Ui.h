@@ -23,7 +23,6 @@
 #include "FrameRenderer.h"
 #include "Log.h"
 #include "Screen.h"
-#include "internSDL/SDL_android_main.c"
 namespace ui
 {
 class View;
